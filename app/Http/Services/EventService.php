@@ -234,7 +234,7 @@ class EventService
 
         return true;
     }
-//
+
     public function changeApprovalStatus(Request $request)
     {
         $event = $this->model->findOrFail($request->event_id);

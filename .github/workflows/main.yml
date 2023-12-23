@@ -1,7 +1,7 @@
 on:
   push:
     branches:
-      - main
+      - master
 name: 🚀 Deploy laravel website on push
 jobs:
   web-deploy:
@@ -10,7 +10,7 @@ jobs:
     steps:
     - name: 🚚 Get latest code
       uses: actions/checkout@v2
-    
+
     - name: 📂 Sync files
       uses: SamKirkland/FTP-Deploy-Action@4.3.0
       with:
