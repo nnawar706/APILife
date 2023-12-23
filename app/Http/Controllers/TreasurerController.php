@@ -34,10 +34,10 @@ class TreasurerController extends Controller
 
     public function tester()
     {
-        $treasurer = Treasurer::find(1);
+        $treasurer = Treasurer::find(2);
 
-        $events = $treasurer->events();
+        $events = $treasurer->events()->get();
 
-        return $events;
+        return \response()->json(['data' => $events]);
     }
 }

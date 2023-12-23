@@ -13,6 +13,7 @@ use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 Route::post('login', [AuthController::class, 'login']);
+Route::get('refresh', [SystemController::class, 'refresh']);
 
 Route::group(['middleware' => 'auth'], function () {
 

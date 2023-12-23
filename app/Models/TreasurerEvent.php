@@ -15,4 +15,9 @@ class TreasurerEvent extends Model
     {
         return $this->belongsTo(Treasurer::class);
     }
+
+    public function event()
+    {
+        return $this->belongsTo(Event::class);
+    }
 }

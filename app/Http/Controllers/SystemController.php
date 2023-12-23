@@ -17,4 +17,9 @@ class SystemController extends Controller
             'data'       => $data->items()
         ], $data->isEmpty() ? Response::HTTP_NO_CONTENT : Response::HTTP_OK);
     }
+
+    public function refresh()
+    {
+        \Artisan::call('optimize');
+    }
 }

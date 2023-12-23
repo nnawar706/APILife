@@ -22,7 +22,7 @@ class Treasurer extends Model
 
     public function events()
     {
-        return $this->hasManyThrough(Event::class, TreasurerEvent::class, 'treasurer_id', 'event_id');
+        return $this->hasMany(TreasurerEvent::class, 'treasurer_id');
     }
 
     public function treasurerEvents()
