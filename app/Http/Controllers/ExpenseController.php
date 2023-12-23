@@ -32,7 +32,7 @@ class ExpenseController extends Controller
         ], Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 
-    public function update(ExpenseCreateRequest $request, $id)
+    public function update(ExpenseUpdateRequest $request, $id)
     {
         $response = $this->service->updateInfo($request, $id);
 
@@ -61,5 +61,15 @@ class ExpenseController extends Controller
     }
 
     public function delete($id)
-    {}
+    {
+        if ($this->service->removeExpense($id))
+        {
+            return response()->json(['status' => true], Response::HTTP_OK);
+        }
+
+        return response()->json([
+            'status' => false,
+            'error'  => 'Unable to delete data when expense payers exist.'
+        ], Response::HTTP_BAD_REQUEST);
+    }
 }

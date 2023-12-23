@@ -24,8 +24,12 @@ class ExpensePayerValidationRule implements ValidationRule
 
             if (count(array_unique($userIds)) !== count($userIds)) {
                 $fail('Duplicate user expense detected.');
-            } else if (($event->participants()->whereIn('users.id', $userIds)->count() != count($userIds))) {
+            }
+            else if (($event->participants()->whereIn('users.id', $userIds)->count() != count($userIds))) {
                 $fail('Some users do not belong to the participant list.');
+            }
+            else if (array_sum(array_column($value, 'amount')) != (request()->input('unit_cost') * request()->input('quantity'))) {
+                $fail("Sum of expense payer's amount does not match total amount.");
             }
         } catch (\Throwable $th) {
             $fail('Invalid payload, some fields are missing.');

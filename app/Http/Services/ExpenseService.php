@@ -122,9 +122,22 @@ class ExpenseService
     public function getExpenseLog($event_id)
     {
         return $this->model->where('event_id', $event_id)
-            ->with('category','bearers.user','bearers.paidBy')
+            ->with('category','bearers.user','payers.user')
             ->orderBy('created_at')
             ->get();
+    }
+
+    public function removeExpense($id): bool
+    {
+        $expense = $this->model->findOrFail($id);
+
+        try {
+            $expense->delete();
+
+            return true;
+        } catch (QueryException $ex) {
+            return false;
+        }
     }
 
 

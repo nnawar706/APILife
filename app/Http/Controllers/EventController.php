@@ -21,7 +21,9 @@ class EventController extends Controller
 
     public function index()
     {
-        $data = $this->service->getAllEvents();
+        $data = Cache::remember('events', 24*60*60*7, function () {
+            return $this->service->getAllEvents();
+        });
 
         return response()->json([
             'status' => true,
@@ -79,6 +81,7 @@ class EventController extends Controller
         $this->service->removeEventParticipant($request->user_id, $id);
 
         return response()->json(['status' => true], Response::HTTP_OK);
+
     }
 
     public function read($id)
@@ -91,5 +94,18 @@ class EventController extends Controller
             'status' => true,
             'data'   => $this->service->getInfo($id)
         ], Response::HTTP_OK);
+    }
+
+    public function delete($id)
+    {
+        if ($this->service->removeEvent($id))
+        {
+            return response()->json(['status' => true], Response::HTTP_OK);
+        }
+
+        return response()->json([
+            'status' => false,
+            'error'  => 'Unable to delete event when it has payment data.'
+        ], Response::HTTP_BAD_REQUEST);
     }
 }

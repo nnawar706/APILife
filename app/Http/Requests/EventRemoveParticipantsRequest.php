@@ -42,15 +42,10 @@ class EventRemoveParticipantsRequest extends FormRequest
                                 }
 
                                 else {
-                                    $userExpenses = $event->expenses()->where('event_id', $this->route('id'))
-                                        ->whereHas('bearers', function ($q) use ($val) {
-                                            return $q->where('user_id', $val)
-                                                ->orWhere('paid_by_id', $val);
-                                        })
-                                        ->first();
+                                    $userExpenses = $event->expensePayers()->where('user_id', $val)->first();
 
                                     if ($userExpenses) {
-                                        $fail('Users who have expense data can not be removed.');
+                                        $fail('Users who have expense data can not be removed from participant list.');
                                     }
                                 }
                             }],

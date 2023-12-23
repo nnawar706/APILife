@@ -22,10 +22,12 @@ class EventParticipant extends Model
         parent::boot();
 
         static::created(function ($model) {
+            Cache::forget('events');
             Cache::forget('event_info'.$model->event_id);
         });
 
         static::deleted(function ($model) {
+            Cache::forget('events');
             Cache::forget('event_info'.$model->event_id);
         });
     }

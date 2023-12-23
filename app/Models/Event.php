@@ -49,6 +49,11 @@ class Event extends Model
         return $this->hasManyThrough(ExpenseBearer::class, Expense::class, 'event_id', 'expense_id');
     }
 
+    public function expensePayers()
+    {
+        return $this->hasManyThrough(ExpensePayer::class, Expense::class, 'event_id', 'expense_id');
+    }
+
     public function category()
     {
         return $this->belongsTo(EventCategory::class, 'event_category_id');
@@ -67,11 +72,17 @@ class Event extends Model
             $model->event_status_id = 1;
         });
 
+        static::created(function ($model) {
+            Cache::forget('events');
+        });
+
         static::updated(function ($model) {
+            Cache::forget('events');
             Cache::forget('event_info'.$model->id);
         });
 
         static::deleted(function ($model) {
+            Cache::forget('events');
             Cache::forget('event_info'.$model->id);
         });
     }
