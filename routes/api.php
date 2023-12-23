@@ -6,6 +6,7 @@ use App\Http\Controllers\EventCategoryController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\ExpenseCategoryController;
 use App\Http\Controllers\ExpenseController;
+use App\Http\Controllers\SystemController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -71,4 +72,6 @@ Route::group(['middleware' => 'auth'], function () {
             Route::delete('expenses/delete/{id}', 'delete');
         });
     });
+
+    Route::get('activity_logs/all', [SystemController::class, 'index']);
 });

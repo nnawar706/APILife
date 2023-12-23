@@ -13,12 +13,14 @@ class EventPaymentCalculation implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
+    public $event_id;
+
     /**
      * Create a new job instance.
      */
-    public function __construct()
+    public function __construct($event_id)
     {
-        //
+        $this->event_id = $event_id;
     }
 
     /**
@@ -26,6 +28,6 @@ class EventPaymentCalculation implements ShouldQueue
      */
     public function handle(): void
     {
-        //
+        $event_data =
     }
 }

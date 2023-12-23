@@ -2,13 +2,18 @@
 
 namespace App\Models;
 
+use App\Jobs\EventPaymentCalculation;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
+use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
 
 class Event extends Model
 {
+    use LogsActivity;
+
     protected $guarded = ['id'];
     protected $hidden = ['updated_at'];
 
@@ -17,6 +22,20 @@ class Event extends Model
         return Attribute::make(
             get: fn(string $value) => Carbon::parse($value)->format('F d, Y')
         );
+    }
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logOnly(['event_category_id','lead_user_id','title','detail','from_date','to_date','remarks','event_status_id'])
+            ->useLogName('Event')
+            ->logAll()
+            ->logOnlyDirty();
+    }
+
+    public function getDescriptionForEvent(string $eventName): string
+    {
+        return "An event has been {$eventName}";
     }
 
     public function lead()
