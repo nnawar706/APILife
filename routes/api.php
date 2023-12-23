@@ -4,9 +4,11 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DesignationController;
 use App\Http\Controllers\EventCategoryController;
 use App\Http\Controllers\EventController;
+use App\Http\Controllers\EventStatusController;
 use App\Http\Controllers\ExpenseCategoryController;
 use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\SystemController;
+use App\Http\Controllers\TreasurerController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -17,11 +19,12 @@ Route::group(['middleware' => 'auth'], function () {
     Route::controller(AuthController::class)->group(function () {
         Route::get('profile', 'authProfile');
         Route::put('change_password', 'changePassword');
+        Route::get('refresh', 'refreshUser');
         Route::get('logout', 'logout');
     });
 
     Route::get('designations/all', [DesignationController::class, 'index']);
-    Route::get('events/statuses/all', [\App\Http\Controllers\EventStatusController::class, 'index']);
+    Route::get('events/statuses/all', [EventStatusController::class, 'index']);
 
     Route::controller(UserController::class)->group(function () {
         Route::get('users/all', 'index');
@@ -73,5 +76,11 @@ Route::group(['middleware' => 'auth'], function () {
         });
     });
 
+    Route::controller(TreasurerController::class)->group(function () {
+        Route::post('treasurers/create', 'create');
+    });
+
     Route::get('activity_logs/all', [SystemController::class, 'index']);
 });
+
+Route::get('test', [TreasurerController::class, 'tester']);

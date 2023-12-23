@@ -239,7 +239,12 @@ class EventService
     {
         $event = $this->model->findOrFail($request->event_id);
 
-        $event->participants()->where('user_id', auth()->user()->id)->update(['approval_status' => 1]);
+        $event_participant = $event->eventParticipants()
+            ->where('user_id', '=', auth()->user()->id)->first();
+
+        $event_participant->update(['approval_status' => 1]);
+
+        return $event_participant->wasChanged();
     }
 
     public function updateEventStatus($event_status_id, $id): bool

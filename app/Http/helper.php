@@ -22,3 +22,8 @@ function deleteFile($filepath): void
         File::delete(public_path($filepath));
     }
 }
+
+function clearCache(): void
+{
+    Artisan::call('cache:clear');
+}

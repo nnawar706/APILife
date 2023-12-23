@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Spatie\Activitylog\Models\Activity;
+use Symfony\Component\HttpFoundation\Response;
 
 class SystemController extends Controller
 {
@@ -14,6 +15,6 @@ class SystemController extends Controller
             'status'     => true,
             'total_data' => $data->total(),
             'data'       => $data->items()
-        ]);
+        ], $data->isEmpty() ? Response::HTTP_NO_CONTENT : Response::HTTP_OK);
     }
 }

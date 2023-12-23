@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Models\Treasurer;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -9,18 +10,18 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 
-class EventPaymentCalculation implements ShouldQueue
+class TreasurerLiabilitiesCalculation implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public $event_id;
+    public $treasurer_id;
 
     /**
      * Create a new job instance.
      */
-    public function __construct($event_id)
+    public function __construct($treasurer_id)
     {
-        $this->event_id = $event_id;
+        $this->treasurer_id = $treasurer_id;
     }
 
     /**
@@ -28,6 +29,11 @@ class EventPaymentCalculation implements ShouldQueue
      */
     public function handle(): void
     {
-        $event_data =
+//        $treasure = Treasurer::find($this->treasurer_id);
+//
+//        if ($treasure)
+//        {
+//            $events =
+//        }
     }
 }

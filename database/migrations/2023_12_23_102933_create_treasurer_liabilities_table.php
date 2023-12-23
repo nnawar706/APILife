@@ -11,9 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('event_participant_payments', function (Blueprint $table) {
+        Schema::create('treasurer_liabilities', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('event_participant_id')->constrained('event_participants')->onDelete('restrict');
+            $table->foreignId('treasurer_id')->constrained('treasurers')->onDelete('restrict');
+            $table->foreignId('user_id')->constrained('users')->onDelete('restrict');
             $table->float('amount');
             $table->tinyInteger('status', false, true)->default(0)->comment('1:completed');
             $table->timestamps();
@@ -25,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('event_participant_payments');
+        Schema::dropIfExists('treasurer_liabilities');
     }
 };

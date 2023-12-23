@@ -99,9 +99,26 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasMany(ExpenseBearer::class, 'user_id');
     }
 
+    public function sponsors()
+    {
+        return $this->hasMany(ExpenseBearer::class, 'user_id')
+            ->where('is_sponsored', '=', true);
+    }
+
+    public function payments()
+    {
+        return $this->hasMany(ExpensePayer::class, 'user_id');
+    }
+
     public function expensePayers()
     {
         return $this->hasMany(ExpensePayer::class);
+    }
+
+    public function collectedTreasures()
+    {
+        return $this->hasMany(Treasurer::class, 'user_id')
+            ->where('completion_status', '=', true);
     }
 
     public static function boot()
@@ -113,7 +130,7 @@ class User extends Authenticatable implements JWTSubject
         });
 
         static::updated(function ($model) {
-            Artisan::call('cache:clear');
+            clearCache();
         });
 
         static::deleted(function ($model) {

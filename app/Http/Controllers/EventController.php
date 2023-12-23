@@ -107,9 +107,9 @@ class EventController extends Controller
 
     public function approveEventLock(EventApproveLockRequest $request)
     {
-        $this->service->changeApprovalStatus($request);
+        $response = $this->service->changeApprovalStatus($request);
 
-        return response()->json(['status' => true], Response::HTTP_OK);
+        return response()->json(['status' => true], $response ? Response::HTTP_OK : Response::HTTP_NOT_MODIFIED);
     }
 
     public function delete($id)

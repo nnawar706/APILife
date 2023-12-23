@@ -25,7 +25,11 @@ class UserService
         return $this->model->with('designation')
             ->withCount('events')
             ->withCount('leadEvents')
-            ->withSum('expenses', 'amount')->find($id);
+            ->withCount('collectedTreasures')
+            ->withSum('expenses', 'amount')
+            ->withSum('payments', 'amount')
+            ->withSum('sponsors', 'amount')
+            ->find($id);
     }
 
     public function storeNewUser(Request $request)

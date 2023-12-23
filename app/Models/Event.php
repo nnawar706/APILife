@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Jobs\EventPaymentCalculation;
+use App\Jobs\TreasurerLiabilitiesCalculation;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
@@ -48,6 +48,11 @@ class Event extends Model
         return $this->belongsToMany(User::class, 'event_participants', 'event_id');
     }
 
+    public function eventParticipants()
+    {
+        return $this->hasMany(EventParticipant::class, 'event_id');
+    }
+
     public function addParticipants()
     {
         return $this->hasMany(EventParticipant::class);
@@ -82,6 +87,12 @@ class Event extends Model
     {
         return $this->belongsTo(EventStatus::class, 'event_status_id');
     }
+
+    public function treasurer()
+    {
+        return $this->hasOne(TreasurerEvent::class, 'event_id');
+    }
+
 
     public static function boot()
     {

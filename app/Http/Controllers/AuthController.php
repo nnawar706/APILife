@@ -36,8 +36,19 @@ class AuthController extends Controller
         ], Response::HTTP_UNAUTHORIZED);
     }
 
+    public function refreshUser()
+    {
+        $data = $this->service->refreshUser();
+
+        return \response()->json([
+            'status' => true,
+            'data'   => $data
+        ]);
+    }
+
     public function authProfile()
     {
+        clearCache();
         $data = Cache::remember('auth_user'.auth()->user()->id, 24*60*60, function () {
             return $this->service->getAuthUserProfile();
         });
