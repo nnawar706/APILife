@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Sanctum\HasApiTokens;
 use Tymon\JWTAuth\Contracts\JWTSubject;
@@ -36,7 +38,6 @@ class User extends Authenticatable implements JWTSubject
      * @var array<string, string>
      */
     protected $casts = [
-        'member_since' => 'datetime',
         'password'     => 'hashed',
         'status'       => 'boolean'
     ];
@@ -87,5 +88,26 @@ class User extends Authenticatable implements JWTSubject
     public function expensePayers()
     {
         return $this->hasMany(ExpensePayer::class);
+    }
+
+    public static function boot()
+    {
+        parent::boot();
+
+        static::created(function ($model) {
+            Cache::forget('users');
+        });
+
+        static::updated(function ($model) {
+            Artisan::call('cache:clear');
+        });
+
+        static::deleted(function ($model) {
+            Cache::forget('users');
+            Cache::forget('user'.$model->id);
+            Cache::forget('auth_user'.$model->id);
+
+            deleteFile($model->photo_url);
+        });
     }
 }

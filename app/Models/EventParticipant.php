@@ -12,6 +12,10 @@ class EventParticipant extends Model
 
     public $timestamps = false;
 
+    protected $casts = [
+        'approval_status'       => 'boolean'
+    ];
+
     public function event()
     {
         return $this->belongsTo(Event::class);
@@ -24,6 +28,15 @@ class EventParticipant extends Model
         static::created(function ($model) {
             Cache::forget('events');
             Cache::forget('event_info'.$model->event_id);
+        });
+
+        static::updated(function ($model) {
+            if ($model->approval_status &&
+                $model->event->participants()->where('approval_status', false)->doesntExist())
+            {
+                $model->event->event_status_id = 3;
+                $model->event->save();
+            }
         });
 
         static::deleted(function ($model) {

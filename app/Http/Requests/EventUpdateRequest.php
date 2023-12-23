@@ -44,7 +44,6 @@ class EventUpdateRequest extends FormRequest
             'from_date'           => 'required|date_format:Y-m-d|after_or_equal:today',
             'to_date'             => 'nullable|date_format:Y-m-d|after:from_date',
             'remarks'             => 'nullable|string|max:500',
-            'event_status_id'     => 'required|in:1',
             'designation_gradings'=> ['required','array',
                 function($attr, $val, $fail) {
                     try {

@@ -20,14 +20,14 @@ class CheckUpdateDeleteEventEligibility
 
         if ($event)
         {
-            if ($event->event_status_id == 1)
+            if ($event->event_status_id !== 4) // 4: completed
             {
                 return $next($request);
             }
 
             return response()->json([
                 'status' => false,
-                'error'  => 'Unable to make changes to event when it is locked.'
+                'error'  => 'Unable to make changes to event when it is completed.'
             ], Response::HTTP_FORBIDDEN);
         }
         return response()->json([

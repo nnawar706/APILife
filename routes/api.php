@@ -51,9 +51,11 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('events/all', 'index');
         Route::get('events/get/{id}', 'read');
         Route::post('events/create', 'create');
+        Route::put('events/approve_lock', 'approveEventLock');
 
         Route::group(['middleware' => 'event.checker'], function () {
             Route::put('events/update/{id}', 'update');
+            Route::put('events/change_status/{id}', 'updateStatus');
             Route::delete('events/delete/{id}', 'delete');
             Route::post('events/add_participants/{id}', 'addParticipants');
             Route::put('events/remove_participants/{id}', 'removeParticipant');

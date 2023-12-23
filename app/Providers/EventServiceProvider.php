@@ -4,14 +4,11 @@ namespace App\Providers;
 
 use App\Models\EventCategory;
 use App\Models\ExpenseCategory;
-use App\Models\User;
 use App\Observers\EventCategoryObserver;
 use App\Observers\ExpenseCategoryObserver;
-use App\Observers\UserObserver;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
-use Illuminate\Support\Facades\Event;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -31,7 +28,6 @@ class EventServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        User::observe(UserObserver::class);
         EventCategory::observe(EventCategoryObserver::class);
         ExpenseCategory::observe(ExpenseCategoryObserver::class);
     }

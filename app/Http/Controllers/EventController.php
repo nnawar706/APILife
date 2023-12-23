@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\EventAddParticipantsRequest;
+use App\Http\Requests\EventApproveLockRequest;
 use App\Http\Requests\EventCreateRequest;
 use App\Http\Requests\EventRemoveParticipantsRequest;
 use App\Http\Requests\EventUpdateRequest;
 use App\Http\Services\EventService;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -61,6 +63,13 @@ class EventController extends Controller
         ], Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 
+    public function updateStatus(Request $request, $id)
+    {
+        $response = $this->service->updateEventStatus($request->event_status_id, $id);
+
+        return response()->json(['status' => true], $response ? Response::HTTP_OK : Response::HTTP_NOT_MODIFIED);
+    }
+
     public function addParticipants(EventAddParticipantsRequest $request, $id)
     {
         $response = $this->service->addEventParticipants($request, $id);
@@ -86,14 +95,21 @@ class EventController extends Controller
 
     public function read($id)
     {
-//        $data = Cache::remember('event_info'.$id, 24*60*60*20, function () use ($id) {
-//            return $this->service->getInfo($id);
-//        });
+        $data = Cache::remember('event_info'.$id, 24*60*60*20, function () use ($id) {
+            return $this->service->getInfo($id);
+        });
 
         return response()->json([
             'status' => true,
-            'data'   => $this->service->getInfo($id)
+            'data'   => $data
         ], Response::HTTP_OK);
+    }
+
+    public function approveEventLock(EventApproveLockRequest $request)
+    {
+        $this->service->changeApprovalStatus($request);
+
+        return response()->json(['status' => true], Response::HTTP_OK);
     }
 
     public function delete($id)

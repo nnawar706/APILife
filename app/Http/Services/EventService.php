@@ -68,7 +68,6 @@ class EventService
                 'from_date'         => $request->from_date,
                 'to_date'           => $request->to_date,
                 'remarks'           => $request->remarks,
-                'event_status_id'   => $request->event_status_id
             ]);
 
             foreach ($request->designation_gradings as $item)
@@ -234,5 +233,21 @@ class EventService
         $event->delete();
 
         return true;
+    }
+
+    public function changeApprovalStatus(Request $request)
+    {
+        $event = $this->model->findOrFail($request->event_id);
+
+        $event->participants()->where('user_id', auth()->user()->id)->update(['approval_status' => 1]);
+    }
+
+    public function updateEventStatus($event_status_id, $id): bool
+    {
+        $event = $this->model->findOrFail($id);
+
+        $event->update(['event_status_id' => $event_status_id]);
+
+        return $event->wasChanged();
     }
 }

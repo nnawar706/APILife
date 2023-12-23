@@ -19,12 +19,12 @@ class CheckUpdateDeleteExpenseEligibility
         $expense = Expense::find($request->route('id'));
 
         if ($expense) {
-            if ($expense->event->event_status_id == 1) {
+            if ($expense->event->event_status_id !== 4) { // 4: completed
                 return $next($request);
             } else {
                 return response()->json([
                     'status' => false,
-                    'error'  => 'Unable to make changes to expenses when the event is locked.'
+                    'error'  => 'Unable to make changes to expenses when the event is completed.'
                 ], Response::HTTP_FORBIDDEN);
             }
         }
