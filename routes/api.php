@@ -84,9 +84,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('treasures/create', 'create');
     });
 
-    Route::controller(TreasurerLiabilitiesController::class)->group(function () {
-        Route::put('treasure');
-    });
+    Route::get('treasures/change_status/{tl_id}', [TreasurerLiabilitiesController::class, 'updateStatus']);
 
     Route::get('activity_logs/all', [SystemController::class, 'index']);
 });

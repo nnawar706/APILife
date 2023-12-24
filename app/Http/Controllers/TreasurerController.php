@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\TreasurerCreateRequest;
 use App\Http\Services\TreasurerService;
+use App\Jobs\TreasurerCompletion;
 use Illuminate\Support\Facades\Cache;
 use Symfony\Component\HttpFoundation\Response;
 
