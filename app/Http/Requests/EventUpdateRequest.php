@@ -41,8 +41,8 @@ class EventUpdateRequest extends FormRequest
                                         }],
             'title'               => 'required|string|max:150',
             'detail'              => 'required|string',
-            'from_date'           => 'required|date_format:Y-m-d|after_or_equal:today',
-            'to_date'             => 'nullable|date_format:Y-m-d|after:from_date',
+            'from_date'           => 'required|date_format:Y-m-d H:i|after_or_equal:today',
+            'to_date'             => 'nullable|date_format:Y-m-d H:i|after:from_date',
             'remarks'             => 'nullable|string|max:500',
             'designation_gradings'=> ['required','array',
                 function($attr, $val, $fail) {
