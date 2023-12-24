@@ -255,4 +255,16 @@ class EventService
 
         return $event->wasChanged();
     }
+
+    public function getEventParticipantList($event_id)
+    {
+        $event = $this->model->find($event_id);
+
+        if (!$event)
+        {
+            return null;
+        }
+
+        return $event->participants()->with('designation')->get();
+    }
 }

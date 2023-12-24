@@ -15,9 +15,9 @@ class Treasurer extends Model
         'completion_status' => 'boolean'
     ];
 
-    public function user()
+    public function treasurer()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     public function events()
@@ -25,8 +25,8 @@ class Treasurer extends Model
         return $this->hasMany(TreasurerEvent::class, 'treasurer_id');
     }
 
-    public function treasurerEvents()
+    public function liabilities()
     {
-        return $this->hasMany(TreasurerEvent::class, 'treasurer_id');
+        return $this->hasMany(TreasurerLiability::class, 'treasurer_id');
     }
 }

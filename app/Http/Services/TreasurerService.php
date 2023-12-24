@@ -26,7 +26,7 @@ class TreasurerService
 
             foreach ($request->events as $item)
             {
-                $treasurer->treasurerEvents()->create(['event_id' => $item]);
+                $treasurer->events()->create(['event_id' => $item]);
             }
 
             DB::commit();
@@ -40,5 +40,18 @@ class TreasurerService
 
             return $ex->getMessage();
         }
+    }
+
+    public function getAll($includeAll)
+    {
+        return $this->model
+            ->when($includeAll, function ($q) {
+                return $q->with('treasurer');
+            })
+            ->when(!$includeAll, function ($q) {
+                return $q->where('user_id', auth()->user()->id);
+            })
+            ->with('liabilities.user')
+            ->latest()->get();
     }
 }

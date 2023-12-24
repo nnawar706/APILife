@@ -2,13 +2,18 @@
 
 namespace App\Jobs;
 
+use App\Http\Services\EventService;
+use App\Models\Event;
 use App\Models\Treasurer;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class TreasurerLiabilitiesCalculation implements ShouldQueue
 {
@@ -29,11 +34,42 @@ class TreasurerLiabilitiesCalculation implements ShouldQueue
      */
     public function handle(): void
     {
-//        $treasure = Treasurer::find($this->treasurer_id);
-//
-//        if ($treasure)
-//        {
-//            $events =
-//        }
+        $treasurer = Treasurer::find($this->treasurer_id);
+
+        if ($treasurer)
+        {
+            $events = $treasurer->events()->get();
+
+            foreach ($events as $item)
+            {
+                $itemData = (new EventService(new Event()))->getInfo($item->event_id);
+
+                DB::beginTransaction();
+
+                try {
+                    $itemData = $itemData['additional_data']['payment_info'];
+
+                    foreach ($itemData as $datum) {
+                        $treasurer_user = $treasurer->liabilities()->where('user_id', $datum['user_id'])->first();
+
+                        if ($treasurer_user) {
+                            $treasurer_user->amount += $datum['overflow'];
+                            $treasurer_user->save();
+                        } else {
+                            $treasurer->liabilities()->create([
+                                'user_id' => $datum['user_id'],
+                                'amount' => $datum['overflow']
+                            ]);
+                        }
+                    }
+
+                    DB::commit();
+                } catch (QueryException $ex) {
+                    DB::rollback();
+
+                    Log::error('error: ' . $ex->getMessage());
+                }
+            }
+        }
     }
 }

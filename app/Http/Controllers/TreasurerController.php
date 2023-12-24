@@ -4,8 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\TreasurerCreateRequest;
 use App\Http\Services\TreasurerService;
-use App\Models\Treasurer;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Symfony\Component\HttpFoundation\Response;
 
 class TreasurerController extends Controller
@@ -15,6 +14,16 @@ class TreasurerController extends Controller
     public function __construct(TreasurerService $service)
     {
         $this->service = $service;
+    }
+
+    public function index()
+    {
+        $data = $this->service->getAll(auth()->user()->id === 1);
+
+        return response()->json([
+            'status' => true,
+            'data'   => $data
+        ], count($data) === 0 ? Response::HTTP_NO_CONTENT : Response::HTTP_OK);
     }
 
     public function create(TreasurerCreateRequest $request)
@@ -30,14 +39,5 @@ class TreasurerController extends Controller
             'status' => false,
             'error'  => $response
         ], Response::HTTP_INTERNAL_SERVER_ERROR);
-    }
-
-    public function tester()
-    {
-        $treasurer = Treasurer::find(2);
-
-        $events = $treasurer->events()->get();
-
-        return \response()->json(['data' => $events]);
     }
 }

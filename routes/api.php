@@ -9,6 +9,7 @@ use App\Http\Controllers\ExpenseCategoryController;
 use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\SystemController;
 use App\Http\Controllers\TreasurerController;
+use App\Http\Controllers\TreasurerLiabilitiesController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -55,6 +56,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::controller(EventController::class)->group(function () {
         Route::get('events/all', 'index');
         Route::get('events/get/{id}', 'read');
+        Route::get('events/participants/{event_id}', 'eventParticipants');
         Route::post('events/create', 'create');
         Route::put('events/approve_lock', 'approveEventLock');
 
@@ -78,10 +80,13 @@ Route::group(['middleware' => 'auth'], function () {
     });
 
     Route::controller(TreasurerController::class)->group(function () {
-        Route::post('treasurers/create', 'create');
+        Route::get('treasures/all', 'index');
+        Route::post('treasures/create', 'create');
+    });
+
+    Route::controller(TreasurerLiabilitiesController::class)->group(function () {
+        Route::put('treasure');
     });
 
     Route::get('activity_logs/all', [SystemController::class, 'index']);
 });
-
-Route::get('test', [TreasurerController::class, 'tester']);

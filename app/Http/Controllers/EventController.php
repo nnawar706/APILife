@@ -76,6 +76,8 @@ class EventController extends Controller
 
         if (!$response)
         {
+            Cache::forget('event_participants'.$id);
+
             return response()->json(['status' => true], Response::HTTP_CREATED);
         }
 
@@ -89,6 +91,8 @@ class EventController extends Controller
     {
         $this->service->removeEventParticipant($request->user_id, $id);
 
+        Cache::forget('event_participants'.$id);
+
         return response()->json(['status' => true], Response::HTTP_OK);
 
     }
@@ -97,6 +101,18 @@ class EventController extends Controller
     {
         $data = Cache::remember('event_info'.$id, 24*60*60*20, function () use ($id) {
             return $this->service->getInfo($id);
+        });
+
+        return response()->json([
+            'status' => true,
+            'data'   => $data
+        ], Response::HTTP_OK);
+    }
+
+    public function eventParticipants($event_id)
+    {
+        $data = Cache::remember('event_participants'.$event_id, 24*60*60*60, function () use ($event_id) {
+            return $this->service->getEventParticipantList($event_id);
         });
 
         return response()->json([

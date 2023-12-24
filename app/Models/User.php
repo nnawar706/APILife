@@ -115,10 +115,17 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasMany(ExpensePayer::class);
     }
 
+    // all treasures belonging to a user
     public function collectedTreasures()
     {
         return $this->hasMany(Treasurer::class, 'user_id')
             ->where('completion_status', '=', true);
+    }
+
+    // all treasurer liabilities belonging to one user
+    public function userPayables()
+    {
+        return $this->hasMany(TreasurerLiability::class, 'user_id');
     }
 
     public static function boot()
