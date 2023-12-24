@@ -15,7 +15,7 @@ use App\Http\Controllers\UserLoanController;
 use Illuminate\Support\Facades\Route;
 
 Route::post('login', [AuthController::class, 'login']);
-Route::get('refresh', [SystemController::class, 'refresh']);
+Route::get('refresh_system', [SystemController::class, 'refresh']);
 
 Route::group(['middleware' => 'auth'], function () {
 
