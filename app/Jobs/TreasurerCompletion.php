@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Models\Event;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -34,6 +35,14 @@ class TreasurerCompletion implements ShouldQueue
         {
             $this->treasurerLiability->treasurer->completion_status = 1;
             $this->treasurerLiability->treasurer->save();
+
+            $events = $this->treasurerLiability->treasurer->events()->get();
+
+            foreach ($events as $item)
+            {
+                $item->event->event_status_id = 4;
+                $item->event->save();
+            }
         }
     }
 }

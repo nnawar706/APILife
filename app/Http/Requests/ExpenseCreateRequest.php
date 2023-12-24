@@ -56,6 +56,7 @@ class ExpenseCreateRequest extends FormRequest
     public function messages()
     {
         return [
+            'expense_category_id.required' => 'Expense category fie',
             'payers.*.amount.required' => 'All the user payment amount is required.',
             'payers.*.amount.numeric'  => 'All the user payment amount ust be numeric.',
             'payers.*.amount.min'      => 'User payment amount must be at least 10.'

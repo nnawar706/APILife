@@ -34,5 +34,12 @@ class BadgeSeeder extends Seeder
             'name'      => 'Badge 3',
             'image_url' => '/images/badges/854741240089.png'
         ]);
+
+        Badge::updateOrCreate([
+            'id' => 4
+        ],[
+            'name'      => 'Badge 4',
+            'image_url' => '/images/badges/195441244350.png'
+        ]);
     }
 }

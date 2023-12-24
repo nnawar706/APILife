@@ -27,3 +27,18 @@ function clearCache(): void
 {
     Artisan::call('cache:clear');
 }
+
+
+function getThresholds($max, $min): array
+{
+    $interval = ($max - $min) / 4;
+
+    $numbers = [];
+
+    // generate 4 numbers that divide the range
+    for ($i = 1; $i <= 4; $i++) {
+        $numbers[] = intval($min + $interval * $i);
+    }
+
+    return $numbers;
+}
