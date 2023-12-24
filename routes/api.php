@@ -11,6 +11,7 @@ use App\Http\Controllers\SystemController;
 use App\Http\Controllers\TreasurerController;
 use App\Http\Controllers\TreasurerLiabilitiesController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\UserLoanController;
 use Illuminate\Support\Facades\Route;
 
 Route::post('login', [AuthController::class, 'login']);
@@ -35,6 +36,13 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('users/update', 'update');
         Route::get('users/change_status/{id}', 'updateStatus');
         Route::delete('users/delete/{id}', 'delete');
+    });
+
+    Route::controller(UserLoanController::class)->group(function () {
+        Route::get('user_loans/all', 'index');
+        Route::post('user_loans/create', 'create');
+        Route::put('user_loans/update_status/{id}', 'updateStatus');
+        Route::delete('user_loans/delete/{id}', 'delete');
     });
 
     Route::controller(EventCategoryController::class)->group(function () {
@@ -88,5 +96,3 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::get('activity_logs/all', [SystemController::class, 'index']);
 });
-
-Route::get('test', [SystemController::class, 'test']);
