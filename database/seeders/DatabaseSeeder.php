@@ -14,7 +14,8 @@ class DatabaseSeeder extends Seeder
         $this->call([
             DesignationSeeder::class,
             UserSeeder::class,
-            EventStatusSeeder::class
+            EventStatusSeeder::class,
+            BadgeSeeder::class
         ]);
     }
 }

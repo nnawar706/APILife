@@ -84,6 +84,11 @@ class User extends Authenticatable implements JWTSubject
         return $this->belongsTo(Designation::class);
     }
 
+    public function badges()
+    {
+        return $this->belongsToMany(Badge::class, 'user_badges', 'user_id');
+    }
+
     public function events()
     {
         return $this->belongsToMany(Event::class, 'event_participants', 'user_id');
@@ -134,6 +139,11 @@ class User extends Authenticatable implements JWTSubject
 
         static::created(function ($model) {
             Cache::forget('users');
+
+            UserBadge::create([
+                'user_id'  => $model->id,
+                'badge_id' => 1
+            ]);
         });
 
         static::updated(function ($model) {

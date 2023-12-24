@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Jobs\TreasurerCompletion;
 use App\Models\TreasurerLiability;
-use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class TreasurerLiabilitiesController extends Controller

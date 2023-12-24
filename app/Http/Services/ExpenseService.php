@@ -40,12 +40,13 @@ class ExpenseService
                 ]);
             }
 
-            foreach ($request->payers as $item)
-            {
-                $expense->payers()->create([
-                    'user_id'  => $item['user_id'],
-                    'amount'   => $item['amount']
-                ]);
+            if ($request->payers) {
+                foreach ($request->payers as $item) {
+                    $expense->payers()->create([
+                        'user_id' => $item['user_id'],
+                        'amount' => $item['amount']
+                    ]);
+                }
             }
 
             DB::commit();
