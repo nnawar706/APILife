@@ -2,11 +2,14 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
 
 class TreasurerLiability extends Model
 {
+    use LogsActivity;
+
     protected $guarded = ['id'];
 
     protected $casts = [
@@ -14,6 +17,21 @@ class TreasurerLiability extends Model
     ];
 
     protected $hidden = ['created_at', 'updated_at'];
+
+    protected static $recordEvents = ['updated'];
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logOnly(['treasurer_id','user_id','amount','status'])
+            ->useLogName('Treasurer Liability')
+            ->logAll();
+    }
+
+    public function getDescriptionForEvent(string $eventName): string
+    {
+        return "A treasurer liability data has been {$eventName}";
+    }
 
     public function treasurer()
     {

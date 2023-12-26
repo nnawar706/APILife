@@ -2,11 +2,14 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
 
 class Treasurer extends Model
 {
+    use LogsActivity;
+
     protected $guarded = ['id'];
 
     protected $hidden = ['created_at', 'updated_at'];
@@ -14,6 +17,20 @@ class Treasurer extends Model
     protected $casts = [
         'completion_status' => 'boolean'
     ];
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logOnly(['user_id','completion_status'])
+            ->useLogName('Treasurer')
+            ->logAll()
+            ->logOnlyDirty();
+    }
+
+    public function getDescriptionForEvent(string $eventName): string
+    {
+        return "A treasurer detail has been {$eventName}";
+    }
 
     public function treasurer()
     {

@@ -4,9 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
 
 class UserLoan extends Model
 {
+    use LogsActivity;
+
     protected $guarded = ['id'];
 
     protected $hidden = ['updated_at'];
@@ -19,6 +23,20 @@ class UserLoan extends Model
     public function selectedUser()
     {
         return $this->belongsTo(User::class, 'selected_user_id');
+    }
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logOnly(['user_id','completion_status'])
+            ->useLogName('User Loan')
+            ->logAll()
+            ->logOnlyDirty();
+    }
+
+    public function getDescriptionForEvent(string $eventName): string
+    {
+        return "A user loan has been {$eventName}";
     }
 
     public static function boot()
