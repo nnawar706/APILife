@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use App\Models\Designation;
 use App\Models\User;
+use App\Rules\EventDesignationGradingValidationRule;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -44,26 +45,7 @@ class EventUpdateRequest extends FormRequest
             'from_date'           => 'required|date_format:Y-m-d H:i|after_or_equal:today',
             'to_date'             => 'nullable|date_format:Y-m-d H:i|after:from_date',
             'remarks'             => 'nullable|string|max:500',
-            'designation_gradings'=> ['required','array',
-                function($attr, $val, $fail) {
-                    try {
-                        $designations = Designation::get();
-
-                        if ($designations->count() != count($val)) {
-                            $fail('All designation wise pricing must be present.');
-                        } else {
-                            $designations = array_map(function ($item) {
-                                return $item['designation_id'];
-                            }, $val);
-
-                            if (count($designations) != count(array_unique($designations))) {
-                                $fail('Duplicate designations detected.');
-                            }
-                        }
-                    } catch (\Throwable $th) {
-                        $fail('Invalid payload, some fields are missing.');
-                    }
-                }],
+            'designation_gradings'=> ['required','array', new EventDesignationGradingValidationRule()],
             'designation_gradings.*.amount' => 'required|numeric'
         ];
     }
