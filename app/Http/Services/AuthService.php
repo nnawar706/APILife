@@ -51,4 +51,18 @@ class AuthService
             'password' => $request->password
         ]);
     }
+
+    public function notificationMarkAsRead(Request $request): void
+    {
+        auth()->user()->unreadNotifications
+            ->when($request->input('id'), function ($q) use ($request) {
+                return $q->where('id', $request->input('id'));
+            })
+            ->markAsRead();
+    }
+
+    public function getAuthNotifications()
+    {
+        return auth()->user()->notifications()->latest()->paginate(50);
+    }
 }

@@ -22,6 +22,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::controller(AuthController::class)->group(function () {
         Route::get('profile', 'authProfile');
         Route::put('change_password', 'changePassword');
+        Route::get('notifications/all', 'getNotifications');
+        Route::get('notifications/mark_as_read', 'readNotifications');
         Route::get('refresh', 'refreshUser');
         Route::get('logout', 'logout');
     });
