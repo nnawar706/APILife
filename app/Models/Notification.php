@@ -2,9 +2,11 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Prunable;
 
-class Notification
+class Notification extends Model
 {
     use Prunable;
 
@@ -18,12 +20,12 @@ class Notification
         'id'            => 'string',
         'send_status'   => 'boolean',
         'read_at'       => 'timestamp',
-        'created_at'    => 'timestamp'
     ];
 
     public function prunable()
     {
-        return static::where('created_at', '<=', now()->subMonth(3))
-            ->whereNull('read_at');
+        return static::whereMonth('created_at', '<=', Carbon::now('Asia/Dhaka')->subMonth(3))
+            ->where('send_status', true)
+            ->whereNotNull('read_at');
     }
 }

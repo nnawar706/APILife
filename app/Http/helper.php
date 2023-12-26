@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\User;
+use App\Notifications\UserNotification;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Log;
 
@@ -41,4 +43,14 @@ function getThresholds($max, $min): array
     }
 
     return $numbers;
+}
+
+function sendNotification($user_ids, $link, $message)
+{
+    $notify_users = User::whereIn('id', $user_ids)->get();
+
+    foreach ($notify_users as $user)
+    {
+        $user->notify(new UserNotification($link, $message));
+    }
 }
