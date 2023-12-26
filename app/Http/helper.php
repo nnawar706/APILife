@@ -55,7 +55,7 @@ function sendNotification($users, $link, $message)
 }
 
 
-function pushNotification()
+function pushNotification($title, $body)
 {
     try {
         $beamsClient = new PushNotifications(
@@ -66,24 +66,24 @@ function pushNotification()
         );
 
         $publishResponse = $beamsClient->publishToInterests(
-            array("hello", "donuts"),
+            array("notifications"),
             array(
                 "fcm" => array(
                     "notification" => array(
-                        "title" => "Hi!",
-                        "body" => "This is my first Push Notification!"
+                        "title" => $title,
+                        "body" => $body
                     )
                 ),
                 "apns" => array("aps" => array(
                     "alert" => array(
-                        "title" => "Hi!",
-                        "body" => "This is my first Push Notification!"
+                        "title" => $title,
+                        "body" => $body
                     )
                 )),
                 "web" => array(
                     "notification" => array(
-                        "title" => "Hi!",
-                        "body" => "This is my first Push Notification!"
+                        "title" => $title,
+                        "body" => $body
                     )
                 )
             ));

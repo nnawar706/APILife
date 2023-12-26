@@ -71,4 +71,19 @@ class UserLoanService
 
         return null;
     }
+
+    public function getLoanSummary($user_id)
+    {
+        return $this->model
+            ->where('user_id', $user_id)
+            ->where('user_loans.status', 1)
+            ->selectRaw(
+                'selected_user_id,
+                SUM(CASE WHEN type = 1 THEN amount ELSE 0 END) AS total_debited_amount,
+                SUM(CASE WHEN type = 2 THEN amount ELSE 0 END) AS total_credited_amount'
+            )
+            ->with('selectedUser')
+            ->groupBy('selected_user_id')
+            ->get();
+    }
 }

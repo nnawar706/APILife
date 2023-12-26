@@ -35,10 +35,12 @@ class NotifyUsers implements ShouldQueue
         if ($this->allUser)
         {
             $users = User::status()->get();
-
-            sendNotification($users, $this->link, $this->message);
-
-
         }
+        else
+        {
+            $users = User::whereIn('id', $this->users)->get();
+        }
+
+        sendNotification($users, $this->link, $this->message);
     }
 }

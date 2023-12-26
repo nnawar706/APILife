@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\UserLoanCreateRequest;
 use App\Http\Services\UserLoanService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Symfony\Component\HttpFoundation\Response;
 
 class UserLoanController extends Controller
@@ -75,5 +76,27 @@ class UserLoanController extends Controller
             'status' => false,
             'error'  => $response
         ], Response::HTTP_FORBIDDEN);
+    }
+
+    public function summary(Request $request)
+    {
+        if ($request->has('user_id') && auth()->user()->id != 1)
+        {
+            return response()->json([
+                'status' => false,
+                'error'  => 'You are not allowed to fetch the data.'
+            ], Response::HTTP_FORBIDDEN);
+        }
+
+        $user_id = $request->user_id ?? auth()->user()->id;
+
+        $data = Cache::remember('user_loans_summary'.$user_id, 24*60*60*60, function () use ($user_id) {
+            return $this->service->getLoanSummary($user_id);
+        });
+
+        return response()->json([
+            'status' => true,
+            'data'   => $data
+        ], count($data) == 0 ? Response::HTTP_NO_CONTENT : Response::HTTP_OK);
     }
 }

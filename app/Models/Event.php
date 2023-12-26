@@ -103,6 +103,8 @@ class Event extends Model
 
         static::created(function ($model) {
             Cache::forget('events');
+
+            // notify users
             dispatch(new NotifyUsers(null, true,
                 'pages/expense-calculator/extra-vaganza',
                 auth()->user()->name .' has created a new extravaganza.'));
