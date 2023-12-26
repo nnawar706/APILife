@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Models\Designation;
+use App\Models\EventCategory;
 use App\Models\User;
 use App\Rules\EventDesignationGradingValidationRule;
 use Illuminate\Contracts\Validation\Validator;
@@ -28,12 +29,20 @@ class EventCreateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'event_category_id' => 'required|exists:event_categories,id',
+            'event_category_id' => ['required',
+                                    function($attr, $val, $fail) {
+                                        $cat = EventCategory::status()->find($val);
+
+                                        if (!$cat)
+                                        {
+                                            $fail('No active extravaganza category found.');
+                                        }
+                                    }],
             'lead_user_id'      => ['required','integer',
                                     function($attr, $val, $fail) {
-                                        $user = User::find($val);
+                                        $user = User::status()->find($val);
 
-                                        if (!$user || !$user->status)
+                                        if (!$user)
                                         {
                                             $fail('No active user found.');
                                         }
@@ -46,7 +55,7 @@ class EventCreateRequest extends FormRequest
             'participants'      => ['required','array','min:1',
                                     function($attr, $val, $fail) {
                                         $users = User::whereIn('id', $val)
-                                            ->where('status', true)->count();
+                                            ->status()->count();
 
                                         if (count(array_unique($val)) != count($val))
                                         {
@@ -65,13 +74,6 @@ class EventCreateRequest extends FormRequest
                                     }],
             'designation_gradings'          => ['required','array', new EventDesignationGradingValidationRule()],
             'designation_gradings.*.amount' => 'required|numeric|min:10'
-        ];
-    }
-
-    public function messages()
-    {
-        return [
-            'event_category_id.exists' => 'Invalid extravaganza category detected.'
         ];
     }
 

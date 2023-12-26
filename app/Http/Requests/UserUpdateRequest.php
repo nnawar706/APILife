@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -20,7 +21,7 @@ class UserUpdateRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     * @return array<string, ValidationRule|array|string>
      */
     public function rules(): array
     {
@@ -28,7 +29,7 @@ class UserUpdateRequest extends FormRequest
             'designation_id'        => 'required|exists:designations,id',
             'name'                  => 'required|string|max:100',
             'phone_no'              => ['required','regex:/^(?:\+88|88)?(01[3-9]\d{8})$/',
-                'unique:users,phone_no,'.auth()->user()->id],
+                                        'unique:users,phone_no,'.auth()->user()->id],
             'birthday'              => 'required|date_format:d-m',
             'photo'                 => 'image|mimes:jpeg,png,jpg|max:2048'
         ];

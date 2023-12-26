@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -41,6 +42,11 @@ class User extends Authenticatable implements JWTSubject
         'password'     => 'hashed',
         'status'       => 'boolean'
     ];
+
+    public function scopeStatus(Builder $q)
+    {
+        $q->where('status', '=', true);
+    }
 
     public function getActivitylogOptions(): LogOptions
     {

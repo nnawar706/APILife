@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Models\Event;
+use App\Models\ExpenseCategory;
 use App\Rules\ExpenseBearerValidationRule;
 use App\Rules\ExpensePayerValidationRule;
 use Illuminate\Contracts\Validation\ValidationRule;
@@ -29,18 +30,26 @@ class ExpenseCreateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'expense_category_id' => 'required|exists:expense_categories,id',
-            'event_id'            => ['required','exists:events,id',
+            'expense_category_id' => ['required',
+                                        function($attr, $val, $fail) {
+                                            $cat = ExpenseCategory::status()->find($val);
+
+                                            if (!$cat)
+                                            {
+                                                $fail('No active expense category found.');
+                                            }
+                                        }],
+            'event_id'            => ['required',
                                         function($attr, $val, $fail) {
                                             $event = Event::find($val);
 
                                             if (!$event)
                                             {
-                                                $fail('Invalid event detected.');
+                                                $fail('Invalid extravaganza detected.');
                                             }
                                             else if ($event->event_status_id != 1)
                                             {
-                                                $fail('Unable to add expenses to locked events.');
+                                                $fail('Unable to add expenses to locked extravaganzas.');
                                             }
                                         }],
             'title'               => 'required|string|max:150',
@@ -57,9 +66,9 @@ class ExpenseCreateRequest extends FormRequest
     {
         return [
             'expense_category_id.required' => 'Expense category field is required.',
-            'payers.*.amount.required' => 'All the user payment amount is required.',
-            'payers.*.amount.numeric'  => 'All the user payment amount ust be numeric.',
-            'payers.*.amount.min'      => 'User payment amount must be at least 10.'
+            'payers.*.amount.required'     => 'All the user payment amount is required.',
+            'payers.*.amount.numeric'      => 'All the user payment amount ust be numeric.',
+            'payers.*.amount.min'          => 'User payment amount must be at least 10.'
         ];
     }
 

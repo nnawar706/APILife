@@ -51,7 +51,7 @@ class UserLoanController extends Controller
     public function updateStatus(Request $request, $id)
     {
         $validate = \Validator::make($request->all(), [
-            'status' => 'required|in:1,2,3'
+            'status' => 'required|in:1,2'
         ],[
             'status.in' => 'Invalid status detected.'
         ]);

@@ -31,7 +31,7 @@ class EventAddParticipantsRequest extends FormRequest
             'users.*'  => 'required|integer|distinct',
             'users'    => ['required','array',
                         function($attr, $val, $fail) {
-                            $users = User::whereIn('id', $val)->where('status', true)->count();
+                            $users = User::whereIn('id', $val)->status()->count();
 
                             if ($users !== count($val))
                             {

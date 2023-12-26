@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Models\Designation;
+use App\Models\EventCategory;
 use App\Models\User;
 use App\Rules\EventDesignationGradingValidationRule;
 use Illuminate\Contracts\Validation\Validator;
@@ -30,12 +31,20 @@ class EventUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'event_category_id'   => 'required|exists:event_categories,id',
+            'event_category_id'   => ['required',
+                                        function($attr, $val, $fail) {
+                                            $cat = EventCategory::status()->find($val);
+
+                                            if (!$cat)
+                                            {
+                                                $fail('No active extravaganza category found.');
+                                            }
+                                        }],
             'lead_user_id'        => ['required','integer',
                                         function($attr, $val, $fail) {
-                                            $user = User::find($val);
+                                            $user = User::status()->find($val);
 
-                                            if (!$user || !$user->status)
+                                            if (!$user)
                                             {
                                                 $fail('No active user found.');
                                             }

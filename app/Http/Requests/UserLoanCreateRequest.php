@@ -29,7 +29,7 @@ class UserLoanCreateRequest extends FormRequest
         return [
             'selected_user_id' => ['required','integer','not_in:'.auth()->user()->id,
                                     function($attr, $val, $fail) {
-                                        $user = User::find($val);
+                                        $user = User::status()->find($val);
 
                                         if(!$user)
                                         {

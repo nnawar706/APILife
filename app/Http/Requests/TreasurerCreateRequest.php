@@ -29,15 +29,11 @@ class TreasurerCreateRequest extends FormRequest
         return [
             'user_id' => ['required','integer',
                         function($attr, $val, $fail) {
-                            $user = User::find($val);
+                            $user = User::status()->find($val);
 
                             if (!$user)
                             {
-                                $fail('Invalid user detected.');
-                            }
-                            else if (!$user->status)
-                            {
-                                $fail('Selected user is not active.');
+                                $fail('No active user found.');
                             }
                         }],
             'events'   => ['required','array','min:1','distinct',
