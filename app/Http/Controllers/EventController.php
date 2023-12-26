@@ -7,6 +7,7 @@ use App\Http\Requests\EventApproveLockRequest;
 use App\Http\Requests\EventCreateRequest;
 use App\Http\Requests\EventRemoveParticipantsRequest;
 use App\Http\Requests\EventUpdateRequest;
+use App\Http\Requests\EventUpdateStatusRequest;
 use App\Http\Services\EventService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
@@ -63,7 +64,7 @@ class EventController extends Controller
         ], Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 
-    public function updateStatus(Request $request, $id)
+    public function updateStatus(EventUpdateStatusRequest $request, $id)
     {
         $response = $this->service->updateEventStatus($request->event_status_id, $id);
 
