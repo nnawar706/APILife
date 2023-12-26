@@ -81,6 +81,7 @@ Route::group(['middleware' => 'auth'], function () {
     });
 
     Route::controller(ExpenseController::class)->group(function () {
+        Route::get('expenses/get/{id}', 'read');
         Route::get('expenses/log/{event_id}', 'eventExpenseLog');
         Route::post('expenses/create', 'create');
 

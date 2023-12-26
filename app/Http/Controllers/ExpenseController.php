@@ -16,6 +16,18 @@ class ExpenseController extends Controller
         $this->service = $service;
     }
 
+    public function read($id)
+    {
+        $data = Cache::remember('expense'.$id, 24*60*60*7, function () use ($id) {
+            return $this->service->getExpenseInfo($id);
+        });
+
+        return response()->json([
+            'status' => true,
+            'data'   => $data
+        ], is_null($data) ? Response::HTTP_NO_CONTENT : Response::HTTP_OK);
+    }
+
     public function create(ExpenseCreateRequest $request)
     {
         $response = $this->service->storeNewExpense($request);
@@ -37,6 +49,8 @@ class ExpenseController extends Controller
 
         if (is_null($response))
         {
+            Cache::forget('expense'.$id);
+
             return response()->json(['status' => true], Response::HTTP_OK);
         }
 

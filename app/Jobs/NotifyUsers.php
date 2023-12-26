@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -20,7 +21,10 @@ class NotifyUsers implements ShouldQueue
      */
     public function __construct($users, $allUser, $link, $message)
     {
-
+        $this->users   = $users;
+        $this->allUser = $allUser;
+        $this->link    = $link;
+        $this->message = $message;
     }
 
     /**
@@ -28,6 +32,13 @@ class NotifyUsers implements ShouldQueue
      */
     public function handle(): void
     {
-        //
+        if ($this->allUser)
+        {
+            $users = User::status()->get();
+
+            sendNotification($users, $this->link, $this->message);
+
+
+        }
     }
 }

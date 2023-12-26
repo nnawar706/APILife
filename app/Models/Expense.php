@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
 
@@ -47,6 +46,7 @@ class Expense extends Model
         });
 
         static::deleted(function ($model) {
+            Cache::forget('expense'.$model->id);
             Cache::forget('event_info'.$model->event_id);
             Cache::forget('event_expense_log'.$model->event_id);
         });

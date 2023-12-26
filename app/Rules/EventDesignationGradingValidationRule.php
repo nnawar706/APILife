@@ -19,9 +19,11 @@ class EventDesignationGradingValidationRule implements ValidationRule
         try {
             $designations = Designation::get();
 
+            // check if all designation data exist
             if ($designations->count() != count($value)) {
                 $fail('All designation wise pricing must be present.');
             } else {
+                // check if any duplicate designation data exists
                 $designations = array_map(function ($item) {
                     return $item['designation_id'];
                 }, $value);

@@ -13,7 +13,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule): void
     {
         $schedule->command('app:assign-user-badge')->everyMinute();
-        $schedule->command('app:wish-happy-birthday');
+//        $schedule->command('app:wish-happy-birthday');
         $schedule->command('model:prune')->daily();
     }
 

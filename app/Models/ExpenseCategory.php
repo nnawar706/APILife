@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Cache;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
@@ -52,7 +53,7 @@ class ExpenseCategory extends Model
         });
 
         static::updated(function ($model) {
-            Cache::forget('expense_categories');
+            clearCache();
         });
 
         static::deleted(function ($model) {

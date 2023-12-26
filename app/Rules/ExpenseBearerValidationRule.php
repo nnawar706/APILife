@@ -33,7 +33,7 @@ class ExpenseBearerValidationRule implements ValidationRule
                     $fail('Invalid extravaganza selected.');
                 }
 
-                // error if any bearer user or paid by user is not present in the participant list
+                // error if any bearer user is not present in the participant list
                 else if (($event->participants()->whereIn('users.id', $userIds)->count() != count($userIds))) {
                     $fail('Some users do not belong to the participant list.');
                 }

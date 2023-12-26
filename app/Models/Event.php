@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Jobs\TreasurerLiabilitiesCalculation;
+use App\Jobs\NotifyUsers;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
@@ -103,6 +103,9 @@ class Event extends Model
 
         static::created(function ($model) {
             Cache::forget('events');
+            dispatch(new NotifyUsers(null, true,
+                'pages/expense-calculator/extra-vaganza',
+                auth()->user()->name .' has created a new extravaganza.'));
         });
 
         static::updated(function ($model) {
