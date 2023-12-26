@@ -106,12 +106,9 @@ class ExpenseService
 
             DB::commit();
 
-            if ($expense->wasChanged())
-            {
-                Cache::forget('event_info'.$expense->event_id);
-            }
+            Cache::forget('event_info'.$expense->event_id);
 
-            return $expense->wasChanged();
+            return null;
         } catch (QueryException $ex)
         {
             DB::rollback();

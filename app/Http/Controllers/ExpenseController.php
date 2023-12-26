@@ -35,10 +35,9 @@ class ExpenseController extends Controller
     {
         $response = $this->service->updateInfo($request, $id);
 
-        if (is_bool($response))
+        if (is_null($response))
         {
-            return response()->json(['status' => true],
-                $response ? Response::HTTP_OK : Response::HTTP_NOT_MODIFIED);
+            return response()->json(['status' => true], Response::HTTP_OK);
         }
 
         return response()->json([
