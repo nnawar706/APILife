@@ -14,6 +14,7 @@ class Kernel extends ConsoleKernel
     {
         $schedule->command('app:assign-user-badge')->everyMinute();
         $schedule->command('app:wish-happy-birthday');
+        $schedule->command('model:prune')->daily();
     }
 
     /**
