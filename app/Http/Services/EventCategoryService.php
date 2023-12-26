@@ -21,7 +21,7 @@ class EventCategoryService
             ->withCount('events')->get();
     }
 
-    public function storeNewCategory(Request $request)
+    public function storeNewCategory(Request $request): void
     {
         $category = $this->model->create([
             'name' => $request->name
@@ -30,7 +30,7 @@ class EventCategoryService
         saveImage($request->file('icon'), '/images/event_categories_icons/', $category, 'icon_url');
     }
 
-    public function updateInfo(Request $request, $id)
+    public function updateInfo(Request $request, $id): bool
     {
         $category = $this->model->findOrFail($id);
 
@@ -48,7 +48,7 @@ class EventCategoryService
         return $category->wasChanged();
     }
 
-    public function updateCategoryStatus($id)
+    public function updateCategoryStatus($id): void
     {
         $category = $this->model->findOrFail($id);
 
@@ -56,7 +56,7 @@ class EventCategoryService
         $category->save();
     }
 
-    public function removeCategory($id)
+    public function removeCategory($id): bool
     {
         $category = $this->model->findOrFail($id);
 

@@ -45,7 +45,7 @@ class AuthService
         return (new UserService(new User()))->getUserData(auth()->user()->id);
     }
 
-    public function updateUserPassword(Request $request)
+    public function updateUserPassword(Request $request): void
     {
         auth()->user()->update([
             'password' => $request->password

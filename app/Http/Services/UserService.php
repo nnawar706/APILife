@@ -32,7 +32,7 @@ class UserService
             ->find($id);
     }
 
-    public function storeNewUser(Request $request)
+    public function storeNewUser(Request $request): void
     {
         $user = $this->model->create([
             'designation_id'    => $request->designation_id,
@@ -45,7 +45,7 @@ class UserService
         saveImage(request()->file('photo'), '/images/users/', $user, 'photo_url');
     }
 
-    public function updateInfo(Request $request)
+    public function updateInfo(Request $request): bool
     {
         $user = $this->model->find(auth()->user()->id);
 
@@ -66,7 +66,7 @@ class UserService
         return $user->wasChanged();
     }
 
-    public function removeUser($id)
+    public function removeUser($id): bool
     {
         $user = $this->model->findOrFail($id);
 
@@ -80,7 +80,7 @@ class UserService
         }
     }
 
-    public function updateUserStatus($id)
+    public function updateUserStatus($id): void
     {
         $user = $this->model->findOrFail($id);
 
