@@ -31,6 +31,13 @@ class EventCategoryCreateRequest extends FormRequest
         ];
     }
 
+    public function messages()
+    {
+        return [
+            'name.unique' => 'Selected extravaganza category name is already taken.'
+        ];
+    }
+
     protected function failedValidation(Validator $validator)
     {
         throw new HttpResponseException(response()->json([

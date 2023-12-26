@@ -32,16 +32,16 @@ class EventApproveLockRequest extends FormRequest
 
                                 if (!$event)
                                 {
-                                    $fail('Invalid event detected.');
+                                    $fail('Invalid extravaganza detected.');
                                 }
                                 else {
                                     if ($event->event_status_id != 2)
                                     {
-                                        $fail('Unable to approve event until it has been locked.');
+                                        $fail('Unable to approve extravaganza until it has been locked.');
                                     }
                                     else if ($event->participants()->where('users.id', auth()->user()->id)->doesntExist())
                                     {
-                                        $fail('You do not belong to the event participant list.');
+                                        $fail('You do not belong to the extravaganza participant list.');
                                     }
                                 }
 

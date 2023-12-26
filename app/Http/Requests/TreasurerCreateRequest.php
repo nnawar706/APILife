@@ -46,17 +46,17 @@ class TreasurerCreateRequest extends FormRequest
 
                                 if ($events->clone()->count() != count($val))
                                 {
-                                    $fail('Duplicate events detected.');
+                                    $fail('Duplicate extravaganzas detected.');
                                 }
 
                                 else if ($events->clone()->whereHas('treasurer')->exists())
                                 {
-                                    $fail('Some of the selected events have treasurer.');
+                                    $fail('Some of the selected extravaganzas have treasurer.');
                                 }
 
                                 else if ($events->clone()->where('event_status_id', '=', 1)->exists())
                                 {
-                                    $fail('Some of the events are not approved yet.');
+                                    $fail('Some of the extravaganzas are not approved yet.');
                                 }
                             }]
         ];

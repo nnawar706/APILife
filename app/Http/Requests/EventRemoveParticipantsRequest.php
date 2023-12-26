@@ -34,11 +34,11 @@ class EventRemoveParticipantsRequest extends FormRequest
 
                                 if (!$event)
                                 {
-                                    $fail('Invalid event detected.');
+                                    $fail('Invalid extravaganza detected.');
                                 }
 
                                 else if ($event->lead_user_id == $val) {
-                                    $fail('Event lead user cannot be removed from participant list.');
+                                    $fail('Extravaganza lead user cannot be removed from participant list.');
                                 }
 
                                 else {

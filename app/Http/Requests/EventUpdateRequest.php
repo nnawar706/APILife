@@ -50,6 +50,13 @@ class EventUpdateRequest extends FormRequest
         ];
     }
 
+    public function messages()
+    {
+        return [
+            'event_category_id.exists' => 'Invalid extravaganza category detected.'
+        ];
+    }
+
     protected function failedValidation(Validator $validator)
     {
         throw new HttpResponseException(response()->json([

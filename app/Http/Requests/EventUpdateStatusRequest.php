@@ -33,14 +33,14 @@ class EventUpdateStatusRequest extends FormRequest
 
                                         if (!$event)
                                         {
-                                            $fail('Invalid event detected.');
+                                            $fail('Invalid extravaganza detected.');
                                         }
                                         else {
                                             if ($val == 2)
                                             {
                                                 if ($event->expenses()->whereDoesntHave('payers')->exists())
                                                 {
-                                                    $fail('Unable to lock event when payment is not complete.');
+                                                    $fail('Unable to lock extravaganza when payment is not complete.');
                                                 }
                                             }
                                         }
