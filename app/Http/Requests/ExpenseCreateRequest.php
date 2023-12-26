@@ -5,6 +5,7 @@ namespace App\Http\Requests;
 use App\Models\Event;
 use App\Rules\ExpenseBearerValidationRule;
 use App\Rules\ExpensePayerValidationRule;
+use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -23,7 +24,7 @@ class ExpenseCreateRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     * @return array<string, ValidationRule|array|string>
      */
     public function rules(): array
     {
@@ -46,7 +47,6 @@ class ExpenseCreateRequest extends FormRequest
             'unit_cost'           => 'required|numeric|min:1',
             'quantity'            => 'required|integer|min:1',
             'remarks'             => 'nullable|string|max:300',
-            'paid_at'             => 'nullable|date_format:Y-m-d H:i|before_or_equal:today',
             'bearers'             => ['required','array','min:1', new ExpenseBearerValidationRule()],
             'payers'              => ['sometimes','array','min:1', new ExpensePayerValidationRule()],
             'payers.*.amount'     => 'required|numeric|min:10'
@@ -56,7 +56,7 @@ class ExpenseCreateRequest extends FormRequest
     public function messages()
     {
         return [
-            'expense_category_id.required' => 'Expense category fie',
+            'expense_category_id.required' => 'Expense category field is required.',
             'payers.*.amount.required' => 'All the user payment amount is required.',
             'payers.*.amount.numeric'  => 'All the user payment amount ust be numeric.',
             'payers.*.amount.min'      => 'User payment amount must be at least 10.'

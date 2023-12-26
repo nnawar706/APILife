@@ -4,6 +4,7 @@ use App\Models\User;
 use App\Notifications\UserNotification;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Log;
+use Pusher\PushNotifications\PushNotifications;
 
 function saveImage($image, $path, $model, $field): void
 {
@@ -52,5 +53,47 @@ function sendNotification($user_ids, $link, $message)
     foreach ($notify_users as $user)
     {
         $user->notify(new UserNotification($link, $message));
+    }
+}
+
+
+function pushNotification()
+{
+    try {
+        $beamsClient = new PushNotifications(
+            array(
+                "instanceId" => env('PUSHER_INSTANCE_ID', ''),
+                "secretKey" => env('PUSHER_SECRET_KEY', ''),
+            )
+        );
+
+        $publishResponse = $beamsClient->publishToInterests(
+            array("hello", "donuts"),
+            array(
+                "fcm" => array(
+                    "notification" => array(
+                        "title" => "Hi!",
+                        "body" => "This is my first Push Notification!"
+                    )
+                ),
+                "apns" => array("aps" => array(
+                    "alert" => array(
+                        "title" => "Hi!",
+                        "body" => "This is my first Push Notification!"
+                    )
+                )),
+                "web" => array(
+                    "notification" => array(
+                        "title" => "Hi!",
+                        "body" => "This is my first Push Notification!"
+                    )
+                )
+            ));
+
+        return response()->json($publishResponse);
+
+    } catch (Throwable $th)
+    {
+        return response()->json('push notification error: ' . $th->getMessage());
     }
 }

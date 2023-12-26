@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ExpenseCreateRequest;
-use App\Http\Requests\ExpenseUpdateRequest;
 use App\Http\Services\ExpenseService;
 use Illuminate\Support\Facades\Cache;
 use Symfony\Component\HttpFoundation\Response;
@@ -32,7 +31,7 @@ class ExpenseController extends Controller
         ], Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 
-    public function update(ExpenseUpdateRequest $request, $id)
+    public function update(ExpenseCreateRequest $request, $id)
     {
         $response = $this->service->updateInfo($request, $id);
 
