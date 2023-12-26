@@ -72,8 +72,7 @@ class ExpenseService
                 'title'               => $request->title,
                 'unit_cost'           => $request->unit_cost,
                 'quantity'            => $request->quantity,
-                'remarks'             => $request->remarks,
-                'paid_at'             => $request->paid_at
+                'remarks'             => $request->remarks
             ]);
 
             if ($request->has('bearers'))

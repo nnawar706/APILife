@@ -38,7 +38,7 @@ class EventUpdateStatusRequest extends FormRequest
                                         else {
                                             if ($val == 2)
                                             {
-                                                if ($event->expensePayers()->sum('amount') != $event->amount)
+                                                if ($event->expenses()->whereDoesntHave('payers')->exists())
                                                 {
                                                     $fail('Unable to lock event when payment is not complete.');
                                                 }
