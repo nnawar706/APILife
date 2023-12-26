@@ -24,8 +24,7 @@ class EventCategory extends Model
         return LogOptions::defaults()
             ->logOnly(['name','icon_url','status'])
             ->useLogName('Event Category')
-            ->logAll()
-            ->logOnlyDirty();
+            ->logAll();
     }
 
     public function getDescriptionForEvent(string $eventName): string

@@ -48,7 +48,7 @@ class User extends Authenticatable implements JWTSubject
             ->logOnly(['designation_id','name','phone_no','birthday','photo_url','status'])
             ->logExcept(['password', 'updated_at'])
             ->useLogName('User')
-            ->logOnlyDirty();
+            ->logAll();
     }
 
     public function getDescriptionForEvent(string $eventName): string

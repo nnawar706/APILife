@@ -23,8 +23,7 @@ class Treasurer extends Model
         return LogOptions::defaults()
             ->logOnly(['user_id','completion_status'])
             ->useLogName('Treasurer')
-            ->logAll()
-            ->logOnlyDirty();
+            ->logAll();
     }
 
     public function getDescriptionForEvent(string $eventName): string

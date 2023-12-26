@@ -24,8 +24,7 @@ class ExpenseCategory extends Model
         return LogOptions::defaults()
             ->logOnly(['name','icon_url','status'])
             ->useLogName('Expense Category')
-            ->logAll()
-            ->logOnlyDirty();
+            ->logAll();
     }
 
     public function getDescriptionForEvent(string $eventName): string

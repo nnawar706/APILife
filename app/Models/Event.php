@@ -29,8 +29,7 @@ class Event extends Model
         return LogOptions::defaults()
             ->logOnly(['event_category_id','lead_user_id','title','detail','from_date','to_date','remarks','event_status_id'])
             ->useLogName('Extravaganza')
-            ->logAll()
-            ->logOnlyDirty();
+            ->logAll();
     }
 
     public function getDescriptionForEvent(string $eventName): string

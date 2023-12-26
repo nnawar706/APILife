@@ -30,8 +30,7 @@ class UserLoan extends Model
         return LogOptions::defaults()
             ->logOnly(['user_id','completion_status'])
             ->useLogName('User Loan')
-            ->logAll()
-            ->logOnlyDirty();
+            ->logAll();
     }
 
     public function getDescriptionForEvent(string $eventName): string
