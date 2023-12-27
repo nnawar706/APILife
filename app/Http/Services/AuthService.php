@@ -63,6 +63,8 @@ class AuthService
 
     public function getAuthNotifications()
     {
+        auth()->user()->unreadNotifications()->update(['send_status' => 1]);
+
         return auth()->user()->notifications()->latest()->paginate(50);
     }
 }

@@ -36,6 +36,29 @@ class AuthController extends Controller
         ], Response::HTTP_UNAUTHORIZED);
     }
 
+    public function authenticatePusher()
+    {
+        try {
+            $beamsClient = getBeamsClient();
+
+            $beamsToken = $beamsClient->generateToken(auth()->user()->id);
+
+            return response()->json([
+                'status' => true,
+                'data'   => array(
+                    'beams_token' => $beamsToken
+                )
+            ], Response::HTTP_OK);
+        }
+        catch (\Throwable $th)
+        {
+            return response()->json([
+                'status' => false,
+                'error'  => $th->getMessage()
+            ], Response::HTTP_BAD_REQUEST);
+        }
+    }
+
     public function refreshUser()
     {
         $data = $this->service->refreshUser();

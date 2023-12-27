@@ -1,6 +1,5 @@
 <?php
 
-use App\Models\User;
 use App\Notifications\UserNotification;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Log;
@@ -54,44 +53,12 @@ function sendNotification($users, $link, $message)
     }
 }
 
-
-function pushNotification($title, $body)
+function getBeamsClient()
 {
-    try {
-        $beamsClient = new PushNotifications(
-            array(
-                "instanceId" => env('PUSHER_INSTANCE_ID', ''),
-                "secretKey" => env('PUSHER_SECRET_KEY', ''),
-            )
-        );
-
-        $publishResponse = $beamsClient->publishToInterests(
-            array("notifications"),
-            array(
-                "fcm" => array(
-                    "notification" => array(
-                        "title" => $title,
-                        "body" => $body
-                    )
-                ),
-                "apns" => array("aps" => array(
-                    "alert" => array(
-                        "title" => $title,
-                        "body" => $body
-                    )
-                )),
-                "web" => array(
-                    "notification" => array(
-                        "title" => $title,
-                        "body" => $body
-                    )
-                )
-            ));
-
-        return response()->json($publishResponse);
-
-    } catch (Throwable $th)
-    {
-        return response()->json('push notification error: ' . $th->getMessage());
-    }
+    return new PushNotifications(
+        array(
+            "instanceId" => env('PUSHER_INSTANCE_ID', ''),
+            "secretKey" => env('PUSHER_SECRET_KEY', ''),
+        )
+    );
 }
