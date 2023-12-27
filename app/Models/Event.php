@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Jobs\NotifyNewEvent;
 use App\Jobs\NotifyUsers;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -108,6 +109,8 @@ class Event extends Model
             dispatch(new NotifyUsers(null, true,
                 'pages/expense-calculator/extra-vaganza',
                 auth()->user()->name .' has created a new extravaganza.'));
+
+            dispatch(new NotifyNewEvent($model));
         });
 
         static::updated(function ($model) {

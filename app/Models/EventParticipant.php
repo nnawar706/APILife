@@ -39,8 +39,7 @@ class EventParticipant extends Model
         });
 
         static::deleted(function ($model) {
-            Cache::forget('events');
-            Cache::forget('event_info'.$model->event_id);
+
         });
     }
 }

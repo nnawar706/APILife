@@ -5,6 +5,7 @@ namespace App\Http\Services;
 use App\Models\Event;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -218,6 +219,9 @@ class EventService
         $event = $this->model->findOrFail($id);
 
         $event->participants()->detach([$user_id]);
+
+        Cache::forget('events');
+        Cache::forget('event_info'.$id);
     }
 
     public function removeEvent($id): bool
