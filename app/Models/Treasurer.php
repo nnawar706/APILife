@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Jobs\NotifyUsers;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
@@ -44,5 +45,14 @@ class Treasurer extends Model
     public function liabilities()
     {
         return $this->hasMany(TreasurerLiability::class, 'treasurer_id');
+    }
+
+    public static function boot()
+    {
+        parent::boot();
+
+        static::created(function ($model) {
+            dispatch(new NotifyUsers([$model->user_id], false, '', 'You have been selected as a treasurer.'));
+        });
     }
 }

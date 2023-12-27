@@ -46,9 +46,9 @@ class UserLoanService
         {
             return 'Unable to delete loans that were not created by you.';
         }
-        if ($loan->status === 3)
+        if ($loan->status == 1)
         {
-            return 'Unable to delete loan once it is paid.';
+            return 'Unable to delete loan once it is accepted.';
         }
 
         $loan->delete();

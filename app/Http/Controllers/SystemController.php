@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Enums\BadgeWeight;
+use App\Models\Event;
 use App\Models\User;
 use App\Models\UserBadge;
+use App\Notifications\UserNotification;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;

@@ -48,6 +48,11 @@ class ExpenseCategoryController extends Controller
     {
         $status = $this->service->updateInfo($request, $id);
 
+        if ($status)
+        {
+            clearCache();
+        }
+
         return response()->json([
             'status' => $status,
         ], $status ? Response::HTTP_OK : Response::HTTP_NOT_MODIFIED);

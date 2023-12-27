@@ -2,12 +2,9 @@
 
 namespace App\Models;
 
-use App\Jobs\NotifyNewEvent;
-use App\Jobs\NotifyUsers;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Cache;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
 
@@ -91,36 +88,5 @@ class Event extends Model
     public function treasurer()
     {
         return $this->hasOne(TreasurerEvent::class, 'event_id');
-    }
-
-
-    public static function boot()
-    {
-        parent::boot();
-
-        static::creating(function ($model) {
-            $model->event_status_id = 1;
-        });
-
-        static::created(function ($model) {
-            Cache::forget('events');
-
-            // notify users
-            dispatch(new NotifyUsers(null, true,
-                'pages/expense-calculator/extra-vaganza',
-                auth()->user()->name .' has created a new extravaganza.'));
-
-            dispatch(new NotifyNewEvent($model));
-        });
-
-        static::updated(function ($model) {
-            Cache::forget('events');
-            Cache::forget('event_info'.$model->id);
-        });
-
-        static::deleted(function ($model) {
-            Cache::forget('events');
-            Cache::forget('event_info'.$model->id);
-        });
     }
 }
