@@ -3,6 +3,7 @@
 namespace App\Http\Services;
 
 use App\Models\UserLoan;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class UserLoanService
@@ -74,7 +75,11 @@ class UserLoanService
 
     public function getLoanSummary($user_id)
     {
-        return $this->model
+        $last_week  = Carbon::now('Asia/Dhaka')->subWeek(1);
+        $last_month = Carbon::now('Asia/Dhaka')->subMonth(1);
+        $last_year  = Carbon::now('Asia/Dhaka')->subYear(1);
+
+        $summary = $this->model->clone()
             ->where('user_id', $user_id)
             ->where('user_loans.status', 1)
             ->selectRaw(
@@ -85,5 +90,41 @@ class UserLoanService
             ->with('selectedUser')
             ->groupBy('selected_user_id')
             ->get();
+
+        $weekly = $this->model->clone()
+            ->where('user_id', $user_id)
+            ->where('user_loans.status', 1)
+            ->whereBetween('created_at', [$last_week, Carbon::now('Asia/Dhaka')])
+            ->selectRaw(
+                'SUM(CASE WHEN type = 1 THEN amount ELSE 0 END) AS total_debited_amount,
+                SUM(CASE WHEN type = 2 THEN amount ELSE 0 END) AS total_credited_amount'
+            )->first();
+
+        $monthly = $this->model->clone()
+            ->where('user_id', $user_id)
+            ->where('user_loans.status', 1)
+            ->whereBetween('created_at', [$last_month, Carbon::now('Asia/Dhaka')])
+            ->selectRaw(
+                'SUM(CASE WHEN type = 1 THEN amount ELSE 0 END) AS total_debited_amount,
+                SUM(CASE WHEN type = 2 THEN amount ELSE 0 END) AS total_credited_amount'
+            )->first();
+
+        $yearly = $this->model->clone()
+            ->where('user_id', $user_id)
+            ->where('user_loans.status', 1)
+            ->whereBetween('created_at', [$last_year, Carbon::now('Asia/Dhaka')])
+            ->selectRaw(
+                'SUM(CASE WHEN type = 1 THEN amount ELSE 0 END) AS total_debited_amount,
+                SUM(CASE WHEN type = 2 THEN amount ELSE 0 END) AS total_credited_amount'
+            )->first();
+
+        return array(
+            'summary'         => $summary,
+            'additional_data' => array(
+                'weekly'  => $weekly,
+                'monthly' => $monthly,
+                'yearly'  => $yearly
+            )
+        );
     }
 }

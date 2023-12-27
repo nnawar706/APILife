@@ -18,7 +18,7 @@ class DesignationController extends Controller
     public function index()
     {
         $data = Cache::rememberForever('designations', function () {
-            return $this->model->latest()->get();
+            return $this->model->orderBy('id')->get();
         });
 
         return response()->json([

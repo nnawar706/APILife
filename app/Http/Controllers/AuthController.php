@@ -40,7 +40,7 @@ class AuthController extends Controller
     {
         $data = $this->service->refreshUser();
 
-        return \response()->json([
+        return response()->json([
             'status' => true,
             'data'   => $data
         ]);
@@ -48,8 +48,7 @@ class AuthController extends Controller
 
     public function authProfile()
     {
-        clearCache();
-        $data = Cache::remember('auth_user'.auth()->user()->id, 24*60*60, function () {
+        $data = Cache::remember('auth_user'.auth()->user()->id, 24*60*60*60, function () {
             return $this->service->getAuthUserProfile();
         });
 
