@@ -90,8 +90,6 @@ class UserLoanController extends Controller
 
         $user_id = $request->user_id ?? auth()->user()->id;
 
-        clearCache();
-
         $data = Cache::remember('user_loans_summary'.$user_id, 24*60*60*60, function () use ($user_id) {
             return $this->service->getLoanSummary($user_id);
         });
