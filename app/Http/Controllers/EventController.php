@@ -24,7 +24,7 @@ class EventController extends Controller
 
     public function index(Request $request)
     {
-        $data = $this->service->getAllEvents();
+        $data = $this->service->getAllEvents($request);
 
         return response()->json([
             'status' => true,
