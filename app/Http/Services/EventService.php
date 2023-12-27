@@ -208,6 +208,9 @@ class EventService
     public function getAllEvents()
     {
         return $this->model->latest()
+//            ->whereHas('participants', function ($q) {
+//                return $q->where('addParticipants');
+//            })
             ->with('lead','category')
             ->with(['participants' => function($q) {
                 return $q->select('users.id','name','photo_url');
@@ -276,7 +279,7 @@ class EventService
     {
         return $this->model
             ->where('event_status_id', '=', 2)
-            ->whereHas('participants', function ($q) {
+            ->whereHas('addParticipants', function ($q) {
                 return $q->where('user_id', auth()->user()->id)->where('approval_status', 0);
             })->get();
     }
