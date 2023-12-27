@@ -101,7 +101,7 @@ class AuthController extends Controller
 
         return response()->json([
             'status' => true,
-            'data'   => $data->items()
+            'data'   => $data
         ], $data->isEmpty() ? Response::HTTP_NO_CONTENT : Response::HTTP_OK);
     }
 
