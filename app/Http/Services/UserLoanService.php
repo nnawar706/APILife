@@ -113,7 +113,7 @@ class UserLoanService
                     ->accepted()->credited()->sum('amount');
 
             if ($total_debited_amount != 0 || $total_credited_amount != 0) {
-                $summary[$index]['user'] = $user->id;
+                $summary[$index]['user'] = $user;
                 $summary[$index]['total_debited_amount']  = $total_debited_amount;
                 $summary[$index]['total_credited_amount'] = $total_credited_amount;
 
