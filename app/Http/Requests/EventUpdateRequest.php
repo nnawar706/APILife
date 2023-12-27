@@ -6,6 +6,7 @@ use App\Models\Designation;
 use App\Models\EventCategory;
 use App\Models\User;
 use App\Rules\EventDesignationGradingValidationRule;
+use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -21,12 +22,10 @@ class EventUpdateRequest extends FormRequest
         return true;
     }
 
-    // TODO: event status update validation
-
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     * @return array<string, ValidationRule|array|string>
      */
     public function rules(): array
     {
@@ -55,7 +54,7 @@ class EventUpdateRequest extends FormRequest
             'to_date'             => 'nullable|date_format:Y-m-d H:i|after:from_date',
             'remarks'             => 'nullable|string|max:500',
             'designation_gradings'=> ['required','array', new EventDesignationGradingValidationRule()],
-            'designation_gradings.*.amount' => 'required|numeric'
+            'designation_gradings.*.amount' => 'required|numeric|min:0'
         ];
     }
 
