@@ -20,13 +20,13 @@ class UserLoanService
         $this->model->create([
             'selected_user_id' => $request->selected_user_id,
             'amount'           => $request->amount,
-            'type'             => $request->type,
+            'type'             => $request->type, // 1: debit (incoming), 2: credit (outgoing)
         ]);
     }
 
     public function getAll($includeAll)
     {
-        return $this->model->with('selectedUser')
+        return $this->model->with('user','selectedUser')
             ->when($includeAll, function ($q) {
                 return $q->with('user');
             })
@@ -63,9 +63,9 @@ class UserLoanService
         {
             return 'Unable to change loan status that were not created for you.';
         }
-        if ($loan->status === 3)
+        if ($loan->status === 1)
         {
-            return 'Unable to update status once the loan is paid.';
+            return 'Unable to update status once the loan is accepted.';
         }
 
         $loan->update(['status' => $status]);
@@ -81,53 +81,55 @@ class UserLoanService
 
         $summary = $this->model->clone()
             ->where('user_id', $user_id)
+            ->orWhere('selected_user_id', $user_id)
             ->where('user_loans.status', 1)
             ->selectRaw(
-                'selected_user_id,
+                'user_id,
+                selected_user_id,
                 SUM(CASE WHEN type = 1 THEN amount ELSE 0 END) AS total_debited_amount,
                 SUM(CASE WHEN type = 2 THEN amount ELSE 0 END) AS total_credited_amount'
             )
             ->with('selectedUser')
-            ->groupBy('selected_user_id')
+            ->groupBy('user_id','selected_user_id')
             ->get();
 
-        $weekly = $this->model->clone()
-            ->where('user_id', $user_id)
-            ->where('user_loans.status', 1)
-            ->whereBetween('created_at', [$last_week, Carbon::now('Asia/Dhaka')])
-            ->selectRaw(
-                'SUM(CASE WHEN type = 1 THEN amount ELSE 0 END) AS total_debited_amount,
-                SUM(CASE WHEN type = 2 THEN amount ELSE 0 END) AS total_credited_amount,
-                COUNT(id) as total_confirmed_transaction'
-            )->first();
-
-        $monthly = $this->model->clone()
-            ->where('user_id', $user_id)
-            ->where('user_loans.status', 1)
-            ->whereBetween('created_at', [$last_month, Carbon::now('Asia/Dhaka')])
-            ->selectRaw(
-                'SUM(CASE WHEN type = 1 THEN amount ELSE 0 END) AS total_debited_amount,
-                SUM(CASE WHEN type = 2 THEN amount ELSE 0 END) AS total_credited_amount,
-                COUNT(id) as total_confirmed_transaction'
-            )->first();
-
-        $yearly = $this->model->clone()
-            ->where('user_id', $user_id)
-            ->where('user_loans.status', 1)
-            ->whereBetween('created_at', [$last_year, Carbon::now('Asia/Dhaka')])
-            ->selectRaw(
-                'SUM(CASE WHEN type = 1 THEN amount ELSE 0 END) AS total_debited_amount,
-                SUM(CASE WHEN type = 2 THEN amount ELSE 0 END) AS total_credited_amount,
-                COUNT(id) as total_confirmed_transaction'
-            )->first();
+//        $weekly = $this->model->clone()
+//            ->where('user_id', $user_id)
+//            ->where('user_loans.status', 1)
+//            ->whereBetween('created_at', [$last_week, Carbon::now('Asia/Dhaka')])
+//            ->selectRaw(
+//                'SUM(CASE WHEN type = 1 THEN amount ELSE 0 END) AS total_debited_amount,
+//                SUM(CASE WHEN type = 2 THEN amount ELSE 0 END) AS total_credited_amount,
+//                COUNT(id) as total_confirmed_transaction'
+//            )->first();
+//
+//        $monthly = $this->model->clone()
+//            ->where('user_id', $user_id)
+//            ->where('user_loans.status', 1)
+//            ->whereBetween('created_at', [$last_month, Carbon::now('Asia/Dhaka')])
+//            ->selectRaw(
+//                'SUM(CASE WHEN type = 1 THEN amount ELSE 0 END) AS total_debited_amount,
+//                SUM(CASE WHEN type = 2 THEN amount ELSE 0 END) AS total_credited_amount,
+//                COUNT(id) as total_confirmed_transaction'
+//            )->first();
+//
+//        $yearly = $this->model->clone()
+//            ->where('user_id', $user_id)
+//            ->where('user_loans.status', 1)
+//            ->whereBetween('created_at', [$last_year, Carbon::now('Asia/Dhaka')])
+//            ->selectRaw(
+//                'SUM(CASE WHEN type = 1 THEN amount ELSE 0 END) AS total_debited_amount,
+//                SUM(CASE WHEN type = 2 THEN amount ELSE 0 END) AS total_credited_amount,
+//                COUNT(id) as total_confirmed_transaction'
+//            )->first();
 
         return array(
             'summary'         => $summary,
-            'additional_data' => array(
-                'weekly'  => $weekly,
-                'monthly' => $monthly,
-                'yearly'  => $yearly
-            )
+//            'additional_data' => array(
+//                'weekly'  => $weekly,
+//                'monthly' => $monthly,
+//                'yearly'  => $yearly
+//            )
         );
     }
 }
