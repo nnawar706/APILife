@@ -101,3 +101,5 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::get('activity_logs/all', [SystemController::class, 'index']);
 });
+
+Route::get('test', [SystemController::class, 'test']);
