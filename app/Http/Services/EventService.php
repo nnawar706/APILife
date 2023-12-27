@@ -208,9 +208,9 @@ class EventService
     public function getAllEvents()
     {
         return $this->model->latest()
-//            ->whereHas('participants', function ($q) {
-//                return $q->where('addParticipants');
-//            })
+            ->whereHas('participants', function ($q) {
+                return $q->where('users.id', auth()->user()->id);
+            })
             ->with('lead','category')
             ->with(['participants' => function($q) {
                 return $q->select('users.id','name','photo_url');

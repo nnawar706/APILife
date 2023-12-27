@@ -24,9 +24,7 @@ class EventController extends Controller
 
     public function index()
     {
-        $data = Cache::remember('events', 24*60*60*7, function () {
-            return $this->service->getAllEvents();
-        });
+        $data = $this->service->getAllEvents();
 
         return response()->json([
             'status' => true,
