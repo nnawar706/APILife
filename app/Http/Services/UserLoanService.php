@@ -97,7 +97,8 @@ class UserLoanService
             ->whereBetween('created_at', [$last_week, Carbon::now('Asia/Dhaka')])
             ->selectRaw(
                 'SUM(CASE WHEN type = 1 THEN amount ELSE 0 END) AS total_debited_amount,
-                SUM(CASE WHEN type = 2 THEN amount ELSE 0 END) AS total_credited_amount'
+                SUM(CASE WHEN type = 2 THEN amount ELSE 0 END) AS total_credited_amount,
+                COUNT(id) as total_confirmed_transaction'
             )->first();
 
         $monthly = $this->model->clone()
@@ -106,7 +107,8 @@ class UserLoanService
             ->whereBetween('created_at', [$last_month, Carbon::now('Asia/Dhaka')])
             ->selectRaw(
                 'SUM(CASE WHEN type = 1 THEN amount ELSE 0 END) AS total_debited_amount,
-                SUM(CASE WHEN type = 2 THEN amount ELSE 0 END) AS total_credited_amount'
+                SUM(CASE WHEN type = 2 THEN amount ELSE 0 END) AS total_credited_amount,
+                COUNT(id) as total_confirmed_transaction'
             )->first();
 
         $yearly = $this->model->clone()
@@ -115,7 +117,8 @@ class UserLoanService
             ->whereBetween('created_at', [$last_year, Carbon::now('Asia/Dhaka')])
             ->selectRaw(
                 'SUM(CASE WHEN type = 1 THEN amount ELSE 0 END) AS total_debited_amount,
-                SUM(CASE WHEN type = 2 THEN amount ELSE 0 END) AS total_credited_amount'
+                SUM(CASE WHEN type = 2 THEN amount ELSE 0 END) AS total_credited_amount,
+                COUNT(id) as total_confirmed_transaction'
             )->first();
 
         return array(
