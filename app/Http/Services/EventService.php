@@ -205,9 +205,12 @@ class EventService
         }
     }
 
-    public function getAllEvents()
+    public function getAllEvents(Request $request)
     {
         return $this->model->latest()
+            ->when($request->has('status_id'), function ($q) use ($request) {
+                return $q->where('event_status_id', $request->status_id);
+            })
             ->whereHas('participants', function ($q) {
                 return $q->where('users.id', auth()->user()->id);
             })
