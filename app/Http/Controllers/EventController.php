@@ -34,6 +34,16 @@ class EventController extends Controller
         ]);
     }
 
+    public function pendingEvents()
+    {
+        $data = $this->service->getPendingEvents();
+
+        return response()->json([
+            'status' => true,
+            'data'   => $data
+        ], count($data) == 0 ? Response::HTTP_NO_CONTENT : Response::HTTP_OK);
+    }
+
     public function create(EventCreateRequest $request)
     {
         $response = $this->service->storeNewEvent($request);

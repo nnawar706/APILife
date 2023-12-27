@@ -34,7 +34,9 @@ class AssignUserBadge extends Command
     {
         $badge = new UserBadge();
 
-        if (UserBadge::whereMonth('created_at', Carbon::now()->format('n'))->doesntExist())
+        if ($badge->clone()
+            ->whereMonth('created_at', Carbon::now()->format('n'))
+            ->doesntExist())
         {
             $data = [];
 
@@ -86,7 +88,7 @@ class AssignUserBadge extends Command
 
                     if (count($users) != 0) {
                         foreach ($users as $user) {
-                            UserBadge::create([
+                            $badge->clone()->create([
                                 'user_id' => $user['user_id'],
                                 'badge_id' => $i + 1
                             ]);

@@ -68,6 +68,7 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::controller(EventController::class)->group(function () {
         Route::get('events/all', 'index');
+        Route::get('events/pending_events', 'pendingEvents');
         Route::get('events/get/{id}', 'read');
         Route::get('events/participants/{event_id}', 'eventParticipants');
         Route::post('events/create', 'create');
@@ -100,7 +101,10 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::get('treasures/change_status/{tl_id}', [TreasurerLiabilitiesController::class, 'updateStatus']);
 
-    Route::get('activity_logs/all', [SystemController::class, 'index']);
+    Route::controller(SystemController::class)->group(function () {
+        Route::get('activity_logs/all', 'activities');
+        Route::get('dashboard', 'dashboardData');
+    });
 });
 
 Route::get('test', [SystemController::class, 'test']);

@@ -16,7 +16,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class SystemController extends Controller
 {
-    public function index()
+    public function activities()
     {
         $data = Activity::with('causer','subject')->latest()->paginate(15);
 
@@ -34,5 +34,17 @@ class SystemController extends Controller
         Artisan::call('config:clear');
 
         return response()->json(['status' => true], 205);
+    }
+
+    public function dashboardData()
+    {
+        $monthly_user_badges = DB::table('user_badges')->selectRaw(
+            'user_id, MONTH(created_at) as month_id'
+        )->groupBy('month_id','user_id')->get();
+
+        return response()->json([
+            'status' => true,
+            'data'   => $monthly_user_badges
+        ]);
     }
 }

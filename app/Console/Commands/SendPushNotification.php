@@ -5,7 +5,6 @@ namespace App\Console\Commands;
 use App\Models\Notification;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
-use Pusher\PushNotifications\PushNotifications;
 use Throwable;
 
 class SendPushNotification extends Command
