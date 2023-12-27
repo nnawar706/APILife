@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
 use Spatie\Activitylog\LogOptions;
@@ -14,6 +15,22 @@ class UserLoan extends Model
     protected $guarded = ['id'];
 
     protected $hidden = ['updated_at'];
+
+    public function scopeAccepted(Builder $q)
+    {
+        $q->where('status', '=', 1);
+    }
+
+    public function scopeDebited(Builder $q)
+    {
+        $q->where('type', '=', 1);
+    }
+
+    public function scopeCredited(Builder $q)
+    {
+        $q->where('type', '=', 2);
+    }
+
 
     public function user()
     {
