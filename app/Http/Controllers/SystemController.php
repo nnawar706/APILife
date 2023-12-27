@@ -73,8 +73,4 @@ class SystemController extends Controller
             'user_badges'      => $monthly_user_badges
         );
     }
-
-    public function test()
-    {
-    }
 }

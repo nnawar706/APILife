@@ -46,7 +46,7 @@ class AuthController extends Controller
             return response()->json([
                 'status' => true,
                 'data'   => array(
-                    'beams_token' => $beamsToken
+                    'token' => $beamsToken['token']
                 )
             ], Response::HTTP_OK);
         }
