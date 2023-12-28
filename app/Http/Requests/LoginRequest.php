@@ -27,7 +27,7 @@ class LoginRequest extends FormRequest
     {
         return [
             'phone_no' => ['required', 'regex:/^(?:\+88|88)?(01[3-9]\d{8})$/'],
-            'password' => 'required|string'
+            'password' => 'required|string|min:6'
         ];
     }
 

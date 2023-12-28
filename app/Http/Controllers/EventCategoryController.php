@@ -18,7 +18,7 @@ class EventCategoryController extends Controller
 
     public function index()
     {
-        $data = Cache::remember('event_categories', 24*60*60, function () {
+        $data = Cache::remember('event_categories', 24*60*60*60, function () {
             return $this->service->getAll();
         });
 

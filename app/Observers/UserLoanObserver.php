@@ -24,7 +24,7 @@ class UserLoanObserver
         dispatch(new NotifyUsers(
             [$model->selected_user_id],
             false,
-            '',
+            'pages/expense-calculator/loans',
             auth()->user()->name . ' has initialized a loan for you.'));
     }
 
@@ -41,15 +41,7 @@ class UserLoanObserver
         dispatch(new NotifyUsers(
             [$model->user_id],
             false,
-            '',
+            'pages/expense-calculator/loans',
             'A loan status has been updated.'));
-    }
-
-    /**
-     * Handle the UserLoan "deleted" event.
-     */
-    public function deleted($model): void
-    {
-
     }
 }
