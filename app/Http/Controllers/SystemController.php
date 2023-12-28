@@ -53,7 +53,7 @@ class SystemController extends Controller
     private function getDashboardData()
     {
         $user_badge = new UserBadge();
-        $event = new Event();
+        $event      = new Event();
 
         $monthly_user_badges = [];
 

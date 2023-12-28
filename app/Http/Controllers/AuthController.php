@@ -100,8 +100,9 @@ class AuthController extends Controller
         $data = $this->service->getAuthNotifications();
 
         return response()->json([
-            'status' => true,
-            'data'   => $data
+            'status'     => true,
+            'total_data' => $data->total(),
+            'data'       => $data->items()
         ], $data->isEmpty() ? Response::HTTP_NO_CONTENT : Response::HTTP_OK);
     }
 
