@@ -162,7 +162,7 @@ class EventService
             $payment_info[$key]['payable_percentage']     = round(($initialPayable / $totalBudget) * 100, 2) . '%';
             $payment_info[$key]['prev_payable']           = $initialPayable; // designation based
             $payment_info[$key]['estimated_payable']      = $estimatedPayable; // expense based
-            $payment_info[$key]['overflow']               = $estimatedPayable - $totalPaid; // if neg, returnable to that user, else remaining payable amount
+            $payment_info[$key]['overflow']               = round($estimatedPayable - $totalPaid, 2); // if neg, returnable to that user, else remaining payable amount
             $payment_info[$key]['paid']                   = $totalPaid; // w/o sponsored amount
             $payment_info[$key]['sponsored']              = $totalSponsored;
         }
