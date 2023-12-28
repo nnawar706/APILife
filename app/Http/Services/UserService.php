@@ -15,9 +15,14 @@ class UserService
         $this->model = $model;
     }
 
-    public function getAll()
+    public function getAll(Request $request)
     {
-        return $this->model->latest()->with('designation')->get();
+        return $this->model
+            ->when($request->has('status'), function ($q) {
+                return $q->status();
+            })
+            ->latest()
+            ->with('designation')->get();
     }
 
     public function getUserData($id)

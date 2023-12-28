@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\UserCreateRequest;
 use App\Http\Requests\UserUpdateRequest;
 use App\Http\Services\UserService;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -17,10 +18,10 @@ class UserController extends Controller
         $this->service = $service;
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $data = Cache::remember('users', 24*60*60*60, function () {
-            return $this->service->getAll();
+        $data = Cache::remember('users'.$request->status, 24*60*60*60, function () use ($request) {
+            return $this->service->getAll($request);
         });
 
         return response()->json([
