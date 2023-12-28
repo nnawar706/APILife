@@ -43,7 +43,6 @@ class SystemController extends Controller
 
     public function dashboardData()
     {
-        clearCache();
         $data = Cache::remember('dashboard', 60*60*2, function () {
             return $this->getDashboardData();
         });
@@ -58,7 +57,6 @@ class SystemController extends Controller
     {
         $end_date   = Carbon::now('Asia/Dhaka');
         $start_date = Carbon::now('Asia/Dhaka')->subMonths(1);
-        $user_badge = new UserBadge();
         $event      = new Event();
         $user       = User::status();
         $transactions = UserLoan::accepted();
