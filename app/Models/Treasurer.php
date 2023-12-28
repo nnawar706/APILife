@@ -69,6 +69,16 @@ class Treasurer extends Model
 
         static::updated(function ($model) {
             Cache::forget('treasurers');
+
+            if ($model->completion_status == 1)
+            {
+                $model->treasurer->notify(new UserNotification(
+                    '/',
+                    'Thank you for completing a treasure hunt sincerely.',
+                    null,
+                    null
+                ));
+            }
         });
     }
 }

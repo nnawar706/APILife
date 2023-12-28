@@ -112,4 +112,16 @@ class AuthController extends Controller
 
         return response()->json(['status' => true], Response::HTTP_OK);
     }
+
+    public function getNotificationCount()
+    {
+        $count = auth()->user()->unreadNotifications->count();
+
+        return response()->json([
+            'status' => true,
+            'data'   => array(
+                'unread_notification_count' => $count
+            )
+        ], Response::HTTP_OK);
+    }
 }

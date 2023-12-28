@@ -2,6 +2,7 @@
 
 namespace App\Http\Services;
 
+use App\Jobs\NotifyEventParticipants;
 use App\Models\Expense;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
@@ -106,6 +107,15 @@ class ExpenseService
             DB::commit();
 
             Cache::forget('event_info'.$expense->event_id);
+            Cache::forget('event_expense_log'.$expense->event_id);
+
+            dispatch(new NotifyEventParticipants(
+                $expense->event,
+                auth()->user(),
+                'pages/timeline-page/'.$expense->event_id,
+                auth()->user()->name . ' has updated expense data for ' . $expense->event->title,
+                false
+            ));
 
             return null;
         } catch (QueryException $ex)

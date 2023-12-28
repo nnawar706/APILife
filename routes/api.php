@@ -25,6 +25,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::put('change_password', 'changePassword');
         Route::get('notifications/all', 'getNotifications');
         Route::get('notifications/mark_as_read', 'readNotifications');
+        Route::get('unread_notifications_count', 'getNotificationCount');
         Route::get('pusher/beams_auth', 'authenticatePusher');
         Route::get('refresh', 'refreshUser');
         Route::get('logout', 'logout');

@@ -283,6 +283,11 @@ class EventService
 
         $event->update(['event_status_id' => $event_status_id]);
 
+        if ($event->wasChanged() && $event_status_id == 1)
+        {
+            $event->addParticipants()->update(['approval_status' => 0]);
+        }
+
         return $event->wasChanged();
     }
 

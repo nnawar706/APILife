@@ -24,21 +24,4 @@ class ExpenseBearer extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
-
-    public static function boot()
-    {
-        parent::boot();
-
-        static::created(function ($model) {
-            Cache::forget('event_expense_log'.$model->expense->event_id);
-        });
-
-        static::updated(function ($model) {
-            Cache::forget('event_expense_log'.$model->expense->event_id);
-        });
-
-        static::deleted(function ($model) {
-            Cache::forget('event_expense_log'.$model->expense->event_id);
-        });
-    }
 }

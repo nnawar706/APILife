@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Jobs\NotifyEventParticipants;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
 
@@ -38,6 +39,14 @@ class Expense extends Model
         static::created(function ($model) {
             Cache::forget('event_info'.$model->event_id);
             Cache::forget('event_expense_log'.$model->event_id);
+
+            dispatch(new NotifyEventParticipants(
+                $model->event,
+                auth()->user(),
+                'pages/timeline-page/'.$model->event_id,
+                auth()->user()->name . ' has added new expense to ' . $model->event->title,
+                false
+            ));
         });
 
         static::updated(function ($model) {
@@ -49,6 +58,14 @@ class Expense extends Model
             Cache::forget('expense'.$model->id);
             Cache::forget('event_info'.$model->event_id);
             Cache::forget('event_expense_log'.$model->event_id);
+
+            dispatch(new NotifyEventParticipants(
+                $model->event,
+                auth()->user(),
+                'pages/timeline-page/'.$model->event_id,
+                auth()->user()->name . ' has removed an expense data from ' . $model->event->title,
+                false
+            ));
         });
     }
 }

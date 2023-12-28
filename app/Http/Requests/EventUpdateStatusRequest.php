@@ -27,7 +27,7 @@ class EventUpdateStatusRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'event_status_id' => ['required','in:1,2,5', // 2: locked, 5: canceled
+            'event_status_id' => ['required','in:1,2,5', // 1: ongoing, 2: locked, 5: canceled
                                     function($attr, $val, $fail) {
                                         $event = Event::find($this->route('id'));
 
