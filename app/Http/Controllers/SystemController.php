@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use App\Enums\BadgeWeight;
 use App\Models\Event;
 use App\Models\EventStatus;
+use App\Models\TreasurerLiability;
 use App\Models\User;
 use App\Models\UserBadge;
+use App\Models\UserLoan;
 use App\Notifications\UserNotification;
 use Carbon\Carbon;
 use Illuminate\Database\QueryException;
@@ -58,6 +60,8 @@ class SystemController extends Controller
         $start_date = Carbon::now('Asia/Dhaka')->subMonths(1);
         $user_badge = new UserBadge();
         $event      = new Event();
+        $user       = User::status();
+        $transactions = UserLoan::accepted();
 
 //        $monthly_user_badges = [];
 //
@@ -85,17 +89,29 @@ class SystemController extends Controller
             ->groupBy('event_status_id','name')
             ->whereBetween('created_at', [$start_date, $end_date])->get();
 
-        $total_users = User::status()->count();
-        $active_users = User::status()->whereHas('events', function ($q) use ($start_date, $end_date) {
+        $total_users = $user->clone()->count();
+        $active_users = $user->clone()->whereHas('events', function ($q) use ($start_date, $end_date) {
             return $q->whereNotIn('event_status_id', [1,3])
                 ->whereBetween('created_at', [$start_date, $end_date]);
         })->count();
 
+        $total_mfs = $user->clone()->whereHas('userPayables', function ($q) {
+            return $q->where('amount','>',0)->where('status',0);
+        })->count();
+
+        $dues = TreasurerLiability::where('amount','>',0)->where('status',0)->sum('amount');
+
+        $transaction_count = $transactions->clone()->count();
+        $transaction_amount = $transactions->clone()->sum('amount');
         return array(
             'total_users'    => $total_users,
             'active_users'   => $active_users,
             'event_lifetime' => $event_count_lifetime,
-            'event_30days'   => $event_count_30days
+            'event_30days'   => $event_count_30days,
+            'total_mfs'      => $total_mfs,
+            'total_dues'     => $dues,
+            'transaction_count' => $transaction_count,
+            'transaction_amount' => $transaction_amount
         );
     }
 }
