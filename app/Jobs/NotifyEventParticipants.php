@@ -39,7 +39,7 @@ class NotifyEventParticipants implements ShouldQueue
 
         foreach ($participants as $item)
         {
-            if ($item->id != $this->user->id) {
+            if ($item->user && $item->id != $this->user->id) {
                 $item->notify(new UserNotification(
                     $this->link,
                     $this->message,
