@@ -19,13 +19,13 @@ class TreasurerLiabilitiesController extends Controller
     {
         $liability = $this->model->findOrFail($tl_id);
 
-        if ($liability->treasurer->user_id != auth()->user()->id)
-        {
-            return response()->json([
-                'status' => false,
-                'error'  => 'You are not authorized to perform this action.'
-            ], Response::HTTP_FORBIDDEN);
-        }
+//        if ($liability->treasurer->user_id != auth()->user()->id)
+//        {
+//            return response()->json([
+//                'status' => false,
+//                'error'  => 'You are not authorized to perform this action.'
+//            ], Response::HTTP_FORBIDDEN);
+//        }
 
         $liability->update(['status' => 1]);
 
