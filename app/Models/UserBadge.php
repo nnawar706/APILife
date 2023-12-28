@@ -23,4 +23,16 @@ class UserBadge extends Model
     {
         return $this->belongsTo(Badge::class);
     }
+
+    public static function boot ()
+    {
+        parent::boot();
+
+        static::created(function ($model) {
+            $message = $model->badge_id == 4 ? 'Congratulations! 🎉 ✨ You have earned the highest adventure badge this month.'
+                : 'Yayy! 🎉 You have earned a new adventure badge this month.';
+
+            sendNotification([$model->user], '/', $message);
+        });
+    }
 }

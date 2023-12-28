@@ -36,7 +36,7 @@ class WishHappyBirthday extends Command
 
             if (Carbon::today('Asia/Dhaka')->format('d-m-Y') == Carbon::parse($birthdate)->format('d-m-Y'))
             {
-                $item->notify(new UserNotification('', 'Happy Birthday'));
+                $item->notify(new UserNotification('', 'Happy Birthday! 🎉 🎊 May all your dreams turn into reality.'));
             }
         }
     }
