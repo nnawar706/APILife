@@ -125,6 +125,11 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasMany(ExpensePayer::class);
     }
 
+    public function eventsParticipated()
+    {
+        return $this->hasMany(EventParticipant::class);
+    }
+
     // all treasures belonging to a user
     public function collectedTreasures()
     {

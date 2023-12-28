@@ -3,6 +3,7 @@
 namespace App\Observers;
 
 use App\Jobs\NotifyUsers;
+use App\Notifications\UserNotification;
 use Illuminate\Support\Facades\Cache;
 
 class UserLoanObserver
@@ -21,11 +22,18 @@ class UserLoanObserver
      */
     public function created($model): void
     {
-        dispatch(new NotifyUsers(
-            [$model->selected_user_id],
-            false,
+//        dispatch(new NotifyUsers(
+//            [$model->selected_user_id],
+//            false,
+//            'pages/expense-calculator/loans',
+//            auth()->user()->name . ' has initialized a loan for you.'));
+
+        $model->selectedUser->notify(new UserNotification(
             'pages/expense-calculator/loans',
-            auth()->user()->name . ' has initialized a loan for you.'));
+            auth()->user()->name . ' has initialized a loan for you.',
+            auth()->user()->name,
+            auth()->user()->photo_url
+        ));
     }
 
     /**
@@ -38,10 +46,11 @@ class UserLoanObserver
             Cache::forget('user_loans_summary' . $model->user_id);
         }
 
-        dispatch(new NotifyUsers(
-            [$model->user_id],
-            false,
+        $model->user->notify(new UserNotification(
             'pages/expense-calculator/loans',
-            'A loan status has been updated.'));
+            auth()->user()->name . ' has updated a loan status.',
+            auth()->user()->name,
+            auth()->user()->photo_url
+        ));
     }
 }

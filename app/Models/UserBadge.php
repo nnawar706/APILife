@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Notifications\UserNotification;
 use Illuminate\Database\Eloquent\Model;
 
 class UserBadge extends Model
@@ -32,7 +33,7 @@ class UserBadge extends Model
             $message = $model->badge_id == 4 ? 'Congratulations! 🎉 ✨ You have earned the highest adventure badge this month.'
                 : 'Yayy! 🎉 You have earned a new adventure badge this month.';
 
-            sendNotification([$model->user], '/', $message);
+            $model->user->notify(new UserNotification('/', $message, 'Badge', $model->badge->image_url));
         });
     }
 }

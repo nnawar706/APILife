@@ -63,6 +63,8 @@ class EventController extends Controller
 
         if (!$response)
         {
+            Cache::forget('event_info'.$id);
+
             return response()->json(['status' => true], Response::HTTP_OK);
         }
 

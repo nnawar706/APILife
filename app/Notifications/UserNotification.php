@@ -11,15 +11,17 @@ class UserNotification extends Notification
 {
     use Queueable;
 
-    public $link, $message;
+    public $link, $message, $triggered_by, $triggered_by_image_url;
 
     /**
      * Create a new notification instance.
      */
-    public function __construct($link, $message)
+    public function __construct($link, $message, $triggered_by, $triggered_by_image_url)
     {
-        $this->link    = $link;
-        $this->message = $message;
+        $this->link                     = $link;
+        $this->message                  = $message;
+        $this->triggered_by             = $triggered_by;
+        $this->triggered_by_image_url   = $triggered_by_image_url;
     }
 
     /**
@@ -40,8 +42,10 @@ class UserNotification extends Notification
     public function toArray(object $notifiable): array
     {
         return [
-            'message' => $this->message,
-            'link'    => $this->link
+            'message'                   => $this->message,
+            'link'                      => $this->link,
+            'triggered_by'              => $this->triggered_by,
+            'triggered_by_image_url'    => $this->triggered_by_image_url
         ];
     }
 }

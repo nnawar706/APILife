@@ -2,12 +2,11 @@
 
 namespace App\Http\Services;
 
+use App\Jobs\NotifyEventParticipants;
 use App\Models\Event;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 
 class EventService
 {
@@ -58,6 +57,8 @@ class EventService
     {
         $event = $this->model->findOrFail($id);
 
+        $lead_id = $event->lead_user_id;
+
         DB::beginTransaction();
 
         try {
@@ -81,6 +82,15 @@ class EventService
             }
 
             DB::commit();
+
+            dispatch(new NotifyEventParticipants(
+                $event,
+                auth()->user(),
+                'pages/extra-vaganza',
+                auth()->user()->name . ' has updated an extravaganza information.',
+                $lead_id != $event->lead_user_id
+            ));
+
             return null;
         } catch (QueryException $ex)
         {
@@ -197,6 +207,14 @@ class EventService
 
             DB::commit();
 
+            dispatch(new NotifyEventParticipants(
+                $event,
+                auth()->user(),
+                'pages/extra-vaganza',
+                auth()->user()->name . ' has added new participants to ' . $event->title . '.',
+                false
+            ));
+
             return null;
         } catch (QueryException $ex)
         {
@@ -224,10 +242,12 @@ class EventService
     {
         $event = $this->model->findOrFail($id);
 
-        $event->participants()->detach([$user_id]);
+        $participant = $event->addParticipants()->where('user_id', $user_id)->first();
 
-        Cache::forget('events');
-        Cache::forget('event_info'.$id);
+        if ($participant)
+        {
+            $participant->delete();
+        }
     }
 
     public function removeEvent($id): bool

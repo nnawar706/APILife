@@ -2,6 +2,9 @@
 
 namespace App\Models;
 
+use App\Jobs\NotifyEventParticipants;
+use App\Jobs\NotifyUsers;
+use App\Notifications\UserNotification;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
 
@@ -18,6 +21,11 @@ class EventParticipant extends Model
     public function event()
     {
         return $this->belongsTo(Event::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 
     public static function boot()
@@ -39,7 +47,23 @@ class EventParticipant extends Model
         });
 
         static::deleted(function ($model) {
+            Cache::forget('events');
+            Cache::forget('event_info'.$model->event_id);
 
+            dispatch(new NotifyEventParticipants(
+                $model->event,
+                auth()->user(),
+                'pages/extra-vaganza',
+                auth()->user()->name . ' has removed ' . $model->user->name . ' from ' . $model->event->title,
+                false
+            ));
+
+            $model->user->notify(new UserNotification(
+                'pages/extra-vaganza',
+                auth()->user()->name . ' has removed you from ' . $model->event->title,
+                auth()->user()->name,
+                auth()->user()->photo_url
+            ));
         });
     }
 }

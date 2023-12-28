@@ -2,7 +2,7 @@
 
 namespace App\Observers;
 
-use App\Jobs\NotifyNewEvent;
+use App\Jobs\NotifyEventParticipants;
 use App\Jobs\NotifyUsers;
 use App\Models\Event;
 use Illuminate\Support\Facades\Cache;
@@ -24,7 +24,13 @@ class EventObserver
     {
         Cache::forget('events');
 
-        dispatch(new NotifyNewEvent($model));
+        dispatch(new NotifyEventParticipants(
+            $model,
+            auth()->user(),
+            'pages/extra-vaganza',
+            auth()->user()->name . ' has created a new extravaganza.',
+            true
+        ));
     }
 
     /**
@@ -33,7 +39,20 @@ class EventObserver
     public function updated($model): void
     {
         Cache::forget('events');
-        Cache::forget('event_info'.$model->id);
+
+        if ($model->event_status_id == 3 || $model->event_status_id == 4)
+        {
+            $message = $model->event_status_id == 3 ? $model->title . ' has been approved by all participants.'
+                : $model->title . ' has been completed.';
+
+            dispatch(new NotifyEventParticipants(
+                $model,
+                null,
+                'pages/extra-vaganza/' . $model->id,
+                $message,
+                false
+            ));
+        }
     }
 
     /**

@@ -51,7 +51,7 @@ class TreasurerCreateRequest extends FormRequest
                                     $fail('Some of the selected extravaganzas have treasurer.');
                                 }
 
-                                else if ($events->clone()->where('event_status_id', '=', 1)->exists())
+                                else if ($events->clone()->where('event_status_id', '!=', 3)->exists())
                                 {
                                     $fail('Some of the extravaganzas are not approved yet.');
                                 }
