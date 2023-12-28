@@ -83,7 +83,7 @@ class SystemController extends Controller
             ->leftJoin('event_statuses', 'event_statuses.id','=','events.event_status_id')
             ->selectRaw('event_status_id as id,event_statuses.name as name,count(events.id) as events_count')
             ->groupBy('event_status_id','name')
-            ->where('created_at', [$start_date, $end_date])->get();
+            ->whereBetween('created_at', [$start_date, $end_date])->get();
 
         $total_users = User::status()->count();
         $active_users = User::status()->whereHas('events', function ($q) use ($start_date, $end_date) {
