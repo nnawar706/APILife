@@ -54,6 +54,8 @@ class SystemController extends Controller
 
     private function getDashboardData()
     {
+        $end_date   = Carbon::now('Asia/Dhaka');
+        $start_date = Carbon::now('Asia/Dhaka')->subMonths(1);
         $user_badge = new UserBadge();
         $event      = new Event();
 
@@ -81,11 +83,17 @@ class SystemController extends Controller
             ->leftJoin('event_statuses', 'event_statuses.id','=','events.event_status_id')
             ->selectRaw('event_status_id as id,event_statuses.name as name,count(events.id) as events_count')
             ->groupBy('event_status_id','name')
-            ->whereMonth('created_at', Carbon::now()->format('n'))->get();
+            ->where('created_at', [$start_date, $end_date])->get();
 
-
+        $total_users = User::status()->count();
+        $active_users = User::status()->whereHas('events', function ($q) use ($start_date, $end_date) {
+            return $q->whereNotIn('event_status_id', [1,3])
+                ->whereBetween('created_at', [$start_date, $end_date]);
+        })->count();
 
         return array(
+            'total_users'    => $total_users,
+            'active_users'   => $active_users,
             'event_lifetime' => $event_count_lifetime,
             'event_30days'   => $event_count_30days
         );
