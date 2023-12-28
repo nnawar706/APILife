@@ -309,6 +309,7 @@ class EventService
             ->where('event_status_id', '=', 2)
             ->whereHas('addParticipants', function ($q) {
                 return $q->where('user_id', auth()->user()->id)->where('approval_status', 0);
-            })->get();
+            })
+            ->with('lead')->get();
     }
 }
