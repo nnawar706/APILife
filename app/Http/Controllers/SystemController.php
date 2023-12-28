@@ -59,25 +59,20 @@ class SystemController extends Controller
         $start_date = Carbon::now('Asia/Dhaka')->subMonths(1);
         $event      = new Event();
         $user       = User::status();
+        $user_badge = new UserBadge();
         $transactions = UserLoan::accepted();
 
-//        $monthly_user_badges = [];
-//
-//        for ($i=0; $i < 12; $i++)
-//        {
-//            $date      = Carbon::now()->subMonths($i);
-//
-//            $monthly_user_badges[$i]['month'] = Carbon::parse($date)->format('M');
-//            $monthly_user_badges[$i]['user_data'] = $user_badge->clone()
-//                ->whereMonth('created_at', Carbon::parse($date)->format('n'))
-//                ->with('badge','user')->get();
-//        }
-//
-//        return array(
-//            'completed_events' => $event->clone()->where('event_status_id', '=', 4)->count(),
-//            'ongoing_events'   => $event->clone()->where('event_status_id', '=', 1)->count(),
-//            'user_badges'      => $monthly_user_badges
-//        );
+        $monthly_user_badges = [];
+
+        for ($i=0; $i < 1; $i++)
+        {
+            $date      = Carbon::now()->subMonths($i);
+
+            $monthly_user_badges[$i]['month'] = Carbon::parse($date)->format('M');
+            $monthly_user_badges[$i]['user_data'] = $user_badge->clone()
+                ->whereMonth('created_at', Carbon::parse($date)->format('n'))
+                ->with('badge','user')->get();
+        }
 
         $event_count_lifetime = EventStatus::orderBy('id')->withCount('events')->get();
 
@@ -101,6 +96,20 @@ class SystemController extends Controller
 
         $transaction_count = $transactions->clone()->count();
         $transaction_amount = $transactions->clone()->sum('amount');
+
+        $transaction_count_30days = $transactions->clone()
+            ->whereBetween('created_at', [$start_date, $end_date])->count();
+        $transaction_amount_30days = $transactions->clone()
+            ->whereBetween('created_at', [$start_date, $end_date])->sum('amount');
+
+        $user_wise_badge = [];
+
+        foreach ($user->clone()->get() as $key => $item)
+        {
+            $user_wise_badge[$key]['user'] = $item;
+            $user_wise_badge[$key]['badges'] = $item->badges()->get();
+        }
+
         return array(
             'total_users'    => $total_users,
             'active_users'   => $active_users,
@@ -108,8 +117,12 @@ class SystemController extends Controller
             'event_30days'   => $event_count_30days,
             'total_mfs'      => $total_mfs,
             'total_dues'     => $dues,
-            'transaction_count' => $transaction_count,
-            'transaction_amount' => $transaction_amount
+            'transaction_lifetime_count'  => $transaction_count,
+            'transaction_lifetime_amount' => $transaction_amount,
+            'transaction_30days_count'    => $transaction_count_30days,
+            'transaction_30days_amount'   => $transaction_amount_30days,
+            'current_month_badges'        => $monthly_user_badges,
+            'user_badges'                 => $user_wise_badge
         );
     }
 }
