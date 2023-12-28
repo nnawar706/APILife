@@ -42,16 +42,10 @@ class TreasurerService
         }
     }
 
-    public function getAll($includeAll)
+    public function getAll()
     {
         return $this->model
-            ->when($includeAll, function ($q) {
-                return $q->with('treasurer');
-            })
-            ->when(!$includeAll, function ($q) {
-                return $q->where('user_id', auth()->user()->id);
-            })
-            ->with('liabilities.user')
+            ->with('treasurer','liabilities.user')
             ->latest()->get();
     }
 }

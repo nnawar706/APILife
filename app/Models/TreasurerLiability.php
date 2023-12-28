@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Cache;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
 
@@ -41,5 +42,14 @@ class TreasurerLiability extends Model
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public static function boot()
+    {
+        parent::boot();
+
+        static::updated(function ($model) {
+            Cache::forget('treasurers');
+        });
     }
 }

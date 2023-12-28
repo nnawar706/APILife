@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Jobs\NotifyUsers;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Cache;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
 
@@ -52,7 +53,13 @@ class Treasurer extends Model
         parent::boot();
 
         static::created(function ($model) {
+            Cache::forget('treasurers');
+
             dispatch(new NotifyUsers([$model->user_id], false, '', 'You have been selected as a treasurer.'));
+        });
+
+        static::updated(function ($model) {
+            Cache::forget('treasurers');
         });
     }
 }
