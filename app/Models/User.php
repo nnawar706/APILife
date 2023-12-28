@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Jobs\NotifyUsers;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -154,6 +155,14 @@ class User extends Authenticatable implements JWTSubject
                 'user_id'  => $model->id,
                 'badge_id' => 1
             ]);
+
+            dispatch(new NotifyUsers(
+                null,
+                true,
+                'pages/accounts/member',
+                auth()->user()->name . ' has added a new user.',
+                auth()->user()
+            ));
         });
 
         static::updated(function ($model) {
@@ -166,6 +175,14 @@ class User extends Authenticatable implements JWTSubject
             Cache::forget('auth_user'.$model->id);
 
             deleteFile($model->photo_url);
+
+            dispatch(new NotifyUsers(
+                null,
+                true,
+                'pages/accounts/member',
+                auth()->user()->name . ' has removed '. $model->name .'.',
+                auth()->user()
+            ));
         });
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\Models\User;
+use App\Notifications\UserNotification;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -14,17 +15,18 @@ class NotifyUsers implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public $users, $allUser, $link, $message;
+    public $users, $allUser, $link, $message, $user;
 
     /**
      * Create a new job instance.
      */
-    public function __construct($users, $allUser, $link, $message)
+    public function __construct($users, $allUser, $link, $message, $user)
     {
         $this->users   = $users;
         $this->allUser = $allUser;
         $this->link    = $link;
         $this->message = $message;
+        $this->user    = $user; // auth user
     }
 
     /**
@@ -41,6 +43,17 @@ class NotifyUsers implements ShouldQueue
             $users = User::whereIn('id', $this->users)->get();
         }
 
-        sendNotification($users, $this->link, $this->message);
+        if (count($users) != 0)
+        {
+            foreach ($users as $item)
+            {
+                $item->notify(new UserNotification(
+                    $this->link,
+                    $this->message,
+                    $this->user->name,
+                    $this->user->photo_url
+                ));
+            }
+        }
     }
 }

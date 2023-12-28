@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Jobs\NotifyUsers;
+use App\Notifications\UserNotification;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
 use Spatie\Activitylog\LogOptions;
@@ -55,7 +55,16 @@ class Treasurer extends Model
         static::created(function ($model) {
             Cache::forget('treasurers');
 
-            dispatch(new NotifyUsers([$model->user_id], false, '', 'You have been selected as a treasurer.'));
+
+            if (auth()->user()->id != $model->user_id)
+            {
+                $model->treasurer->notify(new UserNotification(
+                    '/',
+                    auth()->user()->name . ' selected you as a treasurer.',
+                    auth()->user()->name,
+                    auth()->user()->photo_url
+                ));
+            }
         });
 
         static::updated(function ($model) {
