@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Enums\BadgeWeight;
+use App\Models\Badge;
 use App\Models\Event;
 use App\Models\EventCategory;
 use App\Models\EventStatus;
@@ -63,6 +64,7 @@ class SystemController extends Controller
         $user       = User::status();
         $user_badge = new UserBadge();
         $transactions = UserLoan::accepted();
+        $badge      = Badge::orderBy('id')->get();
 
         $monthly_user_badges = [];
 
@@ -109,12 +111,18 @@ class SystemController extends Controller
         foreach ($user->clone()->get() as $key => $item)
         {
             $user_wise_badge[$key]['user'] = $item;
-            $user_wise_badge[$key]['badges'] = $user_badge->clone()
-                ->join('badges','user_badges.badge_id','=','badges.id')
-                ->selectRaw('name, image_url, count(user_badges.id) as total_count')
-                ->where('user_id', $item->id)
-                ->groupBy('badge_id','name','image_url')
-                ->get();
+
+            foreach ($badge as $i => $val)
+            {
+                $user_wise_badge[$key]['badges'][$i]['badge'] = $val;
+                $user_wise_badge[$key]['badges'][$i]['count'] = $val->userBadge()->where('user_id', $item->id)->count();
+            }
+//            $user_wise_badge[$key]['badges'] = $user_badge->clone()
+//                ->join('badges','user_badges.badge_id','=','badges.id')
+//                ->selectRaw('name, image_url, count(user_badges.id) as total_count')
+//                ->where('user_id', $item->id)
+//                ->groupBy('badge_id','name','image_url')
+//                ->get();
         }
 
         $event_categories = EventCategory::withCount(['events' => function ($query) {
