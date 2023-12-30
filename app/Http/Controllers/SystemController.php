@@ -16,6 +16,7 @@ use App\Models\UserLoan;
 use App\Notifications\UserNotification;
 use Carbon\Carbon;
 use Illuminate\Database\QueryException;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
@@ -145,5 +146,12 @@ class SystemController extends Controller
             'current_month_badges'        => $monthly_user_badges,
             'user_badges'                 => $user_wise_badge
         );
+    }
+
+    public function test(Request $request)
+    {
+        $badge = Badge::find(1);
+
+        saveImage($request->file('image'), '/images/badges/', $badge, 'image_url');
     }
 }

@@ -107,3 +107,5 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('dashboard', 'dashboardData');
     });
 });
+
+Route::post('test', [SystemController::class, 'test']);
