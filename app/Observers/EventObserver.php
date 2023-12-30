@@ -14,7 +14,8 @@ class EventObserver
      */
     public function creating($model): void
     {
-        $model->event_status_id = 1;
+        $model->event_status_id  = 1;
+        $model->added_by_user_id = auth()->user()->id;
     }
 
     /**

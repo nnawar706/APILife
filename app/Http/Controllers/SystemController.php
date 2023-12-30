@@ -113,6 +113,9 @@ class SystemController extends Controller
 
         $event_categories = EventCategory::withCount(['events' => function ($query) {
             $query->where('event_status_id', 4);
+        }])->with(['events' => function($q) {
+            return $q->select('id','event_category_id','title','event_status_id','created_at')
+                ->where('event_status_id', 4);
         }])->get();
 
         return array(

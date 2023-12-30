@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('events', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('added_by_user_id')->constrained('users')->onDelete('restrict');
             $table->foreignId('event_category_id')->constrained('event_categories')->onDelete('restrict');
             $table->foreignId('lead_user_id')->constrained('users')->onDelete('restrict');
             $table->string('title', 150);
