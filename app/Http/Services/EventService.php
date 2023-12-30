@@ -104,8 +104,8 @@ class EventService
     {
         $event = $this->model
             ->with('lead.designation','participants.designation','category','status',
-                'designationGradings.designation','expenses.bearers','expenses.payers',
-                'expenseBearers','expensePayers')
+                'designationGradings.designation','expenses.category','expenses.bearers',
+                'expenses.payers','expenseBearers','expensePayers')
             ->find($id);
 
         if (!$event)
@@ -265,7 +265,7 @@ class EventService
         return true;
     }
 
-    public function changeApprovalStatus(Request $request)
+    public function changeApprovalStatus(Request $request): bool
     {
         $event = $this->model->findOrFail($request->event_id);
 
