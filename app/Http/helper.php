@@ -45,14 +45,6 @@ function getThresholds($max, $min): array
     return $numbers;
 }
 
-function sendNotification($users, $link, $message)
-{
-    foreach ($users as $user)
-    {
-        $user->notify(new UserNotification($link, $message));
-    }
-}
-
 function getBeamsClient()
 {
     return new PushNotifications(
