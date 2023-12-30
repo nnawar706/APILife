@@ -3,6 +3,7 @@
 namespace App\Http\Services;
 
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -15,6 +16,10 @@ class AuthService
 
         if ($token = $this->guard()->attempt($credentials))
         {
+            auth()->user()->accessLogs()->firstOrCreate([
+                'logged_in_at' => Carbon::today('Asia/Dhaka')->format('Y-m-d'),
+            ]);
+
             return $this->respondWithToken($token);
         }
 

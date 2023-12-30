@@ -86,6 +86,11 @@ class User extends Authenticatable implements JWTSubject
         );
     }
 
+    public function accessLogs()
+    {
+        return $this->hasMany(UserAccessLog::class);
+    }
+
     public function designation () {
         return $this->belongsTo(Designation::class);
     }
