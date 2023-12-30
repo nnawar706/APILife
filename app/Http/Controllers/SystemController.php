@@ -6,6 +6,7 @@ use App\Enums\BadgeWeight;
 use App\Models\Event;
 use App\Models\EventCategory;
 use App\Models\EventStatus;
+use App\Models\ExpenseBearer;
 use App\Models\TreasurerLiability;
 use App\Models\User;
 use App\Models\UserBadge;
@@ -108,14 +109,16 @@ class SystemController extends Controller
         foreach ($user->clone()->get() as $key => $item)
         {
             $user_wise_badge[$key]['user'] = $item;
-            $user_wise_badge[$key]['badges'] = $item->badges()->get();
+            $user_wise_badge[$key]['badges'] = $user_badge->clone()
+                ->join('badges','user_badges.badge_id','=','badges.id')
+                ->selectRaw('name, image_url, count(user_badges.id) as total_count')
+                ->where('user_id', $item->id)
+                ->groupBy('badge_id','name','image_url')
+                ->get();
         }
 
         $event_categories = EventCategory::withCount(['events' => function ($query) {
             $query->where('event_status_id', 4);
-        }])->with(['events' => function($q) {
-            return $q->select('id','event_category_id','title','event_status_id','created_at')
-                ->where('event_status_id', 4);
         }])->get();
 
         return array(
@@ -133,5 +136,144 @@ class SystemController extends Controller
             'current_month_badges'        => $monthly_user_badges,
             'user_badges'                 => $user_wise_badge
         );
+    }
+
+    public function test()
+    {
+        $start = Carbon::now('Asia/Dhaka')->subMonths(1);
+        $end   = Carbon::now('Asia/Dhaka');
+
+        $badge = new UserBadge();
+
+        $events = Event::where('event_status_id', '=', 4)
+            ->whereBetween('created_at', [$start, $end]);
+
+        $bearers = ExpenseBearer::whereHas('expense.event', function ($q) use ($start, $end) {
+            return $q->where('event_status_id', 4)
+                ->whereBetween('created_at', [$start, $end]);
+        });
+
+//        if ($badge->clone()
+//            ->whereMonth('created_at', Carbon::now()->format('n'))
+//            ->doesntExist())
+//        {
+            $data = [];
+
+            $users = User::get();
+
+            foreach ($users as $key => $user)
+            {
+                $weight = 0;
+
+                $data[$key]['user_id'] = $user->id;
+
+                // login count
+                $loginCount = $user->accessLogs()->whereBetween('logged_in_at', [$start, $end])->count();
+
+                $weight += $loginCount * BadgeWeight::getValue(BadgeWeight::USER_LOGIN_COUNT);
+
+                // created event count
+                $eventCreated = $events->clone()->where('added_by_user_id', $user->id)->count();
+
+                $weight += $eventCreated * BadgeWeight::getValue(BadgeWeight::EVENTS_CREATED);
+
+                // attended event count
+                $eventAttended = $events->clone()->whereHas('addParticipants', function ($q) use ($user) {
+                    return $q->where('user_id', $user->id);
+                })->count();
+
+                $weight += $eventAttended * BadgeWeight::getValue(BadgeWeight::EVENTS_ATTENDED);
+
+                // lead event count
+                $eventLead = $events->clone()->where('lead_user_id', $user->id)->count();
+
+                $weight += $eventLead * BadgeWeight::getValue(BadgeWeight::EVENTS_LED);
+
+                // treasured event count
+                $eventTreasured = $events->clone()->whereHas('treasurer.treasurer', function ($q) use ($user) {
+                    return $q->where('user_id', $user->id);
+                })->count();
+
+                $weight += $eventTreasured * BadgeWeight::getValue(BadgeWeight::EVENTS_TREASURED);
+
+                // sponsors
+                $sponsors = $bearers->clone()->where('is_sponsored', 1)->where('user_id', $user->id)->sum('amount');
+
+//                $data[$key]['events'] = $sponsors;
+
+                $weight += $sponsors > 1500 ? BadgeWeight::getValue(BadgeWeight::SPONSOR_ABOVE_1500) :
+                    (
+                        ($sponsors > 1000 && $sponsors < 1500) ? BadgeWeight::getValue(BadgeWeight::SPONSOR_1000_TO_1500) :
+                            (
+                                ($sponsors > 500 && $sponsors < 1000) ? BadgeWeight::getValue(BadgeWeight::SPONSOR_500_TO_1000) :
+                                    (
+                                        ($sponsors > 200 && $sponsors < 500) ? BadgeWeight::getValue(BadgeWeight::SPONSOR_200_TO_500) :
+                                            BadgeWeight::getValue(BadgeWeight::SPONSOR_BELOW_200)
+                                    )
+                            )
+                    );
+
+
+//                $sponsors = $user->sponsors()->sum('amount');
+//
+//                $attendedEvents = $user->events()->where('event_status_id', 4)->count();
+//
+//                $ledEvents = $user->leadEvents()->where('event_status_id', 4)->count();
+//
+//                $treasuredEvents = $user->collectedTreasures()->count();
+//
+//                $eventExpenses = $user->payments()
+//                    ->whereHas('expense', function ($q) {
+//                        return $q->whereHas('event', function ($q) {
+//                            return $q->where('event_status_id', 4);
+//                        });
+//                    })->sum('amount');
+//
+//                $data[$key]['weight'] = $sponsors * BadgeWeight::getValue(BadgeWeight::SPONSOR) +
+//                    $attendedEvents * BadgeWeight::getValue(BadgeWeight::ATTENDED_EVENTS) +
+//                    $treasuredEvents + BadgeWeight::getValue(BadgeWeight::EVENTS_TREASURED) +
+//                    $ledEvents + BadgeWeight::getValue(BadgeWeight::EVENTS_LED) +
+//                    $eventExpenses + BadgeWeight::getValue(BadgeWeight::EVENTS_EXPENSES);
+
+                $data[$key]['weight'] = $weight;
+            }
+//
+//            $weights = array_map(function ($item) {
+//                return $item['weight'];
+//            }, $data);
+
+            return \response()->json($data);
+
+//            $thresholds = getThresholds(max($weights), min($weights));
+//
+//            DB::beginTransaction();
+//
+//            try {
+//                for ($i = 0; $i < 4; $i++) {
+//                    $users = array_filter($data, function ($value) use ($i, $thresholds) {
+//                        if ($i == 0) {
+//                            return $value['weight'] > 0 && $value['weight'] < $thresholds[$i];
+//                        } else if ($i == 3) {
+//                            return $value['weight'] > $thresholds[$i - 1];
+//                        }
+//                        return $value['weight'] > $thresholds[$i - 1] && $value['weight'] < $thresholds[$i];
+//                    });
+//
+//                    if (count($users) != 0) {
+//                        foreach ($users as $user) {
+//                            $badge->clone()->create([
+//                                'user_id' => $user['user_id'],
+//                                'badge_id' => $i + 1
+//                            ]);
+//                        }
+//                    }
+//                }
+//                DB::commit();
+//            } catch (QueryException $ex) {
+//                DB::rollback();
+//
+//                Log::error('error: ' . $ex->getMessage());
+//            }
+//        }
     }
 }
