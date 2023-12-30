@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Enums\BadgeWeight;
 use App\Models\Event;
+use App\Models\EventCategory;
 use App\Models\EventStatus;
 use App\Models\TreasurerLiability;
 use App\Models\User;
@@ -110,11 +111,16 @@ class SystemController extends Controller
             $user_wise_badge[$key]['badges'] = $item->badges()->get();
         }
 
+        $event_categories = EventCategory::withCount(['events' => function ($query) {
+            $query->where('event_status_id', 4);
+        }])->get();
+
         return array(
             'total_users'    => $total_users,
             'active_users'   => $active_users,
             'event_lifetime' => $event_count_lifetime,
             'event_30days'   => $event_count_30days,
+            'event_categories' => $event_categories,
             'total_mfs'      => $total_mfs,
             'total_dues'     => $dues,
             'transaction_lifetime_count'  => $transaction_count,
