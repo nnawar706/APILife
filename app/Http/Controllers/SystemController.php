@@ -150,7 +150,7 @@ class SystemController extends Controller
 
     public function test(Request $request)
     {
-        $badge = Badge::find(1);
+        $badge = Badge::find($request->id);
 
         saveImage($request->file('image'), '/images/badges/', $badge, 'image_url');
     }
