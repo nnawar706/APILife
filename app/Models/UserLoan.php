@@ -30,6 +30,10 @@ class UserLoan extends Model
         $q->where('type', '=', 2);
     }
 
+    public function scopeLoanLend(Builder $q)
+    {
+        $q->where('loan_type', '=', 1);
+    }
 
     public function user()
     {

@@ -38,6 +38,7 @@ class UserLoanCreateRequest extends FormRequest
                                     }],
             'amount'           => 'required|numeric|min:1',
             'type'             => 'required|in:1,2',
+            'loan_type'        => 'required|in:1,2'
         ];
     }
 
@@ -45,7 +46,8 @@ class UserLoanCreateRequest extends FormRequest
     {
         return [
             'type.in'         => 'Loan type can either be debit or credit.',
-            'user_id.not_in'  => 'Unable to create loan for this user.'
+            'user_id.not_in'  => 'Unable to create loan for this user.',
+            'loan_type.in'    => 'Select whether it is lend or return.'
         ];
     }
 

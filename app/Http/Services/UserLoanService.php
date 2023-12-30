@@ -22,6 +22,7 @@ class UserLoanService
             'selected_user_id' => $request->selected_user_id,
             'amount'           => $request->amount,
             'type'             => $request->type, // 1: debit (incoming), 2: credit (outgoing)
+            'loan_type'        => $request->loan_type
         ]);
     }
 
