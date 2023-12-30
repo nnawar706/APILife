@@ -33,12 +33,12 @@ function clearCache(): void
 
 function getThresholds($max, $min): array
 {
-    $interval = ($max - $min) / 4;
+    $interval = ($max - $min) / 5;
 
     $numbers = [];
 
     // generate 4 numbers that divide the range
-    for ($i = 1; $i <= 4; $i++) {
+    for ($i = 1; $i <= 5; $i++) {
         $numbers[] = intval($min + $interval * $i);
     }
 

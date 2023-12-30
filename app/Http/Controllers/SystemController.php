@@ -8,6 +8,7 @@ use App\Models\Event;
 use App\Models\EventCategory;
 use App\Models\EventStatus;
 use App\Models\ExpenseBearer;
+use App\Models\ExpensePayer;
 use App\Models\TreasurerLiability;
 use App\Models\User;
 use App\Models\UserBadge;
@@ -152,6 +153,8 @@ class SystemController extends Controller
         $end   = Carbon::now('Asia/Dhaka');
 
         $badge = new UserBadge();
+        $loan = UserLoan::loanLend()->accepted()
+            ->whereBetween('created_at', [$start, $end]);
 
         $events = Event::where('event_status_id', '=', 4)
             ->whereBetween('created_at', [$start, $end]);
@@ -161,10 +164,15 @@ class SystemController extends Controller
                 ->whereBetween('created_at', [$start, $end]);
         });
 
-//        if ($badge->clone()
-//            ->whereMonth('created_at', Carbon::now()->format('n'))
-//            ->doesntExist())
-//        {
+        $payers = ExpensePayer::whereHas('expense.event', function ($q) use ($start, $end) {
+            return $q->where('event_status_id', 4)
+                ->whereBetween('created_at', [$start, $end]);
+        });
+
+        if ($badge->clone()
+            ->whereMonth('created_at', Carbon::now()->format('n'))
+            ->doesntExist())
+        {
             $data = [];
 
             $users = User::get();
@@ -204,84 +212,99 @@ class SystemController extends Controller
 
                 $weight += $eventTreasured * BadgeWeight::getValue(BadgeWeight::EVENTS_TREASURED);
 
+                // expense paid
+                $expensePayers = $payers->clone()->where('user_id', $user->id)->sum('amount');
+
+                if ($expensePayers != 0)
+                {
+                    $weight += $expensePayers > 1500 ? BadgeWeight::getValue(BadgeWeight::EXPENSE_PAID_ABOVE_1500) :
+                        (
+                        ($expensePayers > 500 && $expensePayers < 1500) ? BadgeWeight::getValue(BadgeWeight::EXPENSE_PAID_500_TO_1500) :
+                            BadgeWeight::getValue(BadgeWeight::EXPENSES_PAID_BELOW_500)
+                        );
+                }
+
+                // expense bear
+                $expenseBears = $bearers->where('is_sponsored', '=', 0)
+                    ->where('user_id', $user->id)->sum('amount');
+
+                if ($expenseBears != 0)
+                {
+                    $weight += $expenseBears > 1500 ? BadgeWeight::getValue(BadgeWeight::EXPENSE_BEAR_ABOVE_1500) :
+                        (
+                        ($expenseBears > 500 && $expenseBears < 1500) ? BadgeWeight::getValue(BadgeWeight::EXPENSE_BEAR_500_TO_1500) :
+                            BadgeWeight::getValue(BadgeWeight::EXPENSES_BEAR_BELOW_500)
+                        );
+                }
+
+                // loans
+                $lendLoanSum = $loan->clone()->where('user_id', $user->id)->credited()->sum('amount')
+                    + $loan->clone()->where('selected_user_id', $user->id)->debited()->sum('amount');
+
+                if ($lendLoanSum != 0)
+                {
+                    $weight += $lendLoanSum > 1500 ? BadgeWeight::getValue(BadgeWeight::LOAN_ABOVE_1500) :
+                        (
+                        ($lendLoanSum > 500 && $lendLoanSum < 1500) ? BadgeWeight::getValue(BadgeWeight::LOAN_500_TO_1500) :
+                            BadgeWeight::getValue(BadgeWeight::LOAN_BELOW_500)
+                        );
+                }
+
                 // sponsors
-                $sponsors = $bearers->clone()->where('is_sponsored', 1)->where('user_id', $user->id)->sum('amount');
+                $sponsorSum = $bearers->clone()->where('is_sponsored', 1)->where('user_id', $user->id)->sum('amount');
 
-//                $data[$key]['events'] = $sponsors;
-
-                $weight += $sponsors > 1500 ? BadgeWeight::getValue(BadgeWeight::SPONSOR_ABOVE_1500) :
-                    (
-                        ($sponsors > 1000 && $sponsors < 1500) ? BadgeWeight::getValue(BadgeWeight::SPONSOR_1000_TO_1500) :
+                if ($sponsorSum != 0) {
+                    $weight += $sponsorSum > 1500 ? BadgeWeight::getValue(BadgeWeight::SPONSOR_ABOVE_1500) :
+                        (
+                        ($sponsorSum > 1000 && $sponsorSum < 1500) ? BadgeWeight::getValue(BadgeWeight::SPONSOR_1000_TO_1500) :
                             (
-                                ($sponsors > 500 && $sponsors < 1000) ? BadgeWeight::getValue(BadgeWeight::SPONSOR_500_TO_1000) :
-                                    (
-                                        ($sponsors > 200 && $sponsors < 500) ? BadgeWeight::getValue(BadgeWeight::SPONSOR_200_TO_500) :
-                                            BadgeWeight::getValue(BadgeWeight::SPONSOR_BELOW_200)
-                                    )
+                            ($sponsorSum > 500 && $sponsorSum < 1000) ? BadgeWeight::getValue(BadgeWeight::SPONSOR_500_TO_1000) :
+                                (
+                                ($sponsorSum > 200 && $sponsorSum < 500) ? BadgeWeight::getValue(BadgeWeight::SPONSOR_200_TO_500) :
+                                    BadgeWeight::getValue(BadgeWeight::SPONSOR_BELOW_200)
+                                )
                             )
-                    );
-
-
-//                $sponsors = $user->sponsors()->sum('amount');
-//
-//                $attendedEvents = $user->events()->where('event_status_id', 4)->count();
-//
-//                $ledEvents = $user->leadEvents()->where('event_status_id', 4)->count();
-//
-//                $treasuredEvents = $user->collectedTreasures()->count();
-//
-//                $eventExpenses = $user->payments()
-//                    ->whereHas('expense', function ($q) {
-//                        return $q->whereHas('event', function ($q) {
-//                            return $q->where('event_status_id', 4);
-//                        });
-//                    })->sum('amount');
-//
-//                $data[$key]['weight'] = $sponsors * BadgeWeight::getValue(BadgeWeight::SPONSOR) +
-//                    $attendedEvents * BadgeWeight::getValue(BadgeWeight::ATTENDED_EVENTS) +
-//                    $treasuredEvents + BadgeWeight::getValue(BadgeWeight::EVENTS_TREASURED) +
-//                    $ledEvents + BadgeWeight::getValue(BadgeWeight::EVENTS_LED) +
-//                    $eventExpenses + BadgeWeight::getValue(BadgeWeight::EVENTS_EXPENSES);
+                        );
+                }
 
                 $data[$key]['weight'] = $weight;
             }
-//
-//            $weights = array_map(function ($item) {
-//                return $item['weight'];
-//            }, $data);
 
-            return \response()->json($data);
+            $weights = array_map(function ($item) {
+                return $item['weight'];
+            }, $data);
 
-//            $thresholds = getThresholds(max($weights), min($weights));
-//
-//            DB::beginTransaction();
-//
-//            try {
-//                for ($i = 0; $i < 4; $i++) {
-//                    $users = array_filter($data, function ($value) use ($i, $thresholds) {
-//                        if ($i == 0) {
-//                            return $value['weight'] > 0 && $value['weight'] < $thresholds[$i];
-//                        } else if ($i == 3) {
-//                            return $value['weight'] > $thresholds[$i - 1];
-//                        }
-//                        return $value['weight'] > $thresholds[$i - 1] && $value['weight'] < $thresholds[$i];
-//                    });
-//
-//                    if (count($users) != 0) {
-//                        foreach ($users as $user) {
-//                            $badge->clone()->create([
-//                                'user_id' => $user['user_id'],
-//                                'badge_id' => $i + 1
-//                            ]);
-//                        }
-//                    }
-//                }
-//                DB::commit();
-//            } catch (QueryException $ex) {
-//                DB::rollback();
-//
-//                Log::error('error: ' . $ex->getMessage());
-//            }
-//        }
+            $thresholds = getThresholds(max($weights), min($weights));
+
+            DB::beginTransaction();
+
+            try {
+                for ($i = 0; $i <= 4; $i++) {
+                    $users = array_filter($data, function ($value) use ($i, $thresholds) {
+                        if ($i == 0) {
+                            return $value['weight'] < $thresholds[$i];
+                        } else if ($i == 4) {
+                            return $value['weight'] >= $thresholds[$i - 1];
+                        }
+                        return $value['weight'] >= $thresholds[$i - 1] && $value['weight'] < $thresholds[$i];
+                    });
+
+                    if (count($users) != 0) {
+                        foreach ($users as $user) {
+                            $badge->clone()->create([
+                                'user_id' => $user['user_id'],
+                                'badge_id' => $i + 1
+                            ]);
+                        }
+                    }
+                }
+
+                DB::commit();
+            } catch (QueryException $ex) {
+                DB::rollback();
+
+                Log::error('error: ' . $ex->getMessage());
+            }
+        }
     }
 }
