@@ -52,6 +52,10 @@ class EventCategory extends Model
             Cache::forget('event_categories');
         });
 
+        static::updated(function ($model) {
+            Cache::forget('event_categories');
+        });
+
         static::deleted(function ($model) {
             Cache::forget('event_categories');
 

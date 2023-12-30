@@ -52,6 +52,10 @@ class ExpenseCategory extends Model
             Cache::forget('expense_categories');
         });
 
+        static::updated(function ($model) {
+            Cache::forget('expense_categories');
+        });
+
         static::deleted(function ($model) {
             Cache::forget('expense_categories');
 

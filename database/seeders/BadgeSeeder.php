@@ -17,29 +17,36 @@ class BadgeSeeder extends Seeder
         Badge::updateOrCreate([
             'id' => 1
         ],[
-            'name'      => 'Badge 1',
+            'name'      => 'Escapade Rookie',
             'image_url' => '/images/badges/654788245356.png'
         ]);
 
         Badge::updateOrCreate([
             'id' => 2
         ],[
-            'name'      => 'Badge 2',
+            'name'      => 'Noisemaker',
             'image_url' => '/images/badges/973123468712.png'
         ]);
 
         Badge::updateOrCreate([
             'id' => 3
         ],[
-            'name'      => 'Badge 3',
+            'name'      => 'Festivity Devotee',
             'image_url' => '/images/badges/854741240089.png'
         ]);
 
         Badge::updateOrCreate([
             'id' => 4
         ],[
-            'name'      => 'Badge 4',
+            'name'      => 'Skylarker',
             'image_url' => '/images/badges/195441244350.png'
+        ]);
+
+        Badge::updateOrCreate([
+            'id' => 5
+        ],[
+            'name'      => 'Extravaganza Overlord',
+            'image_url' => '/images/badges/195441937150.png'
         ]);
     }
 }
