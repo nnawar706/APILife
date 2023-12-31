@@ -75,6 +75,7 @@ class SystemController extends Controller
         $monthly_user_badges['month'] = Carbon::parse($date)->format('M');
         $monthly_user_badges['user_data'] = $user_badge->clone()
             ->whereMonth('created_at', Carbon::parse($date)->format('n'))
+            ->orderByDesc('point')
             ->with('badge','user')->get();
 
         $event_count_lifetime = EventStatus::orderBy('id')->withCount('events')->get();
