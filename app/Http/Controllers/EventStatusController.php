@@ -17,7 +17,7 @@ class EventStatusController extends Controller
     public function index()
     {
         $data = Cache::rememberForever('event_statuses', function () {
-            return $this->model->orderBy('id')->get();
+            return $this->model->whereNotIn('id',[3,4])->orderBy('id')->get();
         });
 
         return response()->json([

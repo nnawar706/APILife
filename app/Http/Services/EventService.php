@@ -32,7 +32,14 @@ class EventService
                 'remarks'           => $request->remarks,
             ]);
 
-            $event->participants()->sync($request->participants);
+            $participants = $request->participants;
+
+            if(!in_array(auth()->user()->id, $participants))
+            {
+                $participants[] = auth()->user()->id;
+            }
+
+            $event->participants()->sync($participants);
 
             foreach ($request->designation_gradings as $item)
             {
