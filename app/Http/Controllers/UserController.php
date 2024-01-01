@@ -7,6 +7,7 @@ use App\Http\Requests\UserUpdateRequest;
 use App\Http\Services\UserService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Validator;
 use Symfony\Component\HttpFoundation\Response;
 
 class UserController extends Controller
@@ -20,6 +21,18 @@ class UserController extends Controller
 
     public function index(Request $request)
     {
+        $validator = Validator::make($request->all(), [
+            'status' => 'sometimes|in:true'
+        ]);
+
+        if ($validator->fails())
+        {
+            return response()->json([
+                'status' => false,
+                'error'  => $validator->errors()->first()
+            ], Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
         $data = Cache::remember('users'.$request->status, 24*60*60*60, function () use ($request) {
             return $this->service->getAll($request);
         });

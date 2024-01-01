@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests;
 
-use App\Enums\ImageDimension;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
@@ -35,7 +34,8 @@ class EventCategoryCreateRequest extends FormRequest
     public function messages()
     {
         return [
-            'name.unique' => 'Selected extravaganza category name is already taken.'
+            'name.unique'     => 'Selected extravaganza category name is already taken.',
+            'icon.dimensions' => 'Event category icon must be a square image.'
         ];
     }
 

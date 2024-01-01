@@ -155,6 +155,7 @@ class User extends Authenticatable implements JWTSubject
 
         static::created(function ($model) {
             Cache::forget('users');
+            Cache::forget('userstrue');
 
             UserBadge::create([
                 'user_id'  => $model->id,
@@ -176,6 +177,7 @@ class User extends Authenticatable implements JWTSubject
 
         static::deleted(function ($model) {
             Cache::forget('users');
+            Cache::forget('userstrue');
             Cache::forget('user'.$model->id);
             Cache::forget('auth_user'.$model->id);
 

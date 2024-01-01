@@ -66,7 +66,7 @@ class AuthController extends Controller
         return response()->json([
             'status' => true,
             'data'   => $data
-        ]);
+        ], Response::HTTP_OK);
     }
 
     public function authProfile()

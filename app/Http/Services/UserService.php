@@ -21,7 +21,7 @@ class UserService
             ->when($request->has('status'), function ($q) {
                 return $q->status();
             })
-            ->latest()
+            ->orderBy('designation_id')
             ->with('designation')->get();
     }
 
