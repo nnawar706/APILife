@@ -166,6 +166,11 @@ class EventService
             // initial payable expense based on designation grading
             $initialPayable = array_sum(array_column($designationRow, 'amount'));
 
+            // expenses that was bearable
+            $totalBearable = array_sum(array_column(array_filter($data['expense_bearers'], function ($value) use ($item) {
+                return !$value['is_sponsored'] && $value['user_id'] === $item['id'];
+            }), 'amount'));
+
             // expenses that has been sponsored
             $totalSponsored = array_sum(array_column(array_filter($data['expense_bearers'], function ($value) use ($item) {
                 return $value['is_sponsored'] && $value['user_id'] === $item['id'];
@@ -182,6 +187,7 @@ class EventService
             $payment_info[$key]['overflow']               = round($estimatedPayable - $totalPaid, 2); // if neg, returnable to that user, else remaining payable amount
             $payment_info[$key]['paid']                   = $totalPaid; // w/o sponsored amount
             $payment_info[$key]['sponsored']              = $totalSponsored;
+            $payment_info[$key]['bearable']               = $totalBearable;
         }
 
         unset($data['expense_bearers']);
