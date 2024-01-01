@@ -80,11 +80,9 @@ class SystemController extends Controller
 
         $event_count_lifetime = EventStatus::orderBy('id')->withCount('events')->get();
 
-        $event_count_30days   = $event
-            ->leftJoin('event_statuses', 'event_statuses.id','=','events.event_status_id')
-            ->selectRaw('event_status_id as id,event_statuses.name as name,count(events.id) as events_count')
-            ->groupBy('event_status_id','name')
-            ->whereBetween('created_at', [$start_date, $end_date])->get();
+        $event_count_30days = EventStatus::orderBy('id')->withCount(['events' => function ($q) use ($start_date, $end_date) {
+            return $q->whereBetween('created_at', [$start_date, $end_date]);
+        }])->get();
 
         $total_users = $user->clone()->count();
         $active_users = $user->clone()->whereHas('events', function ($q) use ($start_date, $end_date) {
