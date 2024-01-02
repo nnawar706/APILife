@@ -44,9 +44,9 @@ class ExpenseBearerValidationRule implements ValidationRule
                     }, 0);
 
                     // error if total cost does not match
-//                    if ($totalAmount != request()->input('unit_cost') * request()->input('quantity')) {
-//                        $fail('Total expense data amount does not match with total spent amount.');
-//                    }
+                    if (round($totalAmount, 2) != round(request()->input('unit_cost') * request()->input('quantity'), 2)) {
+                        $fail('Total expense data amount does not match with total bearer amount.');
+                    }
                 }
             }
         } catch (\Throwable $th)
