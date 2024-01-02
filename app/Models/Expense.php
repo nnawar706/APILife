@@ -32,9 +32,23 @@ class Expense extends Model
         return $this->belongsTo(ExpenseCategory::class, 'expense_category_id');
     }
 
+    public function createdByInfo()
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function lastUpdatedByInfo()
+    {
+        return $this->belongsTo(User::class, 'last_updated_by');
+    }
+
     public static function boot()
     {
         parent::boot();
+
+        static::creating(function ($model) {
+            $model->created_by = auth()->user()->id;
+        });
 
         static::created(function ($model) {
             Cache::forget('event_info'.$model->event_id);

@@ -19,6 +19,8 @@ return new class extends Migration
             $table->float('unit_cost');
             $table->tinyInteger('quantity', false, true);
             $table->string('remarks', 300)->nullable();
+            $table->foreignId('created_by')->nullable()->constrained('users')->onDelete('restrict');
+            $table->foreignId('last_updated_by')->nullable()->constrained('users')->onDelete('restrict');
             $table->timestamps();
         });
     }

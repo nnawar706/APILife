@@ -113,7 +113,7 @@ class EventService
         $event = $this->model
             ->with('lead.designation','participants.designation','category','status',
                 'designationGradings.designation','expenses.category','expenses.bearers',
-                'expenses.payers','expenseBearers','expensePayers')
+                'expenses.payers','expenses.createdByInfo','expenses.lastUpdatedByInfo','expenseBearers','expensePayers')
             ->find($id);
 
         if (!$event)

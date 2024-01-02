@@ -73,7 +73,8 @@ class ExpenseService
                 'title'               => $request->title,
                 'unit_cost'           => $request->unit_cost,
                 'quantity'            => $request->quantity,
-                'remarks'             => $request->remarks
+                'remarks'             => $request->remarks,
+                'last_updated_by'     => auth()->user()->id
             ]);
 
             if ($request->has('bearers'))
@@ -129,7 +130,7 @@ class ExpenseService
     public function getExpenseLog($event_id)
     {
         return $this->model->where('event_id', $event_id)
-            ->with('category','bearers.user','payers.user')
+            ->with('category','bearers.user','payers.user','createdByInfo','lastUpdatedByInfo')
             ->orderBy('created_at')
             ->get();
     }
