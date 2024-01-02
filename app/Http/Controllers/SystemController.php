@@ -49,13 +49,13 @@ class SystemController extends Controller
 
     public function dashboardData()
     {
-//        $data = Cache::remember('dashboard', 60*60*2, function () {
-//            return $this->getDashboardData();
-//        });
+        $data = Cache::remember('dashboard', 60*60*2, function () {
+            return $this->getDashboardData();
+        });
 
         return response()->json([
             'status' => true,
-            'data'   => $this->getDashboardData()
+            'data'   => $data
         ]);
     }
 

@@ -15,11 +15,13 @@ class DesignationSeeder extends Seeder
     public function run(): void
     {
         DB::table('designations')->insert([
-            ['name' => 'Admin', 'created_at' => date('Y-m-d H:i:s'),'updated_at' => date('Y-m-d H:i:s')],
-            ['name' => 'Senior Developer', 'created_at' => date('Y-m-d H:i:s'),'updated_at' => date('Y-m-d H:i:s')],
-            ['name' => 'Mid-Junior Developer', 'created_at' => date('Y-m-d H:i:s'),'updated_at' => date('Y-m-d H:i:s')],
-            ['name' => 'Junior Developer', 'created_at' => date('Y-m-d H:i:s'),'updated_at' => date('Y-m-d H:i:s')],
-            ['name' => 'Intern', 'created_at' => date('Y-m-d H:i:s'),'updated_at' => date('Y-m-d H:i:s')],
+            ['name' => 'Wise Owl'],
+            ['name' => 'Cuddly Manager'],
+            ['name' => 'Panda Playmaker'],
+            ['name' => 'Senior Panda'],
+            ['name' => 'Fluffy Panda'],
+            ['name' => 'Bamboo Ambassador'],
+            ['name' => 'Mystic Stronghold'],
         ]);
     }
 }
