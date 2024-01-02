@@ -56,7 +56,6 @@ class EventController extends Controller
 
     public function eventExpenseLog($event_id)
     {
-        clearCache();
         $data = Cache::remember('event_expense_log'.$event_id, 24*60*60*60, function () use ($event_id) {
             return $this->service->getExpenseLog($event_id);
         });
