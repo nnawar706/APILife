@@ -188,7 +188,7 @@ class EventService
             $payment_info[$key]['overflow']               = round($estimatedPayable - $totalPaid, 2); // if neg, returnable to that user, else remaining payable amount
             $payment_info[$key]['paid']                   = $totalPaid; // w/o sponsored amount
             $payment_info[$key]['sponsored']              = $totalSponsored;
-            $payment_info[$key]['bearable']               = $totalBearable;
+            $payment_info[$key]['bearable']               = round($totalBearable, 2);
         }
 
         unset($data['expense_bearers']);
@@ -198,7 +198,6 @@ class EventService
 
         $expense_categories = ExpenseCategory::leftJoin('expenses','expense_categories.id','=','expenses.expense_category_id')
             ->leftJoin('expense_payers','expenses.id','=','expense_payers.expense_id')
-//            ->leftJoin('events','expenses.event_id','=','events.id')
             ->selectRaw('
                 COALESCE(SUM(CASE
                     WHEN expenses.event_id = '. $id .' THEN expense_payers.amount
