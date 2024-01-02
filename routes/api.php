@@ -73,6 +73,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('events/get/{id}', 'read');
         Route::get('events/participants/{event_id}', 'eventParticipants');
         Route::get('events/designation_gradings/{event_id}', 'eventDesignations');
+        Route::get('events/expense_log/{event_id}', 'eventExpenseLog');
         Route::post('events/create', 'create');
         Route::put('events/approve_lock', 'approveEventLock');
 
@@ -87,7 +88,6 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::controller(ExpenseController::class)->group(function () {
         Route::get('expenses/get/{id}', 'read');
-        Route::get('expenses/log/{event_id}', 'eventExpenseLog');
         Route::post('expenses/create', 'create');
 
         Route::group(['middleware' => 'expense.checker'], function () {

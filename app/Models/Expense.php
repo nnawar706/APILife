@@ -10,8 +10,6 @@ class Expense extends Model
 {
     protected $guarded = ['id'];
 
-    protected $hidden = ['updated_at'];
-
     public function bearers()
     {
         return $this->hasMany(ExpenseBearer::class);

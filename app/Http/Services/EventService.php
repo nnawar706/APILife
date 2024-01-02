@@ -346,4 +346,12 @@ class EventService
     {
         return $this->model->findOrFail($event_id)->designationGradings;
     }
+
+    public function getExpenseLog($event_id)
+    {
+        return $this->model
+            ->with('category','expenses.bearers.user','expenses.payers.user','expenses.category',
+            'expenses.createdByInfo','expenses.lastUpdatedByInfo')
+            ->find($event_id);
+    }
 }

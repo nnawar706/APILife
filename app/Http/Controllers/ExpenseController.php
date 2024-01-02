@@ -60,18 +60,6 @@ class ExpenseController extends Controller
         ], Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 
-    public function eventExpenseLog($event_id)
-    {
-        $data = Cache::remember('event_expense_log'.$event_id, 24*60*60*60, function () use ($event_id) {
-            return $this->service->getExpenseLog($event_id);
-        });
-
-        return response()->json([
-            'status' => true,
-            'data'   => $data
-        ], count($data) === 0 ? Response::HTTP_NO_CONTENT : Response::HTTP_OK);
-    }
-
     public function delete($id)
     {
         if ($this->service->removeExpense($id))
