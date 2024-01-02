@@ -124,6 +124,7 @@ class EventController extends Controller
 
     public function read($id)
     {
+        clearCache();
         $data = Cache::remember('event_info'.$id, 24*60*60*20, function () use ($id) {
             return $this->service->getInfo($id);
         });

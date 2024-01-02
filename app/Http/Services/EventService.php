@@ -4,6 +4,7 @@ namespace App\Http\Services;
 
 use App\Jobs\NotifyEventParticipants;
 use App\Models\Event;
+use App\Models\ExpenseCategory;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -193,17 +194,33 @@ class EventService
         unset($data['expense_bearers']);
         unset($data['expense_payers']);
 
+
+
+        $expense_categories = ExpenseCategory::leftJoin('expenses','expense_categories.id','=','expenses.expense_category_id')
+            ->leftJoin('expense_payers','expenses.id','=','expense_payers.expense_id')
+//            ->leftJoin('events','expenses.event_id','=','events.id')
+            ->selectRaw('
+                COALESCE(SUM(CASE
+                    WHEN expenses.event_id = '. $id .' THEN expense_payers.amount
+                    ELSE 0 END
+                ), 0) AS expense_amount,
+                expense_categories.id,expense_categories.name,expense_categories.icon_url
+            ')
+            ->groupBy('expense_categories.id','expense_categories.name','expense_categories.icon_url')
+            ->get();
+
         return array(
             'additional_data' => array(
-                'budget'            => $totalBudget, // w/o sponsored amount
-                'budget_overflow'   => $estimatedExpense - $totalBudget, // if neg, no overflow
-                'expense'           => $estimatedExpense, // w/o sponsored amount
-                'sponsored'         => $estimatedSponsored,
-                'paid'              => $paid, // w/o sponsored amount
-                'unpaid'            => $estimatedExpense - $paid, // w/o sponsored amount
-                'payment_info'      => $payment_info
+                'budget'                    => $totalBudget, // w/o sponsored amount
+                'budget_overflow'           => $estimatedExpense - $totalBudget, // if neg, no overflow
+                'expense'                   => $estimatedExpense, // w/o sponsored amount
+                'sponsored'                 => $estimatedSponsored,
+                'paid'                      => $paid, // w/o sponsored amount
+                'unpaid'                    => $estimatedExpense - $paid, // w/o sponsored amount
+                'payment_info'              => $payment_info,
+                'category_wise_expense_data'=> $expense_categories
             ),
-            'event_data'      => $data,
+            'event_data'                    => $data,
         );
     }
 
