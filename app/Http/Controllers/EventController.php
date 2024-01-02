@@ -32,6 +32,18 @@ class EventController extends Controller
         ]);
     }
 
+    public function eventDesignations($event_id)
+    {
+        $data = Cache::remember('event_designation_gradings'.$event_id, 24*60*60*60, function () use ($event_id) {
+            return $this->service->getDesignationGradings($event_id);
+        });
+
+        return response()->json([
+            'status' => true,
+            'data'   => $data
+        ], count($data) == 0 ? Response::HTTP_NO_CONTENT : Response::HTTP_OK);
+    }
+
     public function pendingEvents()
     {
         $data = $this->service->getPendingEvents();
@@ -64,6 +76,8 @@ class EventController extends Controller
         if (!$response)
         {
             Cache::forget('event_info'.$id);
+
+            Cache::forget('event_designation_gradings'.$id);
 
             return response()->json(['status' => true], Response::HTTP_OK);
         }

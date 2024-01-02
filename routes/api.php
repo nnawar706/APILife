@@ -72,6 +72,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('events/pending_events', 'pendingEvents');
         Route::get('events/get/{id}', 'read');
         Route::get('events/participants/{event_id}', 'eventParticipants');
+        Route::get('events/designation_gradings/{event_id}', 'eventDesignations');
         Route::post('events/create', 'create');
         Route::put('events/approve_lock', 'approveEventLock');
 

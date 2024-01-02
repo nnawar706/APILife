@@ -325,4 +325,9 @@ class EventService
             })
             ->with('lead')->get();
     }
+
+    public function getDesignationGradings($event_id)
+    {
+        return $this->model->findOrFail($event_id)->designationGradings;
+    }
 }
