@@ -130,7 +130,8 @@ class ExpenseService
     public function getExpenseLog($event_id)
     {
         return $this->model->where('event_id', $event_id)
-            ->with('event','category','bearers.user','payers.user','createdByInfo','lastUpdatedByInfo')
+            ->with('event.lead','category','bearers.user','payers.user',
+                'createdByInfo','lastUpdatedByInfo')
             ->orderBy('created_at')
             ->get();
     }
