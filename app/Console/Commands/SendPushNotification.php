@@ -60,7 +60,7 @@ class SendPushNotification extends Command
                                 "notification" => array(
                                     "title"     => $data['triggered_by'],
                                     "body"      => $data['message'],
-                                    "deep_link" => 'https://lifeplus.selopian.us' . $data['link']
+                                    "deep_link" => 'https://lifeplus.selopian.us/' . $data['link']
                                 )
                             )
                         ));
