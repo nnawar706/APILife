@@ -29,7 +29,7 @@ class EventController extends Controller
         return response()->json([
             'status' => true,
             'data'   => $data
-        ]);
+        ], count($data) == 0 ? Response::HTTP_NO_CONTENT : Response::HTTP_OK);
     }
 
     public function eventDesignations($event_id)
