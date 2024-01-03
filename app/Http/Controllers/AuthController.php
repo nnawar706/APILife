@@ -41,14 +41,9 @@ class AuthController extends Controller
         try {
             $beamsClient = getBeamsClient();
 
-            $beamsToken = $beamsClient->generateToken(auth()->user()->id);
+            $beamsToken = $beamsClient->generateToken(strval(auth()->user()->id));
 
-            return response()->json([
-                'status' => true,
-                'data'   => array(
-                    'token' => $beamsToken['token']
-                )
-            ], Response::HTTP_OK);
+            return response()->json($beamsToken);
         }
         catch (\Throwable $th)
         {
