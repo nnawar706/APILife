@@ -9,7 +9,6 @@ use Illuminate\Support\Facades\Auth;
 
 class AuthService
 {
-
     public function login(Request $request)
     {
         $credentials = $request->only('phone_no', 'password');

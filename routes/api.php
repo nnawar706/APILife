@@ -109,4 +109,4 @@ Route::group(['middleware' => 'auth'], function () {
     });
 });
 
-Route::get('test', [SystemController::class, 'test']);
+Route::get('calculate_monthly_point', [SystemController::class, 'calculatePoint']);
