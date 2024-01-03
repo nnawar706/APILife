@@ -43,8 +43,13 @@ class ExpenseBearerValidationRule implements ValidationRule
                         return $carry + $item['amount'];
                     }, 0);
 
+                    // unit cost * quantity
+                    $total_amount = round(request()->input('unit_cost') * request()->input('quantity'), 2);
+
+                    $adjustment = abs($total_amount - $totalAmount);
+
                     // error if total cost does not match
-                    if (round($totalAmount, 2) != round(request()->input('unit_cost') * request()->input('quantity'), 2)) {
+                    if ($adjustment > 0.5) {
                         $fail('Total expense data amount does not match with total bearer amount.');
                     }
                 }
