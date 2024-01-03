@@ -37,25 +37,30 @@ class SendPushNotification extends Command
             foreach ($notifications as $item)
             {
                 try {
+                    $data = json_decode($item->data, true);
+
                     $publishResponse = $beamsClient->publishToUsers(
                         array(strval($item->notifiable_id)),
                         array(
                             "fcm" => array(
                                 "notification" => array(
-                                    "title" => $item->type,
-                                    "body" => $item->data
+                                    "title"     => $data['triggered_by'],
+                                    "body"      => $data['message'],
+                                    "deep_link" => 'https://lifeplus.selopian.us' . $data['link']
                                 )
                             ),
                             "apns" => array("aps" => array(
                                 "alert" => array(
-                                    "title" => $item->type,
-                                    "body" => $item->data
+                                    "title"     => $data['triggered_by'],
+                                    "body"      => $data['message'],
+                                    "deep_link" => 'https://lifeplus.selopian.us' . $data['link']
                                 )
                             )),
                             "web" => array(
                                 "notification" => array(
-                                    "title" => $item->type,
-                                    "body" => $item->data
+                                    "title"     => $data['triggered_by'],
+                                    "body"      => $data['message'],
+                                    "deep_link" => 'https://lifeplus.selopian.us' . $data['link']
                                 )
                             )
                         ));

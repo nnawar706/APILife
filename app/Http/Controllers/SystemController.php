@@ -10,6 +10,7 @@ use App\Models\EventStatus;
 use App\Models\ExpenseBearer;
 use App\Models\ExpenseCategory;
 use App\Models\ExpensePayer;
+use App\Models\Notification;
 use App\Models\TreasurerLiability;
 use App\Models\User;
 use App\Models\UserBadge;
@@ -182,33 +183,38 @@ class SystemController extends Controller
 
     public function test(Request $request)
     {
-        $beamsClient = getBeamsClient();
+        $notification = Notification::first();
 
-        $publishResponse = $beamsClient->publishToUsers(
-            array(strval(27)),
-            array(
-                "fcm" => array(
-                    "notification" => array(
-                        "title" => 'Default',
-                        "body" => 'Hello from Nafisa'
-                    )
-                ),
-                "apns" => array("aps" => array(
-                    "alert" => array(
-                        "title" => 'Default',
-                        "body" => 'Hello from Nafisa'
-                    )
-                )),
-                "web" => array(
-                    "notification" => array(
-                        "title" => 'Default',
-                        "body" => 'Hello from Nafisa'
-                    )
-                )
-            ));
+        $data = json_decode($notification->data, true);
 
-        return response()->json([
-            'response' => $publishResponse
-        ]);
+        return response($data);
+//        $beamsClient = getBeamsClient();
+//
+//        $publishResponse = $beamsClient->publishToUsers(
+//            array(strval(27)),
+//            array(
+//                "fcm" => array(
+//                    "notification" => array(
+//                        "title" => 'Default',
+//                        "body" => 'Hello from Nafisa'
+//                    )
+//                ),
+//                "apns" => array("aps" => array(
+//                    "alert" => array(
+//                        "title" => 'Default',
+//                        "body" => 'Hello from Nafisa'
+//                    )
+//                )),
+//                "web" => array(
+//                    "notification" => array(
+//                        "title" => 'Default',
+//                        "body" => 'Hello from Nafisa'
+//                    )
+//                )
+//            ));
+//
+//        return response()->json([
+//            'response' => $publishResponse
+//        ]);
     }
 }
