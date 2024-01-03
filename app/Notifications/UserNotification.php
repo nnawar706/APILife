@@ -44,8 +44,8 @@ class UserNotification extends Notification
         return [
             'message'                   => $this->message,
             'link'                      => $this->link,
-            'triggered_by'              => $this->triggered_by,
-            'triggered_by_image_url'    => $this->triggered_by_image_url
+            'triggered_by'              => $this->triggered_by ?? 'Life++',
+            'triggered_by_image_url'    => $this->triggered_by_image_url ?? 'https://lifeplus.selopian.us/layout/images/life_logo.png'
         ];
     }
 }
