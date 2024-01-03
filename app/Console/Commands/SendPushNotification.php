@@ -38,7 +38,7 @@ class SendPushNotification extends Command
             {
                 try {
                     $publishResponse = $beamsClient->publishToUsers(
-                        array($item->notifiable_id),
+                        array(strval($item->notifiable_id)),
                         array(
                             "fcm" => array(
                                 "notification" => array(

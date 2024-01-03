@@ -182,8 +182,33 @@ class SystemController extends Controller
 
     public function test(Request $request)
     {
-        $badge = Badge::find($request->id);
+        $beamsClient = getBeamsClient();
 
-        saveImage($request->file('image'), '/images/badges/', $badge, 'image_url');
+        $publishResponse = $beamsClient->publishToUsers(
+            array(strval(27)),
+            array(
+                "fcm" => array(
+                    "notification" => array(
+                        "title" => 'Default',
+                        "body" => 'Hello from Nafisa'
+                    )
+                ),
+                "apns" => array("aps" => array(
+                    "alert" => array(
+                        "title" => 'Default',
+                        "body" => 'Hello from Nafisa'
+                    )
+                )),
+                "web" => array(
+                    "notification" => array(
+                        "title" => 'Default',
+                        "body" => 'Hello from Nafisa'
+                    )
+                )
+            ));
+
+        return response()->json([
+            'response' => $publishResponse
+        ]);
     }
 }

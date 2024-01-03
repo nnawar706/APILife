@@ -109,4 +109,4 @@ Route::group(['middleware' => 'auth'], function () {
     });
 });
 
-Route::post('test', [SystemController::class, 'test']);
+Route::get('test', [SystemController::class, 'test']);
