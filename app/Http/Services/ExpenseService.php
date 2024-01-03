@@ -142,6 +142,7 @@ class ExpenseService
 
     public function getExpenseInfo($id)
     {
-        return $this->model->with('bearers.user','payers.user','category')->find($id);
+        return $this->model
+            ->with('bearers.user','payers.user','category','createdByInfo','lastUpdatedByInfo')->find($id);
     }
 }
