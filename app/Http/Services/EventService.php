@@ -111,9 +111,9 @@ class EventService
     public function getInfo($id)
     {
         $event = $this->model
-            ->with('lead.designation','participants','category','status',
+            ->with('lead','participants','category','status',
                 'designationGradings.designation','expenses.category','expenses.bearers',
-                'expenses.payers','expenses.createdByInfo','expenses.lastUpdatedByInfo','expenseBearers','expensePayers')
+                'expenses.payers','expenseBearers','expensePayers')
             ->find($id);
 
         if (!$event)
@@ -185,7 +185,7 @@ class EventService
             $payment_info[$key]['payable_percentage']     = round(($initialPayable / $totalBudget) * 100, 2) . '%';
             $payment_info[$key]['prev_payable']           = $initialPayable; // designation based
             $payment_info[$key]['estimated_payable']      = $estimatedPayable; // expense based
-            $payment_info[$key]['overflow']               = round($estimatedPayable - $totalPaid, 2); // if neg, returnable to that user, else remaining payable amount
+            $payment_info[$key]['overflow']               = round($totalBearable - $totalPaid, 2); // if neg, returnable to that user, else remaining payable amount
             $payment_info[$key]['paid']                   = $totalPaid; // w/o sponsored amount
             $payment_info[$key]['sponsored']              = $totalSponsored;
             $payment_info[$key]['bearable']               = round($totalBearable, 2);
@@ -193,8 +193,6 @@ class EventService
 
         unset($data['expense_bearers']);
         unset($data['expense_payers']);
-
-
 
         $expense_categories = ExpenseCategory::leftJoin('expenses','expense_categories.id','=','expenses.expense_category_id')
             ->leftJoin('expense_payers','expenses.id','=','expense_payers.expense_id')
