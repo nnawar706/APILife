@@ -34,9 +34,7 @@ class EventController extends Controller
 
     public function eventDesignations($event_id)
     {
-        $data = Cache::remember('event_designation_gradings'.$event_id, 24*60*60*60, function () use ($event_id) {
-            return $this->service->getDesignationGradings($event_id);
-        });
+        $data = $this->service->getDesignationGradings($event_id);
 
         return response()->json([
             'status' => true,
@@ -56,9 +54,7 @@ class EventController extends Controller
 
     public function eventExpenseLog($event_id)
     {
-        $data = Cache::remember('event_expense_log'.$event_id, 24*60*60*60, function () use ($event_id) {
-            return $this->service->getExpenseLog($event_id);
-        });
+        $data = $this->service->getExpenseLog($event_id);
 
         return response()->json([
             'status' => true,
@@ -87,10 +83,6 @@ class EventController extends Controller
 
         if (!$response)
         {
-            Cache::forget('event_info'.$id);
-
-            Cache::forget('event_designation_gradings'.$id);
-
             return response()->json(['status' => true], Response::HTTP_OK);
         }
 
@@ -128,18 +120,13 @@ class EventController extends Controller
     {
         $this->service->removeEventParticipant($request->user_id, $id);
 
-        Cache::forget('event_participants'.$id);
-
         return response()->json(['status' => true], Response::HTTP_OK);
 
     }
 
     public function read($id)
     {
-        clearCache();
-        $data = Cache::remember('event_info'.$id, 24*60*60*20, function () use ($id) {
-            return $this->service->getInfo($id);
-        });
+        $data = $this->service->getInfo($id);
 
         return response()->json([
             'status' => true,
@@ -149,9 +136,7 @@ class EventController extends Controller
 
     public function eventParticipants($event_id)
     {
-        $data = Cache::remember('event_participants'.$event_id, 24*60*60*60, function () use ($event_id) {
-            return $this->service->getEventParticipantList($event_id);
-        });
+        $data = $this->service->getEventParticipantList($event_id);
 
         return response()->json([
             'status' => true,

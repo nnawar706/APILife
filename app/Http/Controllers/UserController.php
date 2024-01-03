@@ -33,9 +33,7 @@ class UserController extends Controller
             ], Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
-        $data = Cache::remember('users'.$request->status, 24*60*60*60, function () use ($request) {
-            return $this->service->getAll($request);
-        });
+        $data = $this->service->getAll($request);
 
         return response()->json([
             'status' => true,
@@ -45,9 +43,7 @@ class UserController extends Controller
 
     public function read($id)
     {
-        $data = Cache::remember('user'.$id, 24*60*60*60, function () use ($id) {
-            return $this->service->getUserData($id);
-        });
+        $data = $this->service->getUserData($id);
 
         return response()->json([
             'status' => true,

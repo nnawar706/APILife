@@ -18,9 +18,7 @@ class ExpenseCategoryController extends Controller
 
     public function index()
     {
-        $data = Cache::remember('expense_categories', 24*60*60, function () {
-            return $this->service->getAll();
-        });
+        $data = $this->service->getAll();
 
         return response()->json([
             'status' => true,
@@ -47,11 +45,6 @@ class ExpenseCategoryController extends Controller
     public function update(ExpenseCategoryCreateRequest $request, $id)
     {
         $status = $this->service->updateInfo($request, $id);
-
-        if ($status)
-        {
-            clearCache();
-        }
 
         return response()->json([
             'status' => $status,

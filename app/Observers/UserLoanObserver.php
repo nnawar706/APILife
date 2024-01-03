@@ -35,10 +35,8 @@ class UserLoanObserver
      */
     public function updated($model): void
     {
-        if ($model->status == 1)
-        {
-            Cache::forget('user_loans_summary' . $model->user_id);
-        }
+        Cache::forget('user_loans_summary' . $model->user_id);
+        Cache::forget('user_loans_summary' . $model->selected_user_id);
 
         $model->user->notify(new UserNotification(
             'pages/financial-assistance/transaction-log',
