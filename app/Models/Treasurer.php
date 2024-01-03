@@ -59,8 +59,8 @@ class Treasurer extends Model
             if (auth()->user()->id != $model->user_id)
             {
                 $model->treasurer->notify(new UserNotification(
-                    '/',
-                    auth()->user()->name . ' selected you as a treasurer.',
+                    'pages/payments',
+                    auth()->user()->name . ' selected you as a treasurer. 👑',
                     auth()->user()->name,
                     auth()->user()->photo_url
                 ));
@@ -73,8 +73,8 @@ class Treasurer extends Model
             if ($model->completion_status == 1)
             {
                 $model->treasurer->notify(new UserNotification(
-                    '/',
-                    'Thank you for completing a treasure hunt sincerely.',
+                    '',
+                    'Thank you for completing a treasure hunt sincerely. 🔥',
                     null,
                     null
                 ));

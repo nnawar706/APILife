@@ -22,14 +22,8 @@ class UserLoanObserver
      */
     public function created($model): void
     {
-//        dispatch(new NotifyUsers(
-//            [$model->selected_user_id],
-//            false,
-//            'pages/expense-calculator/loans',
-//            auth()->user()->name . ' has initialized a loan for you.'));
-
         $model->selectedUser->notify(new UserNotification(
-            'pages/expense-calculator/loans',
+            'pages/financial-assistance/transaction-log',
             auth()->user()->name . ' has initialized a loan for you.',
             auth()->user()->name,
             auth()->user()->photo_url
@@ -47,7 +41,7 @@ class UserLoanObserver
         }
 
         $model->user->notify(new UserNotification(
-            'pages/expense-calculator/loans',
+            'pages/financial-assistance/transaction-log',
             auth()->user()->name . ' has updated a loan status.',
             auth()->user()->name,
             auth()->user()->photo_url

@@ -2,27 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\BadgeWeight;
 use App\Models\Badge;
-use App\Models\Event;
 use App\Models\EventCategory;
 use App\Models\EventStatus;
-use App\Models\ExpenseBearer;
 use App\Models\ExpenseCategory;
-use App\Models\ExpensePayer;
-use App\Models\Notification;
 use App\Models\TreasurerLiability;
 use App\Models\User;
 use App\Models\UserBadge;
 use App\Models\UserLoan;
-use App\Notifications\UserNotification;
 use Carbon\Carbon;
-use Illuminate\Database\QueryException;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use Spatie\Activitylog\Models\Activity;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -179,42 +169,5 @@ class SystemController extends Controller
             'expense_categories_monthly'  => $expense_categories_monthly,
             'expense_categories_weekly'   => $expense_categories_weekly
         );
-    }
-
-    public function test(Request $request)
-    {
-        $notification = Notification::first();
-
-        $data = json_decode($notification->data, true);
-
-        return response($data);
-//        $beamsClient = getBeamsClient();
-//
-//        $publishResponse = $beamsClient->publishToUsers(
-//            array(strval(27)),
-//            array(
-//                "fcm" => array(
-//                    "notification" => array(
-//                        "title" => 'Default',
-//                        "body" => 'Hello from Nafisa'
-//                    )
-//                ),
-//                "apns" => array("aps" => array(
-//                    "alert" => array(
-//                        "title" => 'Default',
-//                        "body" => 'Hello from Nafisa'
-//                    )
-//                )),
-//                "web" => array(
-//                    "notification" => array(
-//                        "title" => 'Default',
-//                        "body" => 'Hello from Nafisa'
-//                    )
-//                )
-//            ));
-//
-//        return response()->json([
-//            'response' => $publishResponse
-//        ]);
     }
 }

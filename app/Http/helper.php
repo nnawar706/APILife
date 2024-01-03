@@ -1,6 +1,5 @@
 <?php
 
-use App\Notifications\UserNotification;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Log;
 use Pusher\PushNotifications\PushNotifications;

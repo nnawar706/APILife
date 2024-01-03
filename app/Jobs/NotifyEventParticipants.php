@@ -43,7 +43,7 @@ class NotifyEventParticipants implements ShouldQueue
                 $item->notify(new UserNotification(
                     $this->link,
                     $this->message,
-                    !is_null($this->user) ? $this->user->name : null,
+                    !is_null($this->user) ? $this->user->name : 'Life++',
                     !is_null($this->user) ? $this->user->photo_url : null
                 ));
             }
