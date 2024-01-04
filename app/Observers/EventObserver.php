@@ -27,7 +27,7 @@ class EventObserver
             $model,
             auth()->user(),
             'pages/extra-vaganza',
-            auth()->user()->name . ' has created a new extravaganza.',
+            'Mark your calendars for '. $model->title .' and join the party 🥳✨',
             true
         ));
     }

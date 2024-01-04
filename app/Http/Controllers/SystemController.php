@@ -13,9 +13,12 @@ use App\Models\ExpensePayer;
 use App\Models\User;
 use App\Models\UserBadge;
 use App\Models\UserLoan;
+use App\Notifications\UserNotification;
 use Carbon\Carbon;
 use Illuminate\Database\QueryException;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Spatie\Activitylog\Models\Activity;
@@ -71,7 +74,9 @@ class SystemController extends Controller
         $user               = User::status();
         $user_badge         = new UserBadge();
         $transactions       = UserLoan::accepted();
-        $badge              = Badge::orderBy('id')->get();
+        $badge              = Cache::rememberForever('badges', function () {
+                                    return Badge::orderBy('id')->get();
+                                });
         $expense_categories = ExpenseCategory::leftJoin('expenses','expense_categories.id','=','expenses.expense_category_id')
                                 ->leftJoin('expense_payers','expenses.id','=','expense_payers.expense_id')
                                 ->leftJoin('events','expenses.event_id','=','events.id');
@@ -350,6 +355,23 @@ class SystemController extends Controller
 
                 Log::error('error: ' . $ex->getMessage());
             }
+        }
+    }
+
+    public function notifyRandomly(Request $request)
+    {
+        $users = User::status()->get();
+
+        foreach ($users as $user)
+        {
+            $msg = 'Hey ' . $user->name . ' 👋 ' . $request->message;
+
+            $user->notify(new UserNotification(
+                '',
+                $msg,
+                'Life++',
+                null
+            ));
         }
     }
 }

@@ -109,3 +109,4 @@ Route::group(['middleware' => 'auth'], function () {
 });
 
 Route::get('calculate_monthly_point', [SystemController::class, 'calculatePoint']);
+Route::post('send_random_notification', [SystemController::class, 'notifyRandomly']);

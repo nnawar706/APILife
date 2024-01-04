@@ -53,7 +53,7 @@ class NotifyEventParticipants implements ShouldQueue
         {
             $lead->notify(new UserNotification(
                 $this->link,
-                $this->user->name . ' has selected you as a leader for ' . $this->event->title . '.',
+                'Congrats! 🌟' . $this->user->name . ' selected you as the leader for ' . $this->event->title . '.',
                 $this->user->name,
                 $this->user->photo_url
             ));
