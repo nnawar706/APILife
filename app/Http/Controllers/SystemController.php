@@ -132,7 +132,7 @@ class SystemController extends Controller
         }
 
         $event_categories = EventCategory::withCount(['events' => function ($query) {
-            $query->where('event_status_id', 4);
+            $query->whereIn('event_status_id', [2,3,4]);
         }])->get();
 
         $expense_categories_lifetime = $expense_categories->clone()
