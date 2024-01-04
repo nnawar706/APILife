@@ -95,7 +95,7 @@ class EventService
             dispatch(new NotifyEventParticipants(
                 $event,
                 auth()->user(),
-                'pages/extra-vaganza',
+                'pages/update-vaganza/'.$event->id,
                 auth()->user()->name . ' has updated an extravaganza information.',
                 $lead_id != $event->lead_user_id
             ));

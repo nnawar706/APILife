@@ -43,13 +43,4 @@ class TreasurerLiability extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
-
-    public static function boot()
-    {
-        parent::boot();
-
-        static::updated(function ($model) {
-            Cache::forget('treasurers');
-        });
-    }
 }

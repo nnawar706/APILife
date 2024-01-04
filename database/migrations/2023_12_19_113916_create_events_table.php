@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreignId('event_category_id')->constrained('event_categories')->onDelete('restrict');
             $table->foreignId('lead_user_id')->constrained('users')->onDelete('restrict');
             $table->string('title', 150);
-            $table->text('detail');
+            $table->string('detail', 500);
             $table->dateTime('from_date');
             $table->dateTime('to_date')->nullable();
             $table->string('remarks', 500)->nullable();

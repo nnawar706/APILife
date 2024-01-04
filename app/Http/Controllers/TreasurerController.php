@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\TreasurerCreateRequest;
 use App\Http\Services\TreasurerService;
-use Illuminate\Support\Facades\Cache;
 use Symfony\Component\HttpFoundation\Response;
 
 class TreasurerController extends Controller
@@ -18,9 +17,7 @@ class TreasurerController extends Controller
 
     public function index()
     {
-        $data = Cache::remember('treasurers', 24*60*60*60, function () {
-            return $this->service->getAll();
-        });
+        $data = $this->service->getAll();
 
         return response()->json([
             'status' => true,

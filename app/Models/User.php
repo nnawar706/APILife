@@ -188,8 +188,7 @@ class User extends Authenticatable implements JWTSubject
         static::deleted(function ($model) {
             Cache::forget('users');
             Cache::forget('userstrue');
-            Cache::forget('user'.$model->id);
-            Cache::forget('auth_user'.$model->id);
+            Cache::forget('user_profile'.$model->id);
 
             deleteFile($model->photo_url);
 

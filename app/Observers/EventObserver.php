@@ -47,7 +47,7 @@ class EventObserver
             dispatch(new NotifyEventParticipants(
                 $model,
                 null,
-                'pages/extra-vaganza/' . $model->id,
+                'pages/update-vaganza/' . $model->id,
                 $message,
                 false
             ));

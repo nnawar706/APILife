@@ -53,8 +53,6 @@ class Treasurer extends Model
         parent::boot();
 
         static::created(function ($model) {
-            Cache::forget('treasurers');
-
             if (auth()->user()->id != $model->user_id)
             {
                 $model->treasurer->notify(new UserNotification(
@@ -67,8 +65,6 @@ class Treasurer extends Model
         });
 
         static::updated(function ($model) {
-            Cache::forget('treasurers');
-
             if ($model->completion_status == 1)
             {
                 $model->treasurer->notify(new UserNotification(

@@ -45,6 +45,9 @@ class TreasurerService
     public function getAll()
     {
         return $this->model
+            ->whereHas('liabilities', function ($q) {
+                return $q->where('user_id', auth()->user()->id);
+            })
             ->with('treasurer','liabilities.user','events.event')
             ->latest()->get();
     }

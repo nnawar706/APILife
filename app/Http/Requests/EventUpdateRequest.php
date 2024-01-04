@@ -49,7 +49,7 @@ class EventUpdateRequest extends FormRequest
                                             }
                                         }],
             'title'               => 'required|string|max:150',
-            'detail'              => 'required|string',
+            'detail'              => 'required|string|max:490',
             'from_date'           => 'required|date_format:Y-m-d H:i|after_or_equal:today',
             'to_date'             => 'nullable|date_format:Y-m-d H:i|after:from_date',
             'remarks'             => 'nullable|string|max:500',
