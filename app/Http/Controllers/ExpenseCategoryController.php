@@ -18,7 +18,9 @@ class ExpenseCategoryController extends Controller
 
     public function index()
     {
-        $data = $this->service->getAll();
+        $data = Cache::remember('expense_categories', 24*60*60*60, function () {
+            return $this->service->getAll();
+        });
 
         return response()->json([
             'status' => true,
@@ -71,7 +73,7 @@ class ExpenseCategoryController extends Controller
 
         return response()->json([
             'status' => false,
-            'error'  => 'Unable to delete event category since it contains data.'
+            'error'  => 'Unable to delete expense category since it contains data.'
         ], Response::HTTP_BAD_REQUEST);
     }
 }

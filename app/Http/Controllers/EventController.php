@@ -34,7 +34,9 @@ class EventController extends Controller
 
     public function eventDesignations($event_id)
     {
-        $data = $this->service->getDesignationGradings($event_id);
+        $data = Cache::remember('event_designation_gradings'.$event_id, 24*60*60*60, function () use ($event_id) {
+            return $this->service->getDesignationGradings($event_id);
+        });
 
         return response()->json([
             'status' => true,
@@ -83,6 +85,8 @@ class EventController extends Controller
 
         if (!$response)
         {
+            Cache::forget('event_designation_gradings'.$id);
+
             return response()->json(['status' => true], Response::HTTP_OK);
         }
 
@@ -105,8 +109,6 @@ class EventController extends Controller
 
         if (!$response)
         {
-            Cache::forget('event_participants'.$id);
-
             return response()->json(['status' => true], Response::HTTP_CREATED);
         }
 
@@ -118,9 +120,11 @@ class EventController extends Controller
 
     public function removeParticipant(EventRemoveParticipantsRequest $request, $id)
     {
-        $this->service->removeEventParticipant($request->user_id, $id);
+        $response = $this->service->removeEventParticipant($request->user_id, $id);
 
-        return response()->json(['status' => true], Response::HTTP_OK);
+        return response()->json([
+            'status' => true
+        ], $response ? Response::HTTP_OK : Response::HTTP_NOT_MODIFIED);
 
     }
 

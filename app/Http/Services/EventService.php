@@ -265,7 +265,7 @@ class EventService
             }])->get();
     }
 
-    public function removeEventParticipant($user_id, $id): void
+    public function removeEventParticipant($user_id, $id): bool
     {
         $event = $this->model->findOrFail($id);
 
@@ -274,7 +274,11 @@ class EventService
         if ($participant)
         {
             $participant->delete();
+
+            return true;
         }
+
+        return false;
     }
 
     public function removeEvent($id): bool

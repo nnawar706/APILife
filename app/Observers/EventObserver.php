@@ -23,8 +23,6 @@ class EventObserver
      */
     public function created($model): void
     {
-        Cache::forget('events');
-
         dispatch(new NotifyEventParticipants(
             $model,
             auth()->user(),
@@ -39,8 +37,6 @@ class EventObserver
      */
     public function updated($model): void
     {
-        Cache::forget('events');
-
         if ($model->event_status_id == 3 || $model->event_status_id == 4)
         {
             $message = $model->event_status_id == 3 ? $model->title . ' has been approved by all participants.'
@@ -61,7 +57,6 @@ class EventObserver
      */
     public function deleted($model): void
     {
-        Cache::forget('events');
         Cache::forget('event_info'.$model->id);
     }
 }

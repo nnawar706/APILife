@@ -34,24 +34,6 @@ class UserLoanService
             ->latest()->get();
     }
 
-    public function removeLoan($id)
-    {
-        $loan = $this->model->findOrFail($id);
-
-        if ($loan->user_id != auth()->user()->id)
-        {
-            return 'Unable to delete loans that were not created by you.';
-        }
-        if ($loan->status == 1)
-        {
-            return 'Unable to delete loan once it is accepted.';
-        }
-
-        $loan->delete();
-
-        return null;
-    }
-
     public function changeStatus($status, $id)
     {
         $loan = $this->model->findOrFail($id);

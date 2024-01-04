@@ -36,21 +36,6 @@ class UserLoanController extends Controller
         return response()->json(['status' => true], Response::HTTP_CREATED);
     }
 
-    public function delete($id)
-    {
-        $response = $this->service->removeLoan($id);
-
-        if(!$response)
-        {
-            return response()->json(['status' => true], Response::HTTP_OK);
-        }
-
-        return response()->json([
-            'status' => false,
-            'error'  => $response
-        ], Response::HTTP_FORBIDDEN);
-    }
-
     public function updateStatus(Request $request, $id)
     {
         $validate = \Validator::make($request->all(), [

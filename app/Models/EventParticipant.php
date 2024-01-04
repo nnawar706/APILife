@@ -31,11 +31,6 @@ class EventParticipant extends Model
     {
         parent::boot();
 
-        static::created(function ($model) {
-            Cache::forget('events');
-            Cache::forget('event_info'.$model->event_id);
-        });
-
         static::updated(function ($model) {
             if ($model->approval_status &&
                 $model->event->participants()->where('approval_status', false)->doesntExist())
@@ -46,9 +41,6 @@ class EventParticipant extends Model
         });
 
         static::deleted(function ($model) {
-            Cache::forget('events');
-            Cache::forget('event_info'.$model->event_id);
-
             dispatch(new NotifyEventParticipants(
                 $model->event,
                 auth()->user(),

@@ -48,7 +48,6 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('user_loans/summary', 'summary');
         Route::post('user_loans/create', 'create');
         Route::put('user_loans/update_status/{id}', 'updateStatus');
-        Route::delete('user_loans/delete/{id}', 'delete');
     });
 
     Route::controller(EventCategoryController::class)->group(function () {
