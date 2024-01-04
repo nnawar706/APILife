@@ -19,7 +19,9 @@ class UserLoanController extends Controller
 
     public function index()
     {
-        $data = $this->service->getAll(auth()->user()->id === 1);
+        $data = Cache::remember('user_loan'.auth()->user()->id, 24*60*60*60, function () {
+            return $this->service->getAll();
+        });
 
         return response()->json([
             'status' => true,
@@ -90,7 +92,7 @@ class UserLoanController extends Controller
 
         $user_id = $request->user_id ?? auth()->user()->id;
 
-        $data = Cache::remember('user_loans_summary'.$user_id, 24*60*60*60, function () use ($user_id) {
+        $data = Cache::remember('user_loans_summary'.$user_id, 24*60*60*3, function () use ($user_id) {
             return $this->service->getLoanSummary($user_id);
         });
 

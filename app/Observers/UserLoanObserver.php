@@ -22,6 +22,9 @@ class UserLoanObserver
      */
     public function created($model): void
     {
+        Cache::forget('user_loan'.$model->user_id);
+        Cache::forget('user_loan'.$model->selected_user_id);
+
         $model->selectedUser->notify(new UserNotification(
             'pages/financial-assistance/transaction-log',
             auth()->user()->name . ' has initialized a loan for you.',
@@ -35,6 +38,9 @@ class UserLoanObserver
      */
     public function updated($model): void
     {
+        Cache::forget('user_loan'.$model->user_id);
+        Cache::forget('user_loan'.$model->selected_user_id);
+
         Cache::forget('user_loans_summary' . $model->user_id);
         Cache::forget('user_loans_summary' . $model->selected_user_id);
 

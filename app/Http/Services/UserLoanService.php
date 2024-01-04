@@ -26,16 +26,11 @@ class UserLoanService
         ]);
     }
 
-    public function getAll($includeAll)
+    public function getAll()
     {
         return $this->model->with('user','selectedUser')
-            ->when($includeAll, function ($q) {
-                return $q->with('user');
-            })
-            ->when(!$includeAll, function ($q) {
-                return $q->where('user_id', auth()->user()->id)
-                    ->orWhere('selected_user_id', auth()->user()->id);
-            })
+            ->where('user_id', auth()->user()->id)
+            ->orWhere('selected_user_id', auth()->user()->id)
             ->latest()->get();
     }
 
@@ -123,10 +118,11 @@ class UserLoanService
                                     ->whereBetween('created_at', [$last_week, Carbon::now('Asia/Dhaka')])
                                     ->where('selected_user_id', $user_id)->debited()->sum('amount');
 
-        $weekly['total_confirmed_transaction'] = $loan_models->clone()
-                                    ->whereBetween('created_at', [$last_week, Carbon::now('Asia/Dhaka')])
-                                    ->where('user_id', $user_id)
-                                    ->orWhere('selected_user_id', $user_id)->count();
+        $weekly['total_confirmed_transaction'] =
+            $loan_models->clone()->whereBetween('created_at', [$last_week, Carbon::now('Asia/Dhaka')])->where('user_id', $user_id)->count()
+            +
+            $loan_models->clone()->whereBetween('created_at', [$last_week, Carbon::now('Asia/Dhaka')])->where('selected_user_id', $user_id)->count();
+
 
         $monthly['total_debited_amount'] = $loan_models->clone()
                                     ->whereBetween('created_at', [$last_month, Carbon::now('Asia/Dhaka')])
@@ -142,10 +138,11 @@ class UserLoanService
                                     ->whereBetween('created_at', [$last_month, Carbon::now('Asia/Dhaka')])
                                     ->where('selected_user_id', $user_id)->debited()->sum('amount');
 
-        $monthly['total_confirmed_transaction'] = $loan_models->clone()
-                                    ->whereBetween('created_at', [$last_month, Carbon::now('Asia/Dhaka')])
-                                    ->where('user_id', $user_id)
-                                    ->orWhere('selected_user_id', $user_id)->count();
+        $monthly['total_confirmed_transaction'] =
+            $loan_models->clone()->whereBetween('created_at', [$last_month, Carbon::now('Asia/Dhaka')])->where('user_id', $user_id)->count()
+            +
+            $loan_models->clone()->whereBetween('created_at', [$last_month, Carbon::now('Asia/Dhaka')])->where('selected_user_id', $user_id)->count();
+
 
         $yearly['total_debited_amount'] = $loan_models->clone()
                                     ->whereBetween('created_at', [$last_year, Carbon::now('Asia/Dhaka')])
@@ -161,14 +158,15 @@ class UserLoanService
                                     ->whereBetween('created_at', [$last_year, Carbon::now('Asia/Dhaka')])
                                     ->where('selected_user_id', $user_id)->debited()->sum('amount');
 
-        $yearly['total_confirmed_transaction'] = $loan_models->clone()
-                                    ->whereBetween('created_at', [$last_year, Carbon::now('Asia/Dhaka')])
-                                    ->where('user_id', $user_id)
-                                    ->orWhere('selected_user_id', $user_id)->count();
+        $yearly['total_confirmed_transaction'] =
+            $loan_models->clone()->whereBetween('created_at', [$last_year, Carbon::now('Asia/Dhaka')])->where('user_id', $user_id)->count()
+            +
+            $loan_models->clone()->whereBetween('created_at', [$last_year, Carbon::now('Asia/Dhaka')])->where('selected_user_id', $user_id)->count()
+        ;
 
         return array(
-            'total_transaction_count' => $loan_models->where('user_id', $user_id)
-                                            ->orWhere('selected_user_id', $user_id)->count(),
+            'total_transaction_count' => $loan_models->clone()->where('user_id', $user_id)->count() +
+                                            $loan_models->clone()->where('selected_user_id', $user_id)->count(),
             'summary'         => $summary,
             'additional_data' => array(
                 'weekly'  => $weekly,
