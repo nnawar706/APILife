@@ -55,15 +55,18 @@ class SystemController extends Controller
 
     private function getDashboardData()
     {
+        // variables
         $total_mfs           = 0;
         $dues                = 0;
         $monthly_user_badges = [];
         $user_wise_badge     = [];
 
+        // dates
         $end_date        = Carbon::now('Asia/Dhaka');
         $start_date      = Carbon::now('Asia/Dhaka')->subMonths(1);
         $start_date_week = Carbon::now('Asia/Dhaka')->subWeeks(1);
 
+        // model variables
         $eventStatus        = EventStatus::orderBy('id');
         $user               = User::status();
         $user_badge         = new UserBadge();

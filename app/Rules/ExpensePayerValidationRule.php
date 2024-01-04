@@ -23,8 +23,13 @@ class ExpensePayerValidationRule implements ValidationRule
 
             $event = Event::find(request()->input('event_id'));
 
+            if (!$event)
+            {
+                $fail('Invalid event detected.');
+            }
+
             // check if any duplicate user exists
-            if (count(array_unique($userIds)) !== count($userIds)) {
+            else if (count(array_unique($userIds)) !== count($userIds)) {
                 $fail('Duplicate user expense detected.');
             }
 
