@@ -19,7 +19,7 @@ class CheckUpdateDeleteExpenseEligibility
         $expense = Expense::find($request->route('id'));
 
         if ($expense) {
-            if ($expense->event->event_status_id !== 4 || $expense->event->event_status_id !== 3) { // 4: completed, 3: approved
+            if ($expense->event->event_status_id !== 4 && $expense->event->event_status_id !== 3) { // 4: completed, 3: approved
                 return $next($request);
             } else {
                 return response()->json([

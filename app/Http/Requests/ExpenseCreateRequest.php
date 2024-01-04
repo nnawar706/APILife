@@ -47,7 +47,7 @@ class ExpenseCreateRequest extends FormRequest
                                             {
                                                 $fail('Invalid extravaganza detected.');
                                             }
-                                            else if ($event->event_status_id != 1)
+                                            else if ($event->event_status_id != 1 && !$this->route('id'))
                                             {
                                                 $fail('Unable to add expenses to extravaganzas that are not ongoing.');
                                             }

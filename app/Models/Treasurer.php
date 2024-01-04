@@ -14,7 +14,7 @@ class Treasurer extends Model
 
     protected $guarded = ['id'];
 
-    protected $hidden = ['created_at', 'updated_at'];
+    protected $hidden = ['updated_at'];
 
     protected $casts = [
         'completion_status' => 'boolean'
@@ -41,6 +41,11 @@ class Treasurer extends Model
     public function events()
     {
         return $this->hasMany(TreasurerEvent::class, 'treasurer_id');
+    }
+
+    public function treasurerEvents()
+    {
+        return $this->hasManyThrough(Event::class, TreasurerEvent::class, 'event_id', 'treasurer_id');
     }
 
     public function liabilities()
