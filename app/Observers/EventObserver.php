@@ -37,6 +37,8 @@ class EventObserver
      */
     public function updated($model): void
     {
+        Cache::forget('event_expenses'.$model->id);
+
         if ($model->event_status_id == 3 || $model->event_status_id == 4)
         {
             $message = $model->event_status_id == 3 ? $model->title . ' has been approved by all participants.'
