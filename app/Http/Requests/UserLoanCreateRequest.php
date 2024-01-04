@@ -38,7 +38,8 @@ class UserLoanCreateRequest extends FormRequest
                                     }],
             'amount'           => 'required|numeric|min:1',
             'type'             => 'required|in:1,2',
-            'loan_type'        => 'required|in:1,2'
+            'loan_type'        => 'required|in:1,2',
+            'notes'            => 'nullable|string|max:290'
         ];
     }
 

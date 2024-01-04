@@ -19,6 +19,7 @@ return new class extends Migration
             $table->float('amount');
             $table->tinyInteger('type', false, true)->comment('1:debit, 2: credit');
             $table->tinyInteger('loan_type', false, true)->comment('1:lend, 2: return');
+            $table->string('notes', 300)->nullable();
             $table->tinyInteger('status', false, true)->default(0)->comment('0:initiated,1:accepted,2:declined,3:paid');
             $table->timestamps();
         });
