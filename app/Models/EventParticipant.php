@@ -5,7 +5,6 @@ namespace App\Models;
 use App\Jobs\NotifyEventParticipants;
 use App\Notifications\UserNotification;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Cache;
 
 class EventParticipant extends Model
 {

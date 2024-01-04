@@ -18,7 +18,9 @@ class ExpenseController extends Controller
 
     public function read($id)
     {
-        $data = $this->service->getExpenseInfo($id);
+        $data = Cache::remember('expense_info'.$id, 24*60*60*60, function () use ($id) {
+            return $this->service->getExpenseInfo($id);
+        });
 
         return response()->json([
             'status' => true,
@@ -47,7 +49,7 @@ class ExpenseController extends Controller
 
         if (is_null($response))
         {
-            Cache::forget('expense'.$id);
+            Cache::forget('expense_info'.$id);
 
             return response()->json(['status' => true], Response::HTTP_OK);
         }

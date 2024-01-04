@@ -49,7 +49,7 @@ class ExpenseCreateRequest extends FormRequest
                                             }
                                             else if ($event->event_status_id != 1)
                                             {
-                                                $fail('Unable to add expenses to locked extravaganzas.');
+                                                $fail('Unable to add expenses to extravaganzas that are not ongoing.');
                                             }
                                         }],
             'title'               => 'required|string|max:150',

@@ -7,6 +7,7 @@ use App\Models\Event;
 use App\Models\ExpenseCategory;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
 class EventService
@@ -275,6 +276,8 @@ class EventService
         {
             $participant->delete();
 
+            Cache::forget('event_participants'.$id);
+
             return true;
         }
 
@@ -303,9 +306,14 @@ class EventService
         $event_participant = $event->eventParticipants()
             ->where('user_id', '=', auth()->user()->id)->first();
 
-        $event_participant->update(['approval_status' => 1]);
+        if ($event_participant)
+        {
+            $event_participant->update(['approval_status' => 1]);
 
-        return $event_participant->wasChanged();
+            return $event_participant->wasChanged();
+        }
+
+        return false;
     }
 
     public function updateEventStatus($event_status_id, $id): bool

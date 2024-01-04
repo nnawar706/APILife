@@ -107,8 +107,7 @@ class ExpenseService
 
             DB::commit();
 
-            Cache::forget('event_info'.$expense->event_id);
-            Cache::forget('event_expense_log'.$expense->event_id);
+            Cache::forget('event_expenses'.$expense->event_id);
 
             dispatch(new NotifyEventParticipants(
                 $expense->event,

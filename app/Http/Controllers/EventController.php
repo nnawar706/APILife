@@ -56,7 +56,9 @@ class EventController extends Controller
 
     public function eventExpenseLog($event_id)
     {
-        $data = $this->service->getExpenseLog($event_id);
+        $data = Cache::remember('event_expenses'.$event_id, 24*60*60*60, function () use ($event_id) {
+            return $this->service->getExpenseLog($event_id);
+        });
 
         return response()->json([
             'status' => true,
@@ -109,6 +111,8 @@ class EventController extends Controller
 
         if (!$response)
         {
+            Cache::forget('event_participants'.$id);
+
             return response()->json(['status' => true], Response::HTTP_CREATED);
         }
 
@@ -140,7 +144,9 @@ class EventController extends Controller
 
     public function eventParticipants($event_id)
     {
-        $data = $this->service->getEventParticipantList($event_id);
+        $data = Cache::remember('event_participants'.$event_id, 24*60*60*60, function () use ($event_id) {
+            return $this->service->getEventParticipantList($event_id);
+        });
 
         return response()->json([
             'status' => true,
@@ -152,7 +158,9 @@ class EventController extends Controller
     {
         $response = $this->service->changeApprovalStatus($request);
 
-        return response()->json(['status' => true], $response ? Response::HTTP_OK : Response::HTTP_NOT_MODIFIED);
+        return response()->json([
+            'status' => true
+        ], $response ? Response::HTTP_OK : Response::HTTP_NOT_MODIFIED);
     }
 
     public function delete($id)

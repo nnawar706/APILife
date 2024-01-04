@@ -49,8 +49,7 @@ class Expense extends Model
         });
 
         static::created(function ($model) {
-            Cache::forget('event_info'.$model->event_id);
-            Cache::forget('event_expense_log'.$model->event_id);
+            Cache::forget('event_expenses'.$model->event_id);
 
             dispatch(new NotifyEventParticipants(
                 $model->event,
@@ -61,15 +60,9 @@ class Expense extends Model
             ));
         });
 
-        static::updated(function ($model) {
-            Cache::forget('event_info'.$model->event_id);
-            Cache::forget('event_expense_log'.$model->event_id);
-        });
-
         static::deleted(function ($model) {
-            Cache::forget('expense'.$model->id);
-            Cache::forget('event_info'.$model->event_id);
-            Cache::forget('event_expense_log'.$model->event_id);
+            Cache::forget('expense_info'.$model->id);
+            Cache::forget('event_expenses'.$model->event_id);
 
             dispatch(new NotifyEventParticipants(
                 $model->event,
