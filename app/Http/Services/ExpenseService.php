@@ -105,6 +105,11 @@ class ExpenseService
                 }
             }
 
+            if ($expense->event->event_status_id == 2)
+            {
+                $expense->event->addParticipants()->update(['approval_status' => 0]);
+            }
+
             DB::commit();
 
             Cache::forget('event_expenses'.$expense->event_id);
@@ -132,6 +137,11 @@ class ExpenseService
 
         try {
             $expense->delete();
+
+            if ($expense->event->event_status_id == 2)
+            {
+                $expense->event->addParticipants()->update(['approval_status' => 0]);
+            }
 
             return true;
         } catch (QueryException $ex) {
