@@ -12,6 +12,7 @@ use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -62,6 +63,8 @@ class TreasurerLiabilitiesCalculation implements ShouldQueue
                             ]);
                         }
                     }
+
+                    Cache::forget('treasurers');
 
                     DB::commit();
                 } catch (QueryException $ex) {

@@ -57,19 +57,24 @@ class SystemController extends Controller
 
     private function getDashboardData()
     {
-        $end_date     = Carbon::now('Asia/Dhaka');
-        $start_date   = Carbon::now('Asia/Dhaka')->subMonths(1);
-        $start_date_week = Carbon::now('Asia/Dhaka')->subWeeks(1);
-        $eventStatus  = EventStatus::orderBy('id');
-        $user         = User::status();
-        $user_badge   = new UserBadge();
-        $transactions = UserLoan::accepted();
-        $badge        = Badge::orderBy('id')->get();
-        $expense_categories = ExpenseCategory::leftJoin('expenses','expense_categories.id','=','expenses.expense_category_id')
-            ->leftJoin('expense_payers','expenses.id','=','expense_payers.expense_id')
-            ->leftJoin('events','expenses.event_id','=','events.id');
-
+        $total_mfs           = 0;
+        $dues                = 0;
         $monthly_user_badges = [];
+        $user_wise_badge     = [];
+
+        $end_date        = Carbon::now('Asia/Dhaka');
+        $start_date      = Carbon::now('Asia/Dhaka')->subMonths(1);
+        $start_date_week = Carbon::now('Asia/Dhaka')->subWeeks(1);
+
+        $eventStatus        = EventStatus::orderBy('id');
+        $user               = User::status();
+        $user_badge         = new UserBadge();
+        $transactions       = UserLoan::accepted();
+        $badge              = Badge::orderBy('id')->get();
+        $expense_categories = ExpenseCategory::leftJoin('expenses','expense_categories.id','=','expenses.expense_category_id')
+                                ->leftJoin('expense_payers','expenses.id','=','expense_payers.expense_id')
+                                ->leftJoin('events','expenses.event_id','=','events.id');
+
 
         $monthly_user_badges['month'] = Carbon::parse($end_date)->format('M');
         $monthly_user_badges['user_data'] = $user_badge->clone()
@@ -86,15 +91,9 @@ class SystemController extends Controller
 
         $total_users = $user->clone()->count();
         $active_users = $user->clone()->whereHas('events', function ($q) use ($start_date, $end_date) {
-            return $q->whereNotIn('event_status_id', [1,3])
+            return $q->whereNotIn('event_status_id', [1,5]) // 1: ongoing, 5: canceled
                 ->whereBetween('created_at', [$start_date, $end_date]);
         })->count();
-
-        $total_mfs = $user->clone()->whereHas('userPayables', function ($q) {
-            return $q->where('amount','>',0)->where('status',0);
-        })->count();
-
-        $dues = TreasurerLiability::where('amount','>',0)->where('status',0)->sum('amount');
 
         $transaction_count = $transactions->clone()->count();
         $transaction_amount = $transactions->clone()->sum('amount');
@@ -104,8 +103,6 @@ class SystemController extends Controller
         $transaction_amount_30days = $transactions->clone()
             ->whereBetween('created_at', [$start_date, $end_date])->sum('amount');
 
-        $user_wise_badge = [];
-
         foreach ($user->clone()->get() as $key => $item)
         {
             $user_wise_badge[$key]['user'] = $item;
@@ -114,6 +111,23 @@ class SystemController extends Controller
             {
                 $user_wise_badge[$key]['badges'][$i]['badge'] = $val;
                 $user_wise_badge[$key]['badges'][$i]['count'] = $val->userBadge()->where('user_id', $item->id)->count();
+            }
+
+            $debited = $transactions->clone()->where('user_id', $item->id)->debited()->sum('amount')
+                +
+                $transactions->clone()->where('selected_user_id', $item->id)->credited()->sum('amount');
+
+            $credited= $transactions->clone()->where('selected_user_id', $item->id)->debited()->sum('amount')
+                +
+                $transactions->clone()->where('user_id', $item->id)->credited()->sum('amount');
+
+            $adjustment = $credited - $debited;
+
+            if ($adjustment < 0)
+            {
+                $total_mfs++;
+            } else {
+                $dues += $adjustment;
             }
         }
 

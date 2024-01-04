@@ -55,7 +55,6 @@ class Treasurer extends Model
         static::created(function ($model) {
             Cache::forget('treasurers');
 
-
             if (auth()->user()->id != $model->user_id)
             {
                 $model->treasurer->notify(new UserNotification(

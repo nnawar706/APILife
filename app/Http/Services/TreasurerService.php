@@ -45,7 +45,7 @@ class TreasurerService
     public function getAll()
     {
         return $this->model
-            ->with('treasurer.designation','liabilities.user.designation')
+            ->with('treasurer','liabilities.user')
             ->latest()->get();
     }
 }

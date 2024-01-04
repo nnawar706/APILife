@@ -18,7 +18,9 @@ class TreasurerController extends Controller
 
     public function index()
     {
-        $data = $this->service->getAll();
+        $data = Cache::remember('treasurers', 24*60*60*60, function () {
+            return $this->service->getAll();
+        });
 
         return response()->json([
             'status' => true,
