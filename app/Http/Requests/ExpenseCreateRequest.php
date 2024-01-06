@@ -58,7 +58,7 @@ class ExpenseCreateRequest extends FormRequest
             'remarks'             => 'nullable|string|max:300',
             'bearers'             => ['required','array','min:1', new ExpenseBearerValidationRule()],
             'payers'              => ['sometimes','array','min:1', new ExpensePayerValidationRule()],
-            'payers.*.amount'     => 'required|numeric|min:10'
+            'payers.*.amount'     => 'required|numeric|min:1'
         ];
     }
 
@@ -68,7 +68,7 @@ class ExpenseCreateRequest extends FormRequest
             'expense_category_id.required' => 'Expense category field is required.',
             'payers.*.amount.required'     => 'All the user payment amount is required.',
             'payers.*.amount.numeric'      => 'All the user payment amount ust be numeric.',
-            'payers.*.amount.min'          => 'User payment amount must be at least 10.'
+            'payers.*.amount.min'          => 'User payment amount must be at least 1.'
         ];
     }
 
