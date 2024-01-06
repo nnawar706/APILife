@@ -50,8 +50,8 @@ class NotifyUsers implements ShouldQueue
                 $item->notify(new UserNotification(
                     $this->link,
                     $this->message,
-                    $this->user->name,
-                    $this->user->photo_url
+                    $this->user ? $this->user->name : 'Life++',
+                    $this->user ? $this->user->photo_url : null
                 ));
             }
         }

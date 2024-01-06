@@ -86,4 +86,18 @@ class UserLoanController extends Controller
             'data'   => $data
         ]);
     }
+
+    public function delete($id)
+    {
+        $response = $this->service->remove($id);
+
+        if (!$response)
+        {
+            return response()->json(['status' => true], Response::HTTP_OK);
+        }
+        return response()->json([
+            'status' => true,
+            'error'  => $response
+        ], Response::HTTP_FORBIDDEN);
+    }
 }

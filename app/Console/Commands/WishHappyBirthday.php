@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Jobs\NotifyUsers;
 use App\Models\User;
 use App\Notifications\UserNotification;
 use Carbon\Carbon;
@@ -30,6 +31,8 @@ class WishHappyBirthday extends Command
     {
         $users = User::status()->get();
 
+        $userIds = array_column(json_decode($users, true), 'id');
+
         foreach ($users as $item)
         {
             $birthdate = $item->birthday . '-' . Carbon::today('Asia/Dhaka')->format('Y');
@@ -40,6 +43,29 @@ class WishHappyBirthday extends Command
                     '',
                     'Happy Birthday! 🎉 🎊 May all your dreams turn into reality.',
                     null,
+                    null
+                ));
+
+                $notifyUsers = array_diff($userIds, [$item->id]);
+
+                dispatch(new NotifyUsers(
+                    $notifyUsers,
+                    false,
+                    'pages/accounts/notification',
+                    "Today is " . $item->name ."'s day! 🎈🎁 Wish Happy Birthday before it's too late.",
+                    null
+                ));
+            }
+
+            if (Carbon::today('Asia/Dhaka')->format('d-m-Y') == Carbon::parse($birthdate)->subWeek(1)->format('d-m-Y'))
+            {
+                $notifyUsers = array_diff($userIds, [$item->id]);
+
+                dispatch(new NotifyUsers(
+                    $notifyUsers,
+                    false,
+                    'pages/accounts/notification',
+                    $item->name ."'s birthday is coming next week! 🎈🎁 Let's start planning for the surprise.",
                     null
                 ));
             }

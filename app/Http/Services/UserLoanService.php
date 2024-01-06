@@ -158,4 +158,28 @@ class UserLoanService
             )
         );
     }
+
+    public function remove($id)
+    {
+        $loan = $this->model->find($id);
+
+        if (!$loan)
+        {
+            return null;
+        }
+
+        if ($loan->user_id != auth()->user()->id)
+        {
+            return 'You are not authorized to perform this action.';
+        }
+
+        if ($loan->staus == 1)
+        {
+            return 'You are not authorized to delete accepted loans.';
+        }
+
+        $loan->delete();
+
+        return null;
+    }
 }
