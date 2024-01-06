@@ -74,6 +74,7 @@ class SystemController extends Controller
         $eventStatus        = EventStatus::orderBy('id');
         $user               = User::status();
         $user_badge         = new UserBadge();
+        $event_count_lifetime = $eventStatus->clone()->withCount('events')->get();
         $transactions       = UserLoan::accepted();
         $badge              = Cache::rememberForever('badges', function () {
                                     return Badge::orderBy('id')->get();
@@ -83,13 +84,12 @@ class SystemController extends Controller
                                 ->leftJoin('events','expenses.event_id','=','events.id');
 
 
-        $monthly_user_badges['month'] = Carbon::parse($end_date)->format('M');
+        $monthly_user_badges['month'] = Carbon::parse($end_date)->format('F');
         $monthly_user_badges['user_data'] = $user_badge->clone()
             ->whereMonth('created_at', Carbon::parse($end_date)->format('n'))
             ->orderByDesc('point')
             ->with('badge','user')->get();
 
-        $event_count_lifetime = $eventStatus->clone()->withCount('events')->get();
 
         $event_count_30days = $eventStatus->clone()
             ->withCount(['events' => function ($q) use ($start_date, $end_date) {
@@ -110,6 +110,8 @@ class SystemController extends Controller
         $transaction_amount_30days = $transactions->clone()
             ->whereBetween('created_at', [$start_date, $end_date])->sum('amount');
 
+        $current_user_points = [];
+
         foreach ($user->clone()->get() as $key => $item)
         {
             $user_wise_badge[$key]['user'] = $item;
@@ -119,6 +121,9 @@ class SystemController extends Controller
                 $user_wise_badge[$key]['badges'][$i]['badge'] = $val;
                 $user_wise_badge[$key]['badges'][$i]['count'] = $val->userBadge()->where('user_id', $item->id)->count();
             }
+
+            $current_user_points[$key]['user'] = $item;
+            $current_user_points[$key]['earned_points'] = intval($item->points()->sum('point'));
 
             $debited = $transactions->clone()->where('user_id', $item->id)->debited()->sum('amount')
                 +
@@ -191,6 +196,7 @@ class SystemController extends Controller
             'transaction_30days_amount'   => $transaction_amount_30days,
             'current_month_badges'        => $monthly_user_badges,
             'user_badges'                 => $user_wise_badge,
+            'user_points'                 => $current_user_points,
             'expense_categories_lifetime' => $expense_categories_lifetime,
             'expense_categories_monthly'  => $expense_categories_monthly,
             'expense_categories_weekly'   => $expense_categories_weekly

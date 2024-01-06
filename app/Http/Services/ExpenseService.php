@@ -118,7 +118,7 @@ class ExpenseService
                 $expense->event,
                 auth()->user(),
                 'pages/timeline-page/'.$expense->event_id,
-                auth()->user()->name . ' has updated expense data for ' . $expense->event->title,
+                auth()->user()->name . ' updated expense data for ' . $expense->event->title,
                 false
             ));
 

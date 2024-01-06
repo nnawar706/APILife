@@ -239,7 +239,7 @@ class EventService
                 $event,
                 auth()->user(),
                 'pages/extra-vaganza',
-                auth()->user()->name . ' has added new participants to ' . $event->title . '.',
+                auth()->user()->name . ' added new participants to ' . $event->title . '.',
                 false
             ));
 
