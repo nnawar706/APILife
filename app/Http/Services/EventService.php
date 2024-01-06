@@ -257,8 +257,11 @@ class EventService
             ->when($request->has('status_id'), function ($q) use ($request) {
                 return $q->where('event_status_id', $request->status_id);
             })
-            ->whereHas('participants', function ($q) {
-                return $q->where('users.id', auth()->user()->id);
+            ->where('is_public', '=', 1)
+            ->orWhere(function ($q) {
+                $q->whereHas('participants', function ($q1) {
+                    return $q1->where('users.id', auth()->user()->id);
+                });
             })
             ->with('lead','category')
             ->with(['participants' => function($q) {

@@ -13,7 +13,12 @@ class Event extends Model
     use LogsActivity;
 
     protected $guarded = ['id'];
+
     protected $hidden = ['updated_at'];
+
+    protected $casts = [
+        'is_public' => 'boolean'
+    ];
 
     protected function createdAt(): Attribute
     {

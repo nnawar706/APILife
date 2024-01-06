@@ -22,6 +22,7 @@ return new class extends Migration
             $table->dateTime('to_date')->nullable();
             $table->string('remarks', 500)->nullable();
             $table->foreignId('event_status_id')->constrained('event_statuses')->onDelete('restrict');
+            $table->tinyInteger('is_public', false, true)->default(0)->comment('1: public');
             $table->timestamps();
         });
     }

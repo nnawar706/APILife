@@ -64,6 +64,7 @@ class SystemController extends Controller
         $dues                = 0;
         $monthly_user_badges = [];
         $user_wise_badge     = [];
+        $current_user_points = [];
 
         // dates
         $end_date        = Carbon::now('Asia/Dhaka');
@@ -71,7 +72,9 @@ class SystemController extends Controller
         $start_date_week = Carbon::now('Asia/Dhaka')->subWeeks(1);
 
         // model variables
-        $eventStatus        = EventStatus::orderBy('id');
+        $eventStatus        = Cache::rememberForever('event_statuses', function () {
+                                    return EventStatus::orderBy('id');
+                                });
         $user               = User::status();
         $user_badge         = new UserBadge();
         $event_count_lifetime = $eventStatus->clone()->withCount('events')->get();
@@ -109,8 +112,6 @@ class SystemController extends Controller
             ->whereBetween('created_at', [$start_date, $end_date])->count();
         $transaction_amount_30days = $transactions->clone()
             ->whereBetween('created_at', [$start_date, $end_date])->sum('amount');
-
-        $current_user_points = [];
 
         foreach ($user->clone()->get() as $key => $item)
         {
