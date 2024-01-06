@@ -277,28 +277,28 @@ class SystemController extends Controller
 
     public function test()
     {
-        $users = User::status()->get();
-
-        foreach ($users as $item)
-        {
-            $birthdate = $item->birthday . '-' . Carbon::today('Asia/Dhaka')->format('Y');
-
-            if (Carbon::today('Asia/Dhaka')->format('d-m-Y') == Carbon::parse($birthdate)->format('d-m-Y'))
-            {
-                $item->notify(new UserNotification(
-                    '',
-                    'Happy Birthday! 🎉 🎊 May all your dreams turn into reality.',
-                    null,
-                    null
-                ));
-
-                return;
-            }
-
-            if (Carbon::today('Asia/Dhaka')->format('d-m-Y') == Carbon::parse($birthdate)->subWeek(1)->format('d-m-Y'))
-            {
-
-            }
-        }
+//        $users = User::status()->get();
+//
+//        foreach ($users as $item)
+//        {
+//            $birthdate = $item->birthday . '-' . Carbon::today('Asia/Dhaka')->format('Y');
+//
+//            if (Carbon::today('Asia/Dhaka')->format('d-m-Y') == Carbon::parse($birthdate)->format('d-m-Y'))
+//            {
+//                $item->notify(new UserNotification(
+//                    '',
+//                    'Happy Birthday! 🎉 🎊 May all your dreams turn into reality.',
+//                    null,
+//                    null
+//                ));
+//
+//                return;
+//            }
+//
+//            if (Carbon::today('Asia/Dhaka')->format('d-m-Y') == Carbon::parse($birthdate)->subWeek(1)->format('d-m-Y'))
+//            {
+//
+//            }
+//        }
     }
 }
