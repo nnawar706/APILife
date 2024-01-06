@@ -2,27 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\BadgeWeight;
 use App\Jobs\NotifyUsers;
 use App\Models\Badge;
-use App\Models\Event;
 use App\Models\EventCategory;
 use App\Models\EventStatus;
-use App\Models\ExpenseBearer;
 use App\Models\ExpenseCategory;
-use App\Models\ExpensePayer;
 use App\Models\User;
 use App\Models\UserBadge;
 use App\Models\UserLoan;
-use App\Models\UserPoint;
 use App\Notifications\UserNotification;
 use Carbon\Carbon;
-use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use Spatie\Activitylog\Models\Activity;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -220,6 +211,23 @@ class SystemController extends Controller
 
     public function test()
     {
+        $quotes = [
+            "Extravaganza planning: where we turn 'why not?' into 'oh wow!' 🎉",
+            "Tip for crafting an event: Think big, dream bigger, and then add a touch of 'I-can't-believe-we-pulled-this-off 💥",
+            'Extravaganza planning tip: When in doubt, add more sparkles, because ordinary is so last century 🥳',
+            "Extravaganza planning rule #1: If it doesn't make you gasp in awe, you're not doing it right 💥",
+            'Extravaganza planning tip: Start with a sprinkle of creativity, add a dash of audacity, and garnish with a generous helping of wow-factor 🥳',
+            "Plan a party in such a way that everyone asks 'who is the host?' and you get to say 'thats a million dollar question' 🤓"
+        ];
 
+        $index = Carbon::now('Asia/Dhaka')->format('n') % 6;
+
+        dispatch(new NotifyUsers(
+            null,
+            true,
+            '',
+            $quotes[$index],
+            null
+        ));
     }
 }
