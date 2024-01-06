@@ -54,7 +54,8 @@ class EventUpdateRequest extends FormRequest
             'to_date'             => 'nullable|date_format:Y-m-d H:i|after:from_date',
             'remarks'             => 'nullable|string|max:500',
             'designation_gradings'=> ['required','array', new EventDesignationGradingValidationRule()],
-            'designation_gradings.*.amount' => 'required|numeric|min:0'
+            'designation_gradings.*.amount' => 'required|numeric|min:0',
+            'is_public'                     => 'sometimes|in:1',
         ];
     }
 

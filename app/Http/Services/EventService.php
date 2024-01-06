@@ -32,6 +32,7 @@ class EventService
                 'from_date'         => $request->from_date,
                 'to_date'           => $request->to_date,
                 'remarks'           => $request->remarks,
+                'is_public'         => $request->is_public ?? 0
             ]);
 
             $participants = $request->participants;
@@ -79,6 +80,7 @@ class EventService
                 'from_date'         => $request->from_date,
                 'to_date'           => $request->to_date,
                 'remarks'           => $request->remarks,
+                'is_public'         => $request->is_public ?? 0
             ]);
 
             foreach ($request->designation_gradings as $item)

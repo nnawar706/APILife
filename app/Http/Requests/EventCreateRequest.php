@@ -73,7 +73,8 @@ class EventCreateRequest extends FormRequest
                                         }
                                     }],
             'designation_gradings'          => ['required','array', new EventDesignationGradingValidationRule()],
-            'designation_gradings.*.amount' => 'required|numeric|min:0'
+            'designation_gradings.*.amount' => 'required|numeric|min:0',
+            'is_public'                     => 'sometimes|in:1',
         ];
     }
 
