@@ -44,16 +44,19 @@ class EventParticipant extends Model
                 $model->event,
                 auth()->user(),
                 'pages/extra-vaganza',
-                auth()->user()->name . ' has removed ' . $model->user->name . ' from ' . $model->event->title,
+                auth()->user()->name . ' removed ' . $model->user->name . ' from ' . $model->event->title,
                 false
             ));
 
-            $model->user->notify(new UserNotification(
-                'pages/extra-vaganza',
-                auth()->user()->name . ' has removed you from ' . $model->event->title,
-                auth()->user()->name,
-                auth()->user()->photo_url
-            ));
+            if (auth()->user()->id != $model->user_id)
+            {
+                $model->user->notify(new UserNotification(
+                    'pages/extra-vaganza',
+                    auth()->user()->name . ' removed you from ' . $model->event->title,
+                    auth()->user()->name,
+                    auth()->user()->photo_url
+                ));
+            }
         });
     }
 }
