@@ -148,10 +148,13 @@ class AssignUserPoint extends Command
                         );
                 }
 
-                $points->clone()->create([
-                    'user_id' => $user->id,
-                    'point'   => $weight
-                ]);
+                if ($weight != 0)
+                {
+                    $points->clone()->create([
+                        'user_id' => $user->id,
+                        'point' => $weight
+                    ]);
+                }
             }
 
             DB::commit();
