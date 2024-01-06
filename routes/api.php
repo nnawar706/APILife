@@ -109,7 +109,6 @@ Route::group(['middleware' => 'auth'], function () {
 });
 
 Route::controller(SystemController::class)->group(function () {
-    Route::get('calculate_monthly_point', 'calculatePoint');
     Route::post('send_random_notification', 'notifyRandomly');
     Route::get('refresh_system', 'refresh');
     Route::get('test', 'test');
