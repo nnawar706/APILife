@@ -22,8 +22,8 @@ class CheckEventReadEligibility
             if (!$event->is_public && $event->addParticipants()->where('user_id', auth()->user()->id)->doesntExist()) {
                 return response()->json([
                     'status' => false,
-                    'error'  => 'You are not authorized to fetch this data.'
-                ], Response::HTTP_UNAUTHORIZED);
+                    'error'  => 'You are not allowed to fetch this data.'
+                ], Response::HTTP_FORBIDDEN);
             }
             return $next($request);
         }

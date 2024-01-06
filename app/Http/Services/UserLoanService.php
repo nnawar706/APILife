@@ -170,12 +170,12 @@ class UserLoanService
 
         if ($loan->user_id != auth()->user()->id)
         {
-            return 'You are not authorized to perform this action.';
+            return 'You are not allowed to perform this action.';
         }
 
         if ($loan->staus == 1)
         {
-            return 'You are not authorized to delete accepted loans.';
+            return 'You are not allowed to delete accepted loans.';
         }
 
         $loan->delete();
