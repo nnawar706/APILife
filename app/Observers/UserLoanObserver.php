@@ -26,7 +26,7 @@ class UserLoanObserver
 
         $model->selectedUser->notify(new UserNotification(
             'pages/financial-assistance/transaction-log',
-            auth()->user()->name . ' has initialized a loan for you.',
+            auth()->user()->name . ' has initialized a loan for you. 💸',
             auth()->user()->name,
             auth()->user()->photo_url
         ));
@@ -45,7 +45,7 @@ class UserLoanObserver
 
         $model->user->notify(new UserNotification(
             'pages/financial-assistance/transaction-log',
-            auth()->user()->name . ' has updated a loan status.',
+            auth()->user()->name . ' updated a loan status.',
             auth()->user()->name,
             auth()->user()->photo_url
         ));

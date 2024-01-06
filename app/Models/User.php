@@ -159,6 +159,11 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasMany(Expense::class, 'last_updated_by');
     }
 
+    public function points()
+    {
+        return $this->hasMany(UserPoint::class);
+    }
+
     public static function boot()
     {
         parent::boot();
