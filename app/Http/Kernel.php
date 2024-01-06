@@ -66,6 +66,7 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'event.checker' => \App\Http\Middleware\CheckUpdateDeleteEventEligibility::class,
-        'expense.checker' => \App\Http\Middleware\CheckUpdateDeleteExpenseEligibility::class
+        'expense.checker' => \App\Http\Middleware\CheckUpdateDeleteExpenseEligibility::class,
+        'event.participant.checker' => \App\Http\Middleware\CheckEventReadEligibility::class
     ];
 }
