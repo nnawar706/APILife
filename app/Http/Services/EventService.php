@@ -96,7 +96,7 @@ class EventService
                 $event,
                 auth()->user(),
                 'pages/update-vaganza/'.$event->id,
-                auth()->user()->name . ' has updated an extravaganza information.',
+                auth()->user()->name . ' updated an extravaganza information.',
                 $lead_id != $event->lead_user_id
             ));
 

@@ -16,7 +16,6 @@ use Illuminate\Support\Facades\Route;
 use Pusher\PushNotifications\PushNotifications;
 
 Route::post('login', [AuthController::class, 'login']);
-Route::get('refresh_system', [SystemController::class, 'refresh']);
 
 Route::group(['middleware' => 'auth'], function () {
 
@@ -108,5 +107,8 @@ Route::group(['middleware' => 'auth'], function () {
     });
 });
 
-Route::get('calculate_monthly_point', [SystemController::class, 'calculatePoint']);
-Route::post('send_random_notification', [SystemController::class, 'notifyRandomly']);
+Route::controller(SystemController::class)->group(function () {
+    Route::get('calculate_monthly_point', 'calculatePoint');
+    Route::post('send_random_notification', 'notifyRandomly');
+    Route::get('refresh_system', 'refresh');
+});

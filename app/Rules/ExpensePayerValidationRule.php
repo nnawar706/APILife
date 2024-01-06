@@ -39,8 +39,15 @@ class ExpensePayerValidationRule implements ValidationRule
             }
 
             // check if sum of expense amount matches total paid amount
-            else if (array_sum(array_column($value, 'amount')) != (request()->input('unit_cost') * request()->input('quantity'))) {
-                $fail("Sum of expense payer's amount does not match total amount.");
+            else {
+                $totalPaid = array_sum(array_column($value, 'amount'));
+                $totalPayable = request()->input('unit_cost') * request()->input('quantity');
+
+                $adjustment = abs($totalPayable - $totalPaid);
+
+                if ($adjustment > 0.5) {
+                    $fail("Sum of expense payer's amount does not match total amount.");
+                }
             }
         } catch (\Throwable $th) {
             $fail('Invalid payload, some fields are missing.');
