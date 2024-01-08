@@ -11,6 +11,11 @@ enum BadgeWeight: int
     case SPONSOR_200_TO_500      = 26;
     case SPONSOR_BELOW_200       = 24;
 
+    // user loan
+    case LOAN_ABOVE_1500         = 22;
+    case LOAN_500_TO_1500        = 20;
+    case LOAN_BELOW_500          = 18;
+
     // expense cases
     case EXPENSE_BEAR_ABOVE_1500  = 16;
     case EXPENSE_BEAR_500_TO_1500 = 14;
@@ -24,11 +29,6 @@ enum BadgeWeight: int
     case EVENTS_LED              = 4;
     case EVENTS_ATTENDED         = 3;
     case EVENTS_CREATED          = 2;
-
-    // user loan
-    case LOAN_ABOVE_1500         = 22;
-    case LOAN_500_TO_1500        = 20;
-    case LOAN_BELOW_500          = 18;
 
     // login cases
     case USER_LOGIN_COUNT        = 1;
