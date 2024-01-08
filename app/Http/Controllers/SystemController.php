@@ -133,6 +133,10 @@ class SystemController extends Controller
             }
         }
 
+        usort($current_user_points, function ($a,$b) {
+            return $b['earned_points'] - $a['earned_points'];
+        });
+
         $event_categories = EventCategory::withCount(['events' => function ($query) {
             $query->whereIn('event_status_id', [2,3,4]);
         }])->get();
