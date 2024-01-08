@@ -102,7 +102,7 @@ class SystemController extends Controller
         $transaction_amount_30days = $transactions->clone()
             ->whereBetween('created_at', [$start_date, $end_date])->sum('amount');
 
-        foreach ($user->clone()->get() as $key => $item)
+        foreach ($user->clone()->with('designation')->get() as $key => $item)
         {
             $user_wise_badge[$key]['user'] = $item;
 
