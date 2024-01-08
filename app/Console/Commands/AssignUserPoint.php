@@ -44,19 +44,19 @@ class AssignUserPoint extends Command
             Carbon::parse($points->clone()->latest()->first()->created_at)->format('Y-m-d H:i');
 
         $loan = UserLoan::loanLend()->accepted()
-            ->whereBetween('created_at', [$start, $end]);
+            ->whereBetween('updated_at', [$start, $end]);
 
         $events = Event::where('event_status_id', '=', 4)
-            ->whereBetween('created_at', [$start, $end]);
+            ->whereBetween('updated_at', [$start, $end]);
 
         $bearers = ExpenseBearer::whereHas('expense.event', function ($q) use ($start, $end) {
             return $q->where('event_status_id', 4)
-                ->whereBetween('created_at', [$start, $end]);
+                ->whereBetween('updated_at', [$start, $end]);
         });
 
         $payers = ExpensePayer::whereHas('expense.event', function ($q) use ($start, $end) {
             return $q->where('event_status_id', 4)
-                ->whereBetween('created_at', [$start, $end]);
+                ->whereBetween('updated_at', [$start, $end]);
         });
 
         $users = User::get();
