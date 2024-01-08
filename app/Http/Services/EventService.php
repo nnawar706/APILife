@@ -262,7 +262,8 @@ class EventService
                         $q->whereHas('participants', function ($q1) {
                             return $q1->where('users.id', auth()->user()->id);
                         });
-                    });
+                    })
+                    ->whereDoesntHave('treasurer');
             })
             ->when(!$request->has('status_id'), function ($q) use ($request) {
                 return $q->where('is_public', '=', 1)
