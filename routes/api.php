@@ -15,7 +15,7 @@ use App\Http\Controllers\UserLoanController;
 use Illuminate\Support\Facades\Route;
 use Pusher\PushNotifications\PushNotifications;
 
-Route::post('login', [AuthController::class, 'login']);
+Route::post('login', [AuthController::class, 'login'])->middleware(['throttle:public']);
 
 Route::group(['middleware' => 'auth'], function () {
 
