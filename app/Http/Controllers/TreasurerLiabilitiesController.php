@@ -23,7 +23,7 @@ class TreasurerLiabilitiesController extends Controller
         {
             return response()->json([
                 'status' => false,
-                'error'  => 'You are not authorized to perform this action.'
+                'error'  => 'You are not allowed to perform this action.'
             ], Response::HTTP_FORBIDDEN);
         }
 

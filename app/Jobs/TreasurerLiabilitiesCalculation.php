@@ -59,19 +59,38 @@ class TreasurerLiabilitiesCalculation implements ShouldQueue
                         } else {
                             $treasurer->liabilities()->create([
                                 'user_id' => $datum['user_id'],
-                                'amount' => $datum['overflow']
+                                'amount'  => $datum['overflow']
                             ]);
                         }
                     }
 
-                    Cache::forget('treasurers');
-
                     DB::commit();
                 } catch (QueryException $ex) {
                     DB::rollback();
-
-                    Log::error('error: ' . $ex->getMessage());
                 }
+            }
+
+            $treasurer_liabilities = $treasurer->liabilities()->get();
+
+            $treasurer_liabilities_count = $treasurer_liabilities->count();
+
+            DB::beginTransaction();
+
+            try {
+                foreach ($treasurer_liabilities as $key => $liability) {
+                    if (abs($liability->amount) <= 1) {
+                        $liability->status = 1;
+                        $liability->save();
+                    }
+
+                    if ($treasurer_liabilities_count - $key == 1) {
+                        dispatch(new TreasurerCompletion($liability));
+                    }
+                }
+                DB::commit();
+            } catch (QueryException $ex)
+            {
+                DB::rollback();
             }
         }
     }

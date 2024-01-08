@@ -26,7 +26,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('notifications/mark_as_read', 'readNotifications');
         Route::get('unread_notifications_count', 'getNotificationCount');
         Route::get('pusher/beams_auth', 'authenticatePusher');
-        Route::get('refresh', 'refreshUser');
+        Route::get('refresh', 'refreshUser')->middleware(['throttle:public']);
         Route::get('logout', 'logout');
     });
 

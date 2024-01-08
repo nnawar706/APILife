@@ -2,18 +2,26 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Services\EventService;
 use App\Jobs\NotifyUsers;
+use App\Jobs\TreasurerCompletion;
 use App\Models\Badge;
+use App\Models\Event;
 use App\Models\EventCategory;
 use App\Models\EventStatus;
 use App\Models\ExpenseCategory;
+use App\Models\Treasurer;
 use App\Models\User;
 use App\Models\UserBadge;
 use App\Models\UserLoan;
 use App\Notifications\UserNotification;
 use Carbon\Carbon;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Spatie\Activitylog\Models\Activity;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -70,7 +78,9 @@ class SystemController extends Controller
         $user_badge         = new UserBadge();
         $event_count_lifetime = $eventStatus->clone()->withCount('events')->get();
         $transactions       = UserLoan::accepted();
-        $badge              = Badge::orderBy('id')->get();
+        $badge              = Cache::rememberForever('allBadges', function () {
+                                    return Badge::orderBy('id')->get();
+                                });
         $expense_categories = ExpenseCategory::leftJoin('expenses','expense_categories.id','=','expenses.expense_category_id')
                                 ->leftJoin('expense_payers','expenses.id','=','expense_payers.expense_id')
                                 ->leftJoin('events','expenses.event_id','=','events.id');
@@ -215,6 +225,5 @@ class SystemController extends Controller
     }
 
     public function test()
-    {
-    }
+    {}
 }
