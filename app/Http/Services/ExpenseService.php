@@ -92,10 +92,10 @@ class ExpenseService
                 }
             }
 
+            $expense->payers()->delete();
+
             if ($request->has('payers'))
             {
-                $expense->payers()->delete();
-
                 foreach ($request->payers as $item)
                 {
                     $expense->payers()->create([
