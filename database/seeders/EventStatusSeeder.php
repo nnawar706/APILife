@@ -16,8 +16,9 @@ class EventStatusSeeder extends Seeder
         DB::table('event_statuses')->insert([
             ['name' => 'Ongoing'],
             ['name' => 'Locked'],
-            ['name' => 'Lock Approved'],
-            ['name' => 'Complete']
+            ['name' => 'Approved'],
+            ['name' => 'Completed'],
+            ['name' => 'Canceled'],
         ]);
     }
 }

@@ -17,7 +17,7 @@ class UserSeeder extends Seeder
     {
         User::create([
             'designation_id' => 1,
-            'name'           => 'Admin',
+            'name'           => 'Selopia',
             'phone_no'       => '01700000000',
             'birthday'       => Carbon::now(),
             'member_since'   => Carbon::now(),
