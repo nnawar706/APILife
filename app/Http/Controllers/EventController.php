@@ -139,7 +139,7 @@ class EventController extends Controller
         return response()->json([
             'status' => true,
             'data'   => $data
-        ], Response::HTTP_OK);
+        ], $data ? Response::HTTP_OK : Response::HTTP_NO_CONTENT);
     }
 
     public function eventParticipants($event_id)

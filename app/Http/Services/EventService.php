@@ -189,8 +189,8 @@ class EventService
             $payment_info[$key]['prev_payable']           = $initialPayable; // designation based
             $payment_info[$key]['estimated_payable']      = $estimatedPayable; // expense based
             $payment_info[$key]['overflow']               = round($totalBearable - $totalPaid, 2); // if neg, returnable to that user, else remaining payable amount
-            $payment_info[$key]['paid']                   = $totalPaid; // w/o sponsored amount
-            $payment_info[$key]['sponsored']              = $totalSponsored;
+            $payment_info[$key]['paid']                   = round($totalPaid, 2); // w/o sponsored amount
+            $payment_info[$key]['sponsored']              = round($totalSponsored, 2);
             $payment_info[$key]['bearable']               = round($totalBearable, 2);
         }
 
