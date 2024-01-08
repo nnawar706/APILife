@@ -212,11 +212,11 @@ class EventService
         return array(
             'additional_data' => array(
                 'budget'                    => $totalBudget, // w/o sponsored amount
-                'budget_overflow'           => $estimatedExpense - $totalBudget, // if neg, no overflow
-                'expense'                   => $estimatedExpense, // w/o sponsored amount
-                'sponsored'                 => $estimatedSponsored,
-                'paid'                      => $paid, // w/o sponsored amount
-                'unpaid'                    => $estimatedExpense - $paid, // w/o sponsored amount
+                'budget_overflow'           => round($estimatedExpense - $totalBudget, 2), // if neg, no overflow
+                'expense'                   => round($estimatedExpense, 2), // w/o sponsored amount
+                'sponsored'                 => round($estimatedSponsored, 2),
+                'paid'                      => round($paid, 2), // w/o sponsored amount
+                'unpaid'                    => round($estimatedExpense - $paid, 2), // w/o sponsored amount
                 'payment_info'              => $payment_info,
                 'category_wise_expense_data'=> $expense_categories
             ),
