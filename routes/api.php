@@ -69,12 +69,15 @@ Route::group(['middleware' => 'auth'], function () {
     Route::controller(EventController::class)->group(function () {
         Route::get('events/all', 'index');
         Route::get('events/pending_events', 'pendingEvents');
-        Route::get('events/get/{id}', 'read')->middleware('event.participant.checker');
-        Route::get('events/participants/{event_id}', 'eventParticipants');
-        Route::get('events/designation_gradings/{event_id}', 'eventDesignations');
-        Route::get('events/expense_log/{event_id}', 'eventExpenseLog');
         Route::post('events/create', 'create');
         Route::put('events/approve_lock', 'approveEventLock');
+
+        Route::group(['middleware' => 'event.participant.checker'], function () {
+            Route::get('events/get/{id}', 'read');
+            Route::get('events/participants/{id}', 'eventParticipants');
+            Route::get('events/designation_gradings/{id}', 'eventDesignations');
+            Route::get('events/expense_log/{id}', 'eventExpenseLog');
+        });
 
         Route::group(['middleware' => 'event.checker'], function () {
             Route::put('events/update/{id}', 'update');

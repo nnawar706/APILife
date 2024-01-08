@@ -32,10 +32,10 @@ class EventController extends Controller
         ], count($data) == 0 ? Response::HTTP_NO_CONTENT : Response::HTTP_OK);
     }
 
-    public function eventDesignations($event_id)
+    public function eventDesignations($id)
     {
-        $data = Cache::remember('event_designation_gradings'.$event_id, 24*60*60*60, function () use ($event_id) {
-            return $this->service->getDesignationGradings($event_id);
+        $data = Cache::remember('event_designation_gradings'.$id, 24*60*60*60, function () use ($id) {
+            return $this->service->getDesignationGradings($id);
         });
 
         return response()->json([
@@ -54,10 +54,10 @@ class EventController extends Controller
         ], count($data) == 0 ? Response::HTTP_NO_CONTENT : Response::HTTP_OK);
     }
 
-    public function eventExpenseLog($event_id)
+    public function eventExpenseLog($id)
     {
-        $data = Cache::remember('event_expenses'.$event_id, 24*60*60*60, function () use ($event_id) {
-            return $this->service->getExpenseLog($event_id);
+        $data = Cache::remember('event_expenses'.$id, 24*60*60*60, function () use ($id) {
+            return $this->service->getExpenseLog($id);
         });
 
         return response()->json([
@@ -142,10 +142,10 @@ class EventController extends Controller
         ], $data ? Response::HTTP_OK : Response::HTTP_NO_CONTENT);
     }
 
-    public function eventParticipants($event_id)
+    public function eventParticipants($id)
     {
-        $data = Cache::remember('event_participants'.$event_id, 24*60*60*60, function () use ($event_id) {
-            return $this->service->getEventParticipantList($event_id);
+        $data = Cache::remember('event_participants'.$id, 24*60*60*60, function () use ($id) {
+            return $this->service->getEventParticipantList($id);
         });
 
         return response()->json([
