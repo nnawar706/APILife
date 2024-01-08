@@ -79,7 +79,7 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('events/expense_log/{id}', 'eventExpenseLog');
         });
 
-        Route::group(['middleware' => 'event.checker'], function () {
+        Route::group(['middleware' => ['event.participant.checker', 'event.checker']], function () {
             Route::put('events/update/{id}', 'update');
             Route::put('events/change_status/{id}', 'updateStatus');
             Route::delete('events/delete/{id}', 'delete');
