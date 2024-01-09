@@ -3,12 +3,28 @@
 namespace App\Models;
 
 use App\Jobs\NotifyEventParticipants;
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
 
 class Expense extends Model
 {
     protected $guarded = ['id'];
+
+    protected function createdAt(): Attribute
+    {
+        return Attribute::make(
+            get: fn(string $value) => Carbon::parse($value)->format('F d, Y H:i')
+        );
+    }
+
+    protected function updatedAt(): Attribute
+    {
+        return Attribute::make(
+            get: fn(string $value) => Carbon::parse($value)->format('F d, Y H:i')
+        );
+    }
 
     public function bearers()
     {
