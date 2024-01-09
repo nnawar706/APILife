@@ -15,14 +15,14 @@ class Expense extends Model
     protected function createdAt(): Attribute
     {
         return Attribute::make(
-            get: fn(string $value) => Carbon::parse($value)->format('F d, Y H:i')
+            get: fn(string $value) => Carbon::parse($value)->format('F d, Y')
         );
     }
 
     protected function updatedAt(): Attribute
     {
         return Attribute::make(
-            get: fn(string $value) => Carbon::parse($value)->format('F d, Y H:i')
+            get: fn(string $value) => Carbon::parse($value)->format('F d, Y')
         );
     }
 

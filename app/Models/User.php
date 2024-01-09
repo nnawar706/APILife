@@ -188,6 +188,17 @@ class User extends Authenticatable implements JWTSubject
 
         static::updated(function ($model) {
             clearCache();
+
+            if ($model->status == 0)
+            {
+                dispatch(new NotifyUsers(
+                    null,
+                    true,
+                    'pages/accounts/member',
+                    auth()->user()->name . " deactivated " . $model->name . "'s account.",
+                    auth()->user()
+                ));
+            }
         });
 
         static::deleted(function ($model) {
