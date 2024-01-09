@@ -28,21 +28,27 @@ class NotifyPendingLoanPayable extends Command
      */
     public function handle()
     {
+        // fetch active users
         $users          = User::status()->get();
+        // accepted loan objects
         $transactions   = UserLoan::accepted();
 
         foreach ($users as $item)
         {
+            // total debited amount of that user -> (user & debited) + (selected user & credited)
             $debited = $transactions->clone()->where('user_id', $item->id)->debited()->sum('amount')
                 +
                 $transactions->clone()->where('selected_user_id', $item->id)->credited()->sum('amount');
 
+            // total credited amount of that user -> (user & credited) + (selected user & debited)
             $credited= $transactions->clone()->where('selected_user_id', $item->id)->debited()->sum('amount')
                 +
                 $transactions->clone()->where('user_id', $item->id)->credited()->sum('amount');
 
+            // difference between credited and debited amount
             $adjustment = $credited - $debited;
 
+            // if difference is less than zero, meaning that user has not returned money
             if ($adjustment < 0)
             {
                 $item->notify(new UserNotification(

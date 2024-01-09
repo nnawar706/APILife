@@ -18,6 +18,7 @@ class UserService
     public function getAll(Request $request)
     {
         return $this->model
+            // if status is present, filter active users
             ->when($request->has('status'), function ($q) {
                 return $q->status();
             })
@@ -47,6 +48,7 @@ class UserService
             'password'          => $request->password,
         ]);
 
+        // store profile image to the /users folder
         saveImage(request()->file('photo'), '/images/users/', $user, 'photo_url');
     }
 

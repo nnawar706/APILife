@@ -13,6 +13,7 @@ class AuthService
     {
         $credentials = $request->only('phone_no', 'password');
 
+        // if token is available for the requested phone no and password, create log entry and return token
         if ($token = $this->guard()->attempt($credentials))
         {
             auth()->user()->accessLogs()->firstOrCreate([
@@ -51,6 +52,7 @@ class AuthService
 
     public function updateUserPassword(Request $request): void
     {
+        // update auth user password
         auth()->user()->update([
             'password' => $request->password
         ]);
@@ -58,7 +60,9 @@ class AuthService
 
     public function notificationMarkAsRead(Request $request): void
     {
+        // mark auth unread notifications as read
         auth()->user()->unreadNotifications
+            // if id is present, read that notification, else read all unread notifications
             ->when($request->input('id'), function ($q) use ($request) {
                 return $q->where('id', $request->input('id'));
             })
@@ -67,6 +71,7 @@ class AuthService
 
     public function getAuthNotifications()
     {
+        // return paginated notifications after updating send status
         auth()->user()->unreadNotifications()->update(['send_status' => 1]);
 
         return auth()->user()->notifications()->latest()->paginate(15);

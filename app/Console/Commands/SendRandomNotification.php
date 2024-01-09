@@ -36,8 +36,10 @@ class SendRandomNotification extends Command
             "Plan a party in such a way that everyone asks 'who is the host?' and you get to say 'thats a million dollar question' 🤓"
         ];
 
+        // select a random quote
         $index = Carbon::now('Asia/Dhaka')->format('n') % 6;
 
+        // send the quote to users
         dispatch(new NotifyUsers(
             null,
             true,

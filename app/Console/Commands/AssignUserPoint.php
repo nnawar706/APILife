@@ -37,29 +37,36 @@ class AssignUserPoint extends Command
     public function handle()
     {
         $points = new UserPoint();
+        // calculating total user point available in database
         $totalPoint = $points->clone()->count();
 
         $end = Carbon::now('Asia/Dhaka');
+        // define start date from the time when the last point data was calculated
         $start = $totalPoint == 0 ? Carbon::now('Asia/Dhaka')->subCenturies(1)->format('Y-m-d H:i') :
             Carbon::parse($points->clone()->latest()->first()->created_at)->format('Y-m-d H:i');
 
+        // loan data that have type "lend" and status accepted between the specified time interval
         $loan = UserLoan::loanLend()->accepted()
             ->whereBetween('updated_at', [$start, $end]);
 
+        // event data that have been completed between specified time interval
         $events = Event::where('event_status_id', '=', 4)
             ->whereBetween('updated_at', [$start, $end]);
 
+        // expense bearer data of events that have been completed between specified time interval
         $bearers = ExpenseBearer::whereHas('expense.event', function ($q) use ($start, $end) {
             return $q->where('event_status_id', 4)
                 ->whereBetween('updated_at', [$start, $end]);
         });
 
+        // expense payer data of events that have been completed between specified time interval
         $payers = ExpensePayer::whereHas('expense.event', function ($q) use ($start, $end) {
             return $q->where('event_status_id', 4)
                 ->whereBetween('updated_at', [$start, $end]);
         });
 
-        $users = User::get();
+        // fetch active users
+        $users = User::status()->get();
 
         DB::beginTransaction();
 
@@ -148,6 +155,7 @@ class AssignUserPoint extends Command
                         );
                 }
 
+                // calculate points and save if weight is not zero
                 if ($weight != 0)
                 {
                     $points->clone()->create([

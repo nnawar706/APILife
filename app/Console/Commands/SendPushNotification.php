@@ -28,6 +28,7 @@ class SendPushNotification extends Command
      */
     public function handle()
     {
+        // fetch notifications that have not been sent
         $notifications = Notification::where('send_status', false)->get();
 
         if (count($notifications) !== 0)
@@ -65,12 +66,11 @@ class SendPushNotification extends Command
                             )
                         ));
 
+                    // change the status
                     $item->send_status = 1;
                     $item->save();
                 }
-                catch (Throwable $th) {
-                    Log::error('push notification error: ' . $th->getMessage());
-                }
+                catch (Throwable $th) {}
             }
         }
     }
