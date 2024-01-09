@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests;
 
+use App\Models\User;
+use App\Notifications\UserNotification;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
@@ -26,7 +28,15 @@ class LoginRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'phone_no' => ['required', 'regex:/^(?:\+88|88)?(01[3-9]\d{8})$/'],
+            'phone_no' => ['required', 'regex:/^(?:\+88|88)?(01[3-9]\d{8})$/',
+                            function($attr, $val, $fail) {
+                                $user = User::status()->where('phone_no', $val)->first();
+
+                                if (!$user)
+                                {
+                                    $fail('No active account found with given phone number.');
+                                }
+                            }],
             'password' => 'required|string|min:6'
         ];
     }
@@ -36,6 +46,6 @@ class LoginRequest extends FormRequest
         throw new HttpResponseException(response()->json([
             'status'  => false,
             'error'   => $validator->errors()->first(),
-        ], Response::HTTP_UNPROCESSABLE_ENTITY));
+        ], Response::HTTP_BAD_REQUEST));
     }
 }
