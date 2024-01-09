@@ -12,6 +12,7 @@ enum BadgeWeight: int
     case SPONSOR_BELOW_200       = 24;
 
     // user loan
+    case LOAN_ABOVE_5000         = 40;
     case LOAN_ABOVE_1500         = 22;
     case LOAN_500_TO_1500        = 20;
     case LOAN_BELOW_500          = 18;
@@ -73,7 +74,9 @@ enum BadgeWeight: int
 
             self::SPONSOR_1000_TO_1500      => 30,
 
-            self::SPONSOR_ABOVE_1500        => 32
+            self::SPONSOR_ABOVE_1500        => 32,
+
+            self::LOAN_ABOVE_5000           => 40,
         };
     }
 }

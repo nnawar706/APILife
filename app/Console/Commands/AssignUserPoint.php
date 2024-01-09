@@ -131,10 +131,13 @@ class AssignUserPoint extends Command
                     + $loan->clone()->where('selected_user_id', $user->id)->debited()->sum('amount');
 
                 if ($lendLoanSum != 0) {
-                    $weight += $lendLoanSum > 1500 ? BadgeWeight::getValue(BadgeWeight::LOAN_ABOVE_1500) :
-                        (
-                        ($lendLoanSum > 500 && $lendLoanSum < 1500) ? BadgeWeight::getValue(BadgeWeight::LOAN_500_TO_1500) :
-                            BadgeWeight::getValue(BadgeWeight::LOAN_BELOW_500)
+                    $weight += $lendLoanSum > 5000 ? BadgeWeight::LOAN_ABOVE_5000 :
+                            (
+                            ($lendLoanSum < 5000 && $lendLoanSum > 1500) ? BadgeWeight::getValue(BadgeWeight::LOAN_ABOVE_1500) :
+                            (
+                            ($lendLoanSum > 500 && $lendLoanSum < 1500) ? BadgeWeight::getValue(BadgeWeight::LOAN_500_TO_1500) :
+                                BadgeWeight::getValue(BadgeWeight::LOAN_BELOW_500)
+                            )
                         );
                 }
 
