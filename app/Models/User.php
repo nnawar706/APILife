@@ -189,7 +189,7 @@ class User extends Authenticatable implements JWTSubject
         static::updated(function ($model) {
             clearCache();
 
-            if ($model->status == 0)
+            if ($model->id != auth()->user()->id && $model->status == 0)
             {
                 dispatch(new NotifyUsers(
                     null,
