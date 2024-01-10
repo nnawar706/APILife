@@ -19,20 +19,6 @@ class EventObserver
     }
 
     /**
-     * Handle the Event "created" event.
-     */
-    public function created($model): void
-    {
-        dispatch(new NotifyEventParticipants(
-            $model,
-            auth()->user(),
-            'pages/extra-vaganza',
-            'Mark your calendars for '. $model->title .' and join the party 🥳✨',
-            true
-        ));
-    }
-
-    /**
      * Handle the Event "updated" event.
      */
     public function updated($model): void

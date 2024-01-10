@@ -54,6 +54,14 @@ class EventService
 
             DB::commit();
 
+            dispatch(new NotifyEventParticipants(
+                $event,
+                auth()->user(),
+                'pages/extra-vaganza',
+                'Mark your calendars for '. $event->title .' and join the party 🥳✨',
+                true
+            ));
+
             return null;
         } catch (QueryException $ex)
         {
