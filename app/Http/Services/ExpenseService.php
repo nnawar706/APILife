@@ -52,7 +52,7 @@ class ExpenseService
 
             DB::commit();
 
-            return null;
+            return $expense->id;
         } catch (QueryException $ex)
         {
             DB::rollback();

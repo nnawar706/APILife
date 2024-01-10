@@ -32,9 +32,14 @@ class ExpenseController extends Controller
     {
         $response = $this->service->storeNewExpense($request);
 
-        if (!$response)
+        if (is_integer($response))
         {
-            return response()->json(['status' => true], Response::HTTP_CREATED);
+            return response()->json([
+                'status' => true,
+                'data'   => array(
+                    'expense_id' => $response
+                )
+            ], Response::HTTP_CREATED);
         }
 
         return response()->json([
