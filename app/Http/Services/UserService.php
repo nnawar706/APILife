@@ -29,12 +29,6 @@ class UserService
     public function getUserData($id)
     {
         return $this->model->with('designation')
-            ->withCount('events')
-            ->withCount('leadEvents')
-            ->withCount('collectedTreasures')
-            ->withSum('expenses', 'amount')
-            ->withSum('payments', 'amount')
-            ->withSum('sponsors', 'amount')
             ->find($id);
     }
 
