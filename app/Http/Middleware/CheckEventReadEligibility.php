@@ -22,7 +22,7 @@ class CheckEventReadEligibility
             if (!$event->is_public && $event->addParticipants()->where('user_id', auth()->user()->id)->doesntExist()) {
                 return response()->json([
                     'status' => false,
-                    'error'  => 'You are not allowed to perform any action on protected data.'
+                    'error'  => 'You are not allowed to perform any action on protected extravaganza.'
                 ], Response::HTTP_FORBIDDEN);
             }
             return $next($request);

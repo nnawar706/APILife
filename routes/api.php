@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DesignationController;
 use App\Http\Controllers\EventCategoryController;
 use App\Http\Controllers\EventController;
+use App\Http\Controllers\EventImageController;
 use App\Http\Controllers\EventStatusController;
 use App\Http\Controllers\ExpenseCategoryController;
 use App\Http\Controllers\ExpenseController;
@@ -85,6 +86,13 @@ Route::group(['middleware' => 'auth'], function () {
             Route::delete('events/delete/{id}', 'delete');
             Route::post('events/add_participants/{id}', 'addParticipants');
             Route::put('events/remove_participants/{id}', 'removeParticipant');
+        });
+    });
+
+    Route::controller(EventImageController::class)->group(function () {
+        Route::group(['middleware' => 'event.participant.checker'], function () {
+            Route::post('events/images/create/{id}', 'addImages');
+            Route::delete('events/images/delete/{id}/{image_id}', 'deleteImage');
         });
     });
 

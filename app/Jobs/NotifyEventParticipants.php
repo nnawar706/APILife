@@ -22,7 +22,7 @@ class NotifyEventParticipants implements ShouldQueue
     public function __construct(Event $event, $user, $link, $message, $sendToLead)
     {
         $this->event   = $event;
-        $this->user    = $user;
+        $this->user    = $user; // auth user
         $this->link    = $link;
         $this->message = $message;
         $this->sendToLead = $sendToLead;
@@ -39,7 +39,7 @@ class NotifyEventParticipants implements ShouldQueue
 
         foreach ($participants as $item)
         {
-            if (is_null($item->user) || ($item->user && $item->id != $this->user->id)) {
+            if (is_null($this->user) || ($this->user && ($item->id != $this->user->id))) {
                 $item->notify(new UserNotification(
                     $this->link,
                     $this->message,

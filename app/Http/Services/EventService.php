@@ -114,7 +114,7 @@ class EventService
     public function getInfo($id)
     {
         $event = $this->model
-            ->with('lead','participants','category','status',
+            ->with('lead','participants','images','category','status',
                 'designationGradings.designation','expenses.category','expenses.bearers',
                 'expenses.payers','expenseBearers','expensePayers')
             ->find($id);
