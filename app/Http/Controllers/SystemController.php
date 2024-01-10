@@ -63,7 +63,8 @@ class SystemController extends Controller
         $total_mfs           = 0;
         $dues                = 0;
         $monthly_user_badges = [];
-        $user_wise_badge     = [];
+        $user_wise_badge1    = [];
+        $user_wise_badge2    = [];
         $current_user_points = [];
 
         // dates
@@ -115,6 +116,14 @@ class SystemController extends Controller
 
         foreach ($users as $key => $item)
         {
+            $user_wise_badge1[$key]['user'] = $item;
+
+            foreach ($badges as $i => $val)
+            {
+                $user_wise_badge1[$key]['badges'][$i]['badge'] = $val;
+                $user_wise_badge1[$key]['badges'][$i]['count'] = $val->userBadge()->where('user_id', $item->id)->count();
+            }
+
             $current_user_points[$key]['user'] = $item;
             $current_user_points[$key]['earned_points'] = intval($item->points()->sum('point'));
 
@@ -138,12 +147,12 @@ class SystemController extends Controller
 
         foreach ($badges as $key => $badge)
         {
-            $user_wise_badge[$key]['badge'] = $badge;
+            $user_wise_badge2[$key]['badge'] = $badge;
 
             foreach ($users as $index => $user)
             {
-                $user_wise_badge[$key]['user_data'][$index]['user'] = $user;
-                $user_wise_badge[$key]['user_data'][$index]['count'] = $user_badge->clone()
+                $user_wise_badge2[$key]['user_data'][$index]['user'] = $user;
+                $user_wise_badge2[$key]['user_data'][$index]['count'] = $user_badge->clone()
                     ->where('user_id', $user->id)
                     ->where('badge_id', $badge->id)
                     ->count();
@@ -206,7 +215,8 @@ class SystemController extends Controller
             'transaction_30days_count'    => $transaction_count_30days,
             'transaction_30days_amount'   => $transaction_amount_30days,
             'current_month_badges'        => $monthly_user_badges,
-            'user_badges'                 => $user_wise_badge,
+            'user_badges_1'               => $user_wise_badge1,
+            'user_badges_2'               => $user_wise_badge2,
             'user_points'                 => $current_user_points,
             'expense_categories_lifetime' => $expense_categories_lifetime,
             'expense_categories_monthly'  => $expense_categories_monthly,
