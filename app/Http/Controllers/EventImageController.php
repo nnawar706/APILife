@@ -22,6 +22,9 @@ class EventImageController extends Controller
                     $constraint->aspectRatio();
                 });
 
+                $height = $compressedImage->height();
+                $width  = $compressedImage->width();
+
                 $thumbnailImage = $img->resize(200, 200);
 
                 $image_name_c = time() . rand(100, 9999) . '.' . $image->getClientOriginalExtension();
@@ -33,7 +36,9 @@ class EventImageController extends Controller
                 $event->images()->create([
                     'event_id'      => $event->id,
                     'image_url'     => '/images/events/' . $image_name_c,
-                    'thumbnail_url' => '/images/events/' . $image_name_t
+                    'thumbnail_url' => '/images/events/' . $image_name_t,
+                    'width'         => $width,
+                    'height'        => $height
                 ]);
             }
 

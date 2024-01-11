@@ -51,7 +51,7 @@ class AssignUserBadge extends Command
 
             $data = [];
 
-            // for each user calculate sum of points between one month interval
+            // for each user calculate sum of points between one-month interval
             foreach ($users as $key => $user)
             {
                 $data[$key]['user_id'] = $user->id;

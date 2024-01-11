@@ -16,6 +16,8 @@ return new class extends Migration
             $table->foreignId('event_id')->constrained('events')->onDelete('cascade');
             $table->string('image_url', 100)->nullable();
             $table->string('thumbnail_url', 100)->nullable();
+            $table->float('width');
+            $table->float('height');
         });
     }
 
