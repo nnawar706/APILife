@@ -52,7 +52,7 @@ class EventImageController extends Controller
         }
     }
 
-    public function deleteImage($image_id)
+    public function deleteImage($id, $image_id)
     {
         $img = EventImage::findOrFail($image_id);
 
