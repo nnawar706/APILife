@@ -27,7 +27,7 @@ class EventAddImagesRequest extends FormRequest
     {
         return [
             'images'   => 'required|array|min:1',
-            'images.*' => 'required|image|mimes:jpg,png,jpeg|max:2048'
+            'images.*' => 'required|image|mimes:jpg,png,jpeg|max:5120'
         ];
     }
 
@@ -35,7 +35,7 @@ class EventAddImagesRequest extends FormRequest
     {
         return [
             'images.*.mimes' => 'Unprocessable image mime detected.',
-            'images.*.max'   => 'Select images of size below 2MB.'
+            'images.*.max'   => 'Select images of size below 5MB.'
         ];
     }
 
