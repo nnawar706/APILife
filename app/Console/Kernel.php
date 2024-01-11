@@ -13,12 +13,12 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule): void
     {
         $schedule->command('app:send-push-notification')->everyMinute();
+        $schedule->command('app:send-random-notification')->dailyAt('11:00')->timezone('Asia/Dhaka');
         $schedule->command('app:wish-happy-birthday')->dailyAt('0:01')->timezone('Asia/Dhaka');
         $schedule->command('app:assign-user-point')->dailyAt('0:01')->timezone('Asia/Dhaka');
         $schedule->command('app:notify-pending-loan-payable')->weekly();
         $schedule->command('app:assign-user-badge')->monthly();
         $schedule->command('model:prune')->monthly();
-        $schedule->command('app:send-random-notification')->monthly();
     }
 
     /**
