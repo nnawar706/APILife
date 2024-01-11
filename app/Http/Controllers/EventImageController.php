@@ -25,7 +25,9 @@ class EventImageController extends Controller
                 $height = $compressedImage->height();
                 $width  = $compressedImage->width();
 
-                $thumbnailImage = $img->resize(500, 500);
+                $thumbnailImage = $img->resize(700, 700, function ($constraint) {
+                    $constraint->aspectRatio();
+                });
 
                 $image_name_c = time() . rand(100, 9999) . '.' . $image->getClientOriginalExtension();
                 $compressedImage->save(public_path('/images/events/' . $image_name_c));
