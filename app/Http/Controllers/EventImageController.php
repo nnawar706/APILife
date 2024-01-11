@@ -18,7 +18,7 @@ class EventImageController extends Controller
             foreach ($request->images as $image) {
                 $img = Image::make($image);
 
-                $compressedImage = $img->resize(500, 500, function ($constraint) {
+                $compressedImage = $img->resize(1500, 1500, function ($constraint) {
                     $constraint->aspectRatio();
                 });
 
