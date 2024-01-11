@@ -2,10 +2,8 @@
 
 namespace App\Console\Commands;
 
-use App\Jobs\NotifyUsers;
 use App\Models\User;
 use App\Notifications\UserNotification;
-use Carbon\Carbon;
 use Illuminate\Console\Command;
 
 class SendRandomNotification extends Command
