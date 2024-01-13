@@ -10,6 +10,7 @@ use App\Models\Event;
 use App\Models\EventCategory;
 use App\Models\EventStatus;
 use App\Models\ExpenseCategory;
+use App\Models\Notification;
 use App\Models\Treasurer;
 use App\Models\User;
 use App\Models\UserBadge;

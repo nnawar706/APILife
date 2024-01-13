@@ -35,11 +35,10 @@ class SendRandomNotification extends Command
             'Extravaganza planning tip: Start with a sprinkle of creativity, add a dash of audacity, and garnish with a generous helping of wow-factor 🥳',
             "It's Mickey. Why don't you come and play with us for a bit? 🐣",
             "Plan a party in such a way that everyone asks 'who is the host?' and you get to say 'thats a million dollar question' 🤓",
-            "It's Pet Care Day! Ensure food, water, and hygiene of Mickey & Minnie! 🦜",
         ];
 
         // select a random quote
-        $index = 7;
+        $index = 5;
 
         $message = $quotes[$index];
 
