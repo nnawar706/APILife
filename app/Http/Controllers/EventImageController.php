@@ -6,6 +6,7 @@ use App\Http\Requests\EventAddImagesRequest;
 use App\Models\Event;
 use App\Models\EventImage;
 use Intervention\Image\Facades\Image;
+use Intervention\Image\ImageManager;
 use Symfony\Component\HttpFoundation\Response;
 
 class EventImageController extends Controller
@@ -18,16 +19,18 @@ class EventImageController extends Controller
             foreach ($request->images as $image) {
                 $img = Image::make($image);
 
-                $compressedImage = $img->resize(1500, 1500, function ($constraint) {
-                    $constraint->aspectRatio();
-                });
+                $compressedImage = $img->orientate()
+                    ->resize(1500, 1500, function ($constraint) {
+                        $constraint->aspectRatio();
+                    });
 
                 $height = $compressedImage->height();
                 $width  = $compressedImage->width();
 
-                $thumbnailImage = $img->resize(300, 300, function ($constraint) {
-                    $constraint->aspectRatio();
-                });
+                $thumbnailImage = $img->orientate()
+                    ->resize(300, 300, function ($constraint) {
+                        $constraint->aspectRatio();
+                    });
 
                 $image_name_c = time() . rand(100, 9999) . '.' . $image->getClientOriginalExtension();
                 $compressedImage->save(public_path('/images/events/' . $image_name_c));
