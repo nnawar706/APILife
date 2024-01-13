@@ -31,7 +31,7 @@ class UserUpdateRequest extends FormRequest
             'phone_no'              => ['required','regex:/^(?:\+88|88)?(01[3-9]\d{8})$/',
                                         'unique:users,phone_no,'.auth()->user()->id],
             'birthday'              => 'required|date_format:d-m',
-            'photo'                 => 'image|mimes:jpeg,png,jpg|max:2048'
+            'photo'                 => 'image|mimes:jpeg,png,jpg|max:5120'
         ];
     }
 
