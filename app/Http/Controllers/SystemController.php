@@ -43,6 +43,7 @@ class SystemController extends Controller
     {
         Artisan::call('cache:clear');
         Artisan::call('optimize');
+        Artisan::call('optimize:clear');
         Artisan::call('config:clear');
 
         return response()->json(['status' => true], 205);
