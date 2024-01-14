@@ -17,9 +17,10 @@ class EventImageController extends Controller
 
         try {
             foreach ($request->images as $image) {
-                $img = Image::make($image);
+                $img1 = Image::make($image);
+                $img2 = Image::make($image);
 
-                $compressedImage = $img->orientate()
+                $compressedImage = $img1->orientate()
                     ->resize(1500, 1500, function ($constraint) {
                         $constraint->aspectRatio();
                     });
@@ -27,7 +28,7 @@ class EventImageController extends Controller
                 $height = $compressedImage->height();
                 $width  = $compressedImage->width();
 
-                $thumbnailImage = $img->orientate()
+                $thumbnailImage = $img2->orientate()
                     ->resize(300, 300, function ($constraint) {
                         $constraint->aspectRatio();
                     });
