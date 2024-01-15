@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Jobs\NotifyUsers;
+use App\Notifications\UserNotification;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
 use Spatie\Activitylog\LogOptions;
@@ -42,5 +44,21 @@ class TreasurerLiability extends Model
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public static function boot()
+    {
+        parent::boot();
+
+        static::updated(function ($model) {
+            $model->user->notify(
+                new UserNotification(
+                    'pages/payments',
+                    'Your payment is settled for a treasure hunt.',
+                    auth()->user()->name,
+                    auth()->user()->photo_url
+                )
+            );
+        });
     }
 }
