@@ -309,12 +309,20 @@ class EventService
     {
         $event = $this->model->findOrFail($id);
 
+        // event won't be deleted if payer data exists
         if ($event->expensePayers()->exists())
         {
             return false;
         }
 
+        // delete event expenses
         $event->expenses()->delete();
+        // delete each event image
+        $event->images()->each(function ($image) {
+            $image->delete();
+        });
+
+        // delete image
         $event->delete();
 
         return true;
