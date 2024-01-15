@@ -18,10 +18,12 @@ function saveImage($image, $path, $model, $field): void
 
 function deleteFile($filepath): void
 {
-    if (File::exists(public_path($filepath)))
-    {
-        File::delete(public_path($filepath));
-    }
+    try {
+        if (File::exists(public_path($filepath))) {
+            File::delete(public_path($filepath));
+        }
+    } catch (Throwable $th)
+    {}
 }
 
 function clearCache(): void

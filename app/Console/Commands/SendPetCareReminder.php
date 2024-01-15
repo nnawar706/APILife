@@ -31,28 +31,21 @@ class SendPetCareReminder extends Command
     {
         if (!Carbon::now('Asia/Dhaka')->isFriday())
         {
-            $msg = "It's Pet Care Day! Ensure food, water, and hygiene of Mickey & Minnie!";
+            $users = User::status()->get();
 
-            $notification = Notification::where('data', 'like', '%' . $msg . '%')
-                ->latest()->first();
+            $message = "It's Pet Care Day! Ensure food, water, and hygiene of Mickey & Minnie!";
 
-            if (!$notification) {
-                $user = User::first();
-            } else {
-                $user = User::where('id', '>', $notification->notifiable_id)
-                    ->first();
+            foreach ($users as $user)
+            {
+                $msg = 'Hey ' . $user->name . ' 👋 ' . $message;
 
-                if (!$user) {
-                    $user = User::first();
-                }
+                $user->notify(new UserNotification(
+                    '',
+                    $msg,
+                    'Life++',
+                    null
+                ));
             }
-
-            $user->notify(new UserNotification(
-                '/pages/accounts/notification',
-                'Hey ' . $user->name . ' 👋 ' . $msg . '🦜',
-                'Life++',
-                null
-            ));
         }
     }
 }
