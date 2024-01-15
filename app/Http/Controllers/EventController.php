@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\EventAddGuestsRequest;
 use App\Http\Requests\EventAddParticipantsRequest;
 use App\Http\Requests\EventApproveLockRequest;
 use App\Http\Requests\EventCreateRequest;
@@ -25,6 +26,16 @@ class EventController extends Controller
     public function index(Request $request)
     {
         $data = $this->service->getAllEvents($request);
+
+        return response()->json([
+            'status' => true,
+            'data'   => $data
+        ], count($data) == 0 ? Response::HTTP_NO_CONTENT : Response::HTTP_OK);
+    }
+
+    public function getAll()
+    {
+        $data = $this->service->getParticipantBasedEvents();
 
         return response()->json([
             'status' => true,
@@ -133,6 +144,9 @@ class EventController extends Controller
             'error'  => $response
         ], Response::HTTP_INTERNAL_SERVER_ERROR);
     }
+
+    public function addGuests(EventAddGuestsRequest $request, $id)
+    {}
 
     public function removeParticipant(EventRemoveParticipantsRequest $request, $id)
     {

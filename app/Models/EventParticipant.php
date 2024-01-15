@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Jobs\NotifyEventParticipants;
 use App\Notifications\UserNotification;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 class EventParticipant extends Model
@@ -13,8 +14,15 @@ class EventParticipant extends Model
     public $timestamps = false;
 
     protected $casts = [
-        'approval_status'       => 'boolean'
+        'approval_status' => 'boolean',
+        'guest_status'    => 'boolean'
     ];
+
+
+    public function scopeParticipant(Builder $q)
+    {
+        $q->where('guest_status', '=', false);
+    }
 
     public function event()
     {

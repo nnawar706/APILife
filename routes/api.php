@@ -69,23 +69,26 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::controller(EventController::class)->group(function () {
         Route::get('events/all', 'index');
+        Route::get('events/include_users/all', 'getAll');
         Route::get('events/pending_events', 'pendingEvents');
         Route::post('events/create', 'create');
         Route::put('events/approve_lock', 'approveEventLock');
 
-        Route::group(['middleware' => 'event.participant.checker'], function () {
-            Route::get('events/images/{id}', 'getImages');
+        Route::group(['middleware' => 'event.participant.checker:participant'], function () {
             Route::get('events/get/{id}', 'read');
             Route::get('events/participants/{id}', 'eventParticipants');
             Route::get('events/designation_gradings/{id}', 'eventDesignations');
             Route::get('events/expense_log/{id}', 'eventExpenseLog');
         });
 
-        Route::group(['middleware' => ['event.participant.checker', 'event.checker']], function () {
+        Route::get('events/images/{id}', 'getImages')->middleware('event.participant.checker:all');
+
+        Route::group(['middleware' => ['event.participant.checker:participant', 'event.checker']], function () {
             Route::put('events/update/{id}', 'update');
             Route::put('events/change_status/{id}', 'updateStatus');
             Route::delete('events/delete/{id}', 'delete');
             Route::post('events/add_participants/{id}', 'addParticipants');
+            Route::post('events/add_guests/{id}', 'addGuests');
             Route::put('events/remove_participants/{id}', 'removeParticipant');
         });
     });

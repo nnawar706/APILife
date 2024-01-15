@@ -34,7 +34,9 @@ class ExpenseBearerValidationRule implements ValidationRule
                 }
 
                 // error if any bearer user is not present in the participant list
-                else if (($event->participants()->whereIn('users.id', $userIds)->count() != count($userIds))) {
+                else if (($event->addParticipants()
+                        ->whereIn('user_id', $userIds)
+                        ->participant()->count() != count($userIds))) {
                     $fail('Some users do not belong to the participant list.');
                 }
                 else {

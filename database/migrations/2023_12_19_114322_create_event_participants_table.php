@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('event_id')->constrained('events')->onDelete('cascade');
             $table->foreignId('user_id')->constrained('users')->onDelete('restrict');
             $table->tinyInteger('approval_status', false, true)->default(0)->comment('1:approved');
+            $table->tinyInteger('guest_status', false, true)->default(0)->comment('1: guest');
 
             $table->unique(['event_id', 'user_id']);
         });

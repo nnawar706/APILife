@@ -40,7 +40,9 @@ class EventApproveLockRequest extends FormRequest
                                     {
                                         $fail('Unable to approve extravaganza until it has been locked.');
                                     }
-                                    else if ($event->participants()->where('users.id', auth()->user()->id)->doesntExist())
+                                    else if ($event->eventParticipants()
+                                        ->where('user_id', auth()->user()->id)
+                                        ->participant()->doesntExist())
                                     {
                                         $fail('You do not belong to the extravaganza participant list.');
                                     }

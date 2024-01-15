@@ -267,8 +267,8 @@ class EventService
             ->when($request->has('status_id'), function ($q) use ($request) {
                 return $q->where('event_status_id', $request->status_id)
                     ->where(function ($q) {
-                        $q->whereHas('participants', function ($q1) {
-                            return $q1->where('users.id', auth()->user()->id);
+                        $q->whereHas('eventParticipants', function ($q1) {
+                            return $q1->where('user_id', auth()->user()->id)->participant();
                         });
                     })
                     ->whereDoesntHave('treasurer');
@@ -276,8 +276,8 @@ class EventService
             ->when(!$request->has('status_id'), function ($q) use ($request) {
                 return $q->where('is_public', '=', 1)
                     ->orWhere(function ($q) {
-                        $q->whereHas('participants', function ($q1) {
-                            return $q1->where('users.id', auth()->user()->id);
+                        $q->whereHas('eventParticipants', function ($q1) {
+                            return $q1->where('user_id', auth()->user()->id)->participant();
                         });
                     });
             })
@@ -385,7 +385,8 @@ class EventService
         return $this->model
             ->where('event_status_id', '=', 2)
             ->whereHas('addParticipants', function ($q) {
-                return $q->where('user_id', auth()->user()->id)->where('approval_status', 0);
+                return $q->where('user_id', auth()->user()->id)
+                    ->participant()->where('approval_status', 0);
             })
             ->with('lead')->get();
     }
@@ -406,5 +407,12 @@ class EventService
     public function getEventImages($id)
     {
         return $this->model->findOrFail($id)->images()->get();
+    }
+
+    public function getParticipantBasedEvents()
+    {
+        return $this->model->whereHas('addParticipants', function ($q) {
+                return $q->where('user_id', auth()->user()->id);
+            })->get();
     }
 }
