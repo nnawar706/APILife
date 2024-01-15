@@ -124,7 +124,7 @@ class EventService
     public function getInfo($id)
     {
         $event = $this->model
-            ->with('lead','participants','images','category','status',
+            ->with('lead','participants','guests','images','category','status',
                 'designationGradings.designation','expenses.category','expenses.bearers',
                 'expenses.payers','expenseBearers','expensePayers')
             ->find($id);
@@ -296,6 +296,28 @@ class EventService
             }])->get();
     }
 
+    public function getParticipantBasedEvents()
+    {
+        return $this->model->whereHas('eventParticipants', function ($q) {
+            return $q->where('user_id', auth()->user()->id);
+        })->orWhere(function ($q) {
+            return $q->whereHas('eventGuests', function ($q1) {
+                return $q1->where('user_id', auth()->user()->id);
+            });
+        })->get();
+    }
+
+    public function getPendingEvents()
+    {
+        return $this->model
+            ->where('event_status_id', '=', 2)
+            ->whereHas('eventParticipants', function ($q) {
+                return $q->where('user_id', auth()->user()->id)
+                    ->where('approval_status', 0);
+            })
+            ->with('lead')->get();
+    }
+
     public function removeEventParticipant($user_id, $id): bool
     {
         $event = $this->model->findOrFail($id);
@@ -406,17 +428,6 @@ class EventService
         return $event->participants()->with('designation')->get();
     }
 
-    public function getPendingEvents()
-    {
-        return $this->model
-            ->where('event_status_id', '=', 2)
-            ->whereHas('addParticipants', function ($q) {
-                return $q->where('user_id', auth()->user()->id)
-                    ->participant()->where('approval_status', 0);
-            })
-            ->with('lead')->get();
-    }
-
     public function getDesignationGradings($event_id)
     {
         return $this->model->findOrFail($event_id)->designationGradings;
@@ -433,13 +444,6 @@ class EventService
     public function getEventImages($id)
     {
         return $this->model->findOrFail($id)->images()->get();
-    }
-
-    public function getParticipantBasedEvents()
-    {
-        return $this->model->whereHas('addParticipants', function ($q) {
-                return $q->where('user_id', auth()->user()->id);
-            })->get();
     }
 
     public function addEventGuests(Request $request, $id)

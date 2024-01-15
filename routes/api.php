@@ -95,7 +95,7 @@ Route::group(['middleware' => 'auth'], function () {
     });
 
     Route::controller(EventImageController::class)->group(function () {
-        Route::group(['middleware' => 'event.participant.checker'], function () {
+        Route::group(['middleware' => 'event.participant.checker:participant'], function () {
             Route::post('events/images/create/{id}', 'addImages');
             Route::delete('events/images/delete/{id}/{image_id}', 'deleteImage');
         });

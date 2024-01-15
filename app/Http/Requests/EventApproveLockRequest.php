@@ -42,7 +42,7 @@ class EventApproveLockRequest extends FormRequest
                                     }
                                     else if ($event->eventParticipants()
                                         ->where('user_id', auth()->user()->id)
-                                        ->participant()->doesntExist())
+                                        ->doesntExist())
                                     {
                                         $fail('You do not belong to the extravaganza participant list.');
                                     }
