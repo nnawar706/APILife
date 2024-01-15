@@ -310,6 +310,24 @@ class EventService
         return false;
     }
 
+    public function removeEventGuest($user_id, $id): bool
+    {
+        $event = $this->model->findOrFail($id);
+
+        $guest = $event->addParticipants()
+            ->where('user_id', $user_id)
+            ->where('guest_status','=',1)->first();
+
+        if ($guest)
+        {
+            $guest->delete();
+
+            return true;
+        }
+
+        return false;
+    }
+
     public function removeEvent($id): bool
     {
         $event = $this->model->findOrFail($id);

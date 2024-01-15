@@ -90,6 +90,7 @@ Route::group(['middleware' => 'auth'], function () {
             Route::post('events/add_participants/{id}', 'addParticipants');
             Route::post('events/add_guests/{id}', 'addGuests');
             Route::put('events/remove_participants/{id}', 'removeParticipant');
+            Route::put('events/remove_guests/{id}', 'removeGuest');
         });
     });
 

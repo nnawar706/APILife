@@ -6,6 +6,7 @@ use App\Http\Requests\EventAddGuestsRequest;
 use App\Http\Requests\EventAddParticipantsRequest;
 use App\Http\Requests\EventApproveLockRequest;
 use App\Http\Requests\EventCreateRequest;
+use App\Http\Requests\EventRemoveGuestsRequest;
 use App\Http\Requests\EventRemoveParticipantsRequest;
 use App\Http\Requests\EventUpdateRequest;
 use App\Http\Requests\EventUpdateStatusRequest;
@@ -167,7 +168,15 @@ class EventController extends Controller
         return response()->json([
             'status' => true
         ], $response ? Response::HTTP_OK : Response::HTTP_NOT_MODIFIED);
+    }
 
+    public function removeGuest(EventRemoveGuestsRequest $request, $id)
+    {
+        $response = $this->service->removeEventGuest($request->user_id, $id);
+
+        return response()->json([
+            'status' => true
+        ], $response ? Response::HTTP_OK : Response::HTTP_NOT_MODIFIED);
     }
 
     public function read($id)
