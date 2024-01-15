@@ -4,18 +4,13 @@ namespace App\Models;
 
 use App\Jobs\NotifyEventParticipants;
 use App\Notifications\UserNotification;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
-class EventParticipant extends Model
+class EventGuest extends Model
 {
     protected $guarded = ['id'];
 
     public $timestamps = false;
-
-    protected $casts = [
-        'approval_status' => 'boolean'
-    ];
 
     public function event()
     {
@@ -31,21 +26,12 @@ class EventParticipant extends Model
     {
         parent::boot();
 
-        static::updated(function ($model) {
-            if ($model->approval_status &&
-                $model->event->participants()->where('approval_status', false)->doesntExist())
-            {
-                $model->event->event_status_id = 3;
-                $model->event->save();
-            }
-        });
-
         static::deleted(function ($model) {
             dispatch(new NotifyEventParticipants(
                 $model->event,
                 auth()->user(),
                 'pages/extra-vaganza',
-                auth()->user()->name . ' removed ' . $model->user->name . ' from ' . $model->event->title,
+                auth()->user()->name . ' removed ' . $model->user->name . ' from ' . $model->event->title . ' guest list.',
                 false
             ));
 
@@ -53,7 +39,7 @@ class EventParticipant extends Model
             {
                 $model->user->notify(new UserNotification(
                     'pages/extra-vaganza',
-                    auth()->user()->name . ' removed you from ' . $model->event->title,
+                    auth()->user()->name . ' removed you from ' . $model->event->title . ' guest list.',
                     auth()->user()->name,
                     auth()->user()->photo_url
                 ));

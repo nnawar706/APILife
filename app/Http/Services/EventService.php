@@ -44,6 +44,8 @@ class EventService
 
             $event->participants()->sync($participants);
 
+            $event->guests()->sync($request->guests);
+
             foreach ($request->designation_gradings as $item)
             {
                 $event->designationGradings()->create([
@@ -240,13 +242,12 @@ class EventService
 
         try {
             foreach ($request->users as $user) {
-                $event->addParticipants()->updateOrCreate([
+                $event->addParticipants()->firstOrCreate([
                     'user_id' => $user
-                ],[
-                    'guest_status'    => 0,
-                    'approval_status' => 0
                 ]);
             }
+
+            $event->eventGuests()->whereIn('user_id', $request->users)->delete();
 
             DB::commit();
 
@@ -273,7 +274,7 @@ class EventService
                 return $q->where('event_status_id', $request->status_id)
                     ->where(function ($q) {
                         $q->whereHas('eventParticipants', function ($q1) {
-                            return $q1->where('user_id', auth()->user()->id)->participant();
+                            return $q1->where('user_id', auth()->user()->id);
                         });
                     })
                     ->whereDoesntHave('treasurer');
@@ -282,12 +283,15 @@ class EventService
                 return $q->where('is_public', '=', 1)
                     ->orWhere(function ($q) {
                         $q->whereHas('eventParticipants', function ($q1) {
-                            return $q1->where('user_id', auth()->user()->id)->participant();
+                            return $q1->where('user_id', auth()->user()->id);
                         });
                     });
             })
             ->with('lead','category')
             ->with(['participants' => function($q) {
+                return $q->select('users.id','name','photo_url');
+            }])
+            ->with(['guests' => function($q) {
                 return $q->select('users.id','name','photo_url');
             }])->get();
     }
@@ -314,9 +318,8 @@ class EventService
     {
         $event = $this->model->findOrFail($id);
 
-        $guest = $event->addParticipants()
-            ->where('user_id', $user_id)
-            ->where('guest_status','=',1)->first();
+        $guest = $event->eventGuests()
+            ->where('user_id', $user_id)->first();
 
         if ($guest)
         {
@@ -345,7 +348,7 @@ class EventService
             $image->delete();
         });
 
-        // delete image
+        // delete event
         $event->delete();
 
         return true;
@@ -447,11 +450,8 @@ class EventService
 
         try {
             foreach ($request->users as $user) {
-                $event->addParticipants()->updateOrCreate([
+                $event->eventGuests()->firstOrCreate([
                     'user_id' => $user
-                ],[
-                    'guest_status'    => 1,
-                    'approval_status' => 1
                 ]);
             }
 

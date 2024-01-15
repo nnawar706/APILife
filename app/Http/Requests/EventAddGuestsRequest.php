@@ -38,7 +38,7 @@ class EventAddGuestsRequest extends FormRequest
                     }
 
                     else if (EventParticipant::where('event_id', $this->route('id'))
-                            ->whereIn('user_id', $val)->participant()->exists()) {
+                            ->whereIn('user_id', $val)->exists()) {
                         $fail('Participants cannot be added to the extravaganza guest list.');
                     }
                 }]

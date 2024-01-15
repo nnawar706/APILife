@@ -50,6 +50,11 @@ class Event extends Model
         return $this->belongsToMany(User::class, 'event_participants', 'event_id');
     }
 
+    public function guests()
+    {
+        return $this->belongsToMany(User::class, 'event_guests', 'event_id');
+    }
+
     public function images()
     {
         return $this->hasMany(EventImage::class);
@@ -58,6 +63,11 @@ class Event extends Model
     public function eventParticipants()
     {
         return $this->hasMany(EventParticipant::class, 'event_id');
+    }
+
+    public function eventGuests()
+    {
+        return $this->hasMany(EventGuest::class, 'event_id');
     }
 
     public function addParticipants()

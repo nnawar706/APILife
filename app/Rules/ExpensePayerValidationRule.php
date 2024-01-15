@@ -35,8 +35,7 @@ class ExpensePayerValidationRule implements ValidationRule
 
             // check if each payer user exists in the participant list
             else if (($event->addParticipants()
-                    ->whereIn('user_id', $userIds)
-                    ->participant()->count() != count($userIds))) {
+                    ->whereIn('user_id', $userIds)->count() != count($userIds))) {
                 $fail('Some users do not belong to the participant list.');
             }
 
