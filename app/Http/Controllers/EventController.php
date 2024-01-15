@@ -146,7 +146,19 @@ class EventController extends Controller
     }
 
     public function addGuests(EventAddGuestsRequest $request, $id)
-    {}
+    {
+        $response = $this->service->addEventGuests($request, $id);
+
+        if (!$response)
+        {
+            return response()->json(['status' => true], Response::HTTP_CREATED);
+        }
+
+        return response()->json([
+            'status' => false,
+            'error'  => $response
+        ], Response::HTTP_INTERNAL_SERVER_ERROR);
+    }
 
     public function removeParticipant(EventRemoveParticipantsRequest $request, $id)
     {

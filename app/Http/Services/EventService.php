@@ -240,7 +240,12 @@ class EventService
 
         try {
             foreach ($request->users as $user) {
-                $event->addParticipants()->firstOrCreate(['user_id' => $user]);
+                $event->addParticipants()->updateOrCreate([
+                    'user_id' => $user
+                ],[
+                    'guest_status'    => 0,
+                    'approval_status' => 0
+                ]);
             }
 
             DB::commit();
@@ -414,5 +419,39 @@ class EventService
         return $this->model->whereHas('addParticipants', function ($q) {
                 return $q->where('user_id', auth()->user()->id);
             })->get();
+    }
+
+    public function addEventGuests(Request $request, $id)
+    {
+        $event = $this->model->findOrFail($id);
+
+        DB::beginTransaction();
+
+        try {
+            foreach ($request->users as $user) {
+                $event->addParticipants()->updateOrCreate([
+                    'user_id' => $user
+                ],[
+                    'guest_status'    => 1,
+                    'approval_status' => 1
+                ]);
+            }
+
+            DB::commit();
+
+            dispatch(new NotifyEventParticipants(
+                $event,
+                auth()->user(),
+                'pages/extra-vaganza',
+                auth()->user()->name . ' added new guests to ' . $event->title . '.',
+                false
+            ));
+
+            return null;
+        } catch (QueryException $ex)
+        {
+            DB::rollback();
+            return $ex->getMessage();
+        }
     }
 }
