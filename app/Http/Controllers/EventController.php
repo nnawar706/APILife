@@ -44,6 +44,18 @@ class EventController extends Controller
         ], count($data) == 0 ? Response::HTTP_NO_CONTENT : Response::HTTP_OK);
     }
 
+    public function getImages($id)
+    {
+        $data = Cache::remember('event_images'.$id, 24*60*60*30, function () use ($id) {
+            return $this->service->getEventImages($id);
+        });
+
+        return response()->json([
+            'status' => true,
+            'data'   => $data
+        ]);
+    }
+
     public function pendingEvents()
     {
         $data = $this->service->getPendingEvents();

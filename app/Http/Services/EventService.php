@@ -402,4 +402,9 @@ class EventService
             'expenses.createdByInfo','expenses.lastUpdatedByInfo')
             ->find($event_id);
     }
+
+    public function getEventImages($id)
+    {
+        return $this->model->findOrFail($id)->images()->get();
+    }
 }

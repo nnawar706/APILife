@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\EventAddImagesRequest;
 use App\Models\Event;
 use App\Models\EventImage;
+use Illuminate\Support\Facades\Cache;
 use Intervention\Image\Facades\Image;
 use Intervention\Image\ImageManager;
 use Symfony\Component\HttpFoundation\Response;
@@ -47,6 +48,8 @@ class EventImageController extends Controller
                     'height'        => $height
                 ]);
             }
+
+            Cache::forget('event_images'.$id);
 
             return response()->json(['status' => true], Response::HTTP_CREATED);
         } catch (\Throwable $th)

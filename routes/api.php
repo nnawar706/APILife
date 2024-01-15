@@ -74,6 +74,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::put('events/approve_lock', 'approveEventLock');
 
         Route::group(['middleware' => 'event.participant.checker'], function () {
+            Route::get('events/images/{id}', 'getImages');
             Route::get('events/get/{id}', 'read');
             Route::get('events/participants/{id}', 'eventParticipants');
             Route::get('events/designation_gradings/{id}', 'eventDesignations');
