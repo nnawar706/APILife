@@ -32,7 +32,7 @@ class Handler extends ExceptionHandler
 
     public function render($request, Throwable $e)
     {
-        if ($e instanceof HttpException || $e instanceof QueryException)
+        if ($e instanceof HttpException)
         {
             return response()->json([
                 'status' => false,
