@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\Models\Notification;
+use App\Models\PetCare;
 use App\Models\User;
 use App\Notifications\UserNotification;
 use Carbon\Carbon;
@@ -31,35 +31,44 @@ class SendPetCareReminder extends Command
     {
         if (!Carbon::now('Asia/Dhaka')->isFriday())
         {
-            $msg = "It's Pet Care Day! Ensure food, water, and hygiene of Mickey & Minnie!";
+            $lastAttendee = PetCare::orderByDesc('id')->first();
 
-            $notification = Notification::where('data', 'like', '%' . $msg . '%')
-                ->latest()->first();
+            $userModel = User::status()->interested();
 
-            if (!$notification) {
-                $user = User::first();
-            } else {
-                $user = User::where('id', '>', $notification->notifiable_id)
-                    ->first();
+            if (!$lastAttendee)
+            {
+                $user = $userModel->clone()->first();
+            }
+            else
+            {
+                $user = $userModel->clone()->where('id', '>', $lastAttendee->user_id)->first();
 
-                if (!$user) {
-                    $user = User::first();
+                if (!$user)
+                {
+                    $user = $userModel->clone()->first();
                 }
             }
 
-            $users = User::status()->get();
+            PetCare::create([
+                'user_id' => $user->id,
+                'created_at' => Carbon::now('Asia/Dhaka')
+            ]);
+
+            $users = $userModel->clone()->get();
 
             foreach ($users as $item)
             {
                 if ($item->id != $user->id)
                 {
                     $msg = 'Hey ' . $item->name . ' 👋 ' . 'Remind ' . $user->name . ' to ensure food, water, and hygiene of Mickey & Minnie!' . '🦜';
-                } else {
-                    $msg = 'Hey ' . $user->name . ' 👋 ' . $msg . '🦜';
+                }
+                else
+                {
+                    $msg = 'Hey ' . $user->name . ' 👋 ' . "It's Pet Care Day! Ensure food, water, and hygiene of Mickey & Minnie!" . '🦜';
                 }
 
-                $user->notify(new UserNotification(
-                    '',
+                $item->notify(new UserNotification(
+                    'pages/accounts/notification',
                     $msg,
                     'Life++',
                     null

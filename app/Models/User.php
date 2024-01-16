@@ -48,6 +48,11 @@ class User extends Authenticatable implements JWTSubject
         $q->where('status', '=', true);
     }
 
+    public function scopeInterested(Builder $q)
+    {
+        $q->whereNotIn('id', [1,3]);
+    }
+
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()
