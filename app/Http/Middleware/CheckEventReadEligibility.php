@@ -19,15 +19,25 @@ class CheckEventReadEligibility
         $event = Event::find($request->route('id'));
 
         if ($event) {
-            if (!$event->is_public && $event->eventParticipants()->where('user_id', auth()->user()->id)
-                    ->doesntExist()) {
+            $argumentParticipant = $event->eventParticipants()->where('user_id', auth()->user()->id)
+                ->doesntExist();
+
+            $argumentGuest = $event->eventGuests()->where('user_id', auth()->user()->id)
+                ->doesntExist();
+
+            if (!$event->is_public &&
+                (($user_type == 'participant' && $argumentParticipant) ||
+                    ($user_type == 'all' && $argumentGuest && $argumentParticipant)))
+            {
                 return response()->json([
                     'status' => false,
                     'error'  => 'You are not allowed to perform any action on protected extravaganza.'
                 ], Response::HTTP_FORBIDDEN);
             }
+
             return $next($request);
         }
+
         return response()->json([
             'status' => false,
             'error'  => 'Invalid event detected.'
