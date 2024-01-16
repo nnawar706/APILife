@@ -13,8 +13,6 @@ class UserLoan extends Model
 
     protected $guarded = ['id'];
 
-    protected $hidden = ['updated_at'];
-
     public function scopeAccepted(Builder $q)
     {
         $q->where('status', '=', 1);
@@ -30,7 +28,7 @@ class UserLoan extends Model
         $q->where('type', '=', 2);
     }
 
-    public function scopeLoanLend(Builder $q)
+    public function scopeLend(Builder $q)
     {
         $q->where('loan_type', '=', 1);
     }
