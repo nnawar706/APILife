@@ -35,9 +35,8 @@ class EventRemoveGuestsRequest extends FormRequest
                         $fail('Invalid extravaganza detected.');
                     }
 
-                    else if ($event->eventParticipants()
-                        ->where('user_id', $val)
-                        ->where('guest_status', '=', 1)->doesntExist()) {
+                    else if ($event->eventGuests()
+                        ->where('user_id', $val)->doesntExist()) {
                         $fail('Selected user does not belong to the guest list.');
                     }
                 }],
