@@ -232,10 +232,10 @@ class SystemController extends Controller
 
     public function notifyRandomly(Request $request)
     {
-        $user = User::find(3);
+        $users = User::status()->get();
 
-//        foreach ($users as $user)
-//        {
+        foreach ($users as $user)
+        {
             $msg = 'Hey ' . $user->name . ' 👋 ' . $request->message;
 
             $user->notify(new UserNotification(
@@ -244,7 +244,7 @@ class SystemController extends Controller
                 'Life++',
                 null
             ));
-//        }
+        }
     }
 
     public function test() {}
