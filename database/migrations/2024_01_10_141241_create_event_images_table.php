@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('thumbnail_url', 100)->nullable();
             $table->float('width');
             $table->float('height');
+            $table->foreignId('added_by')->constrained('user_id')->onDelete('cascade');
         });
     }
 

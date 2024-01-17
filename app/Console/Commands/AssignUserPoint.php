@@ -46,7 +46,7 @@ class AssignUserPoint extends Command
             Carbon::parse($points->clone()->latest()->first()->created_at)->format('Y-m-d H:i');
 
         // loan data that have type "lend" and status accepted between the specified time interval
-        $loan = UserLoan::loanLend()->accepted()
+        $loan = UserLoan::lend()->accepted()
             ->whereBetween('updated_at', [$start, $end]);
 
         // event data that have been completed between specified time interval
@@ -77,7 +77,12 @@ class AssignUserPoint extends Command
                 // login count
                 $loginCount = $user->accessLogs()->whereBetween('logged_in_at', [$start, $end])->count();
 
+                // added extravaganza image count
+                $addedImageCount = $user->addedImages()->whereBetween('created_at', [$start, $end])->count();
+
                 $weight += $loginCount * BadgeWeight::getValue(BadgeWeight::USER_LOGIN_COUNT);
+
+                $weight += $addedImageCount * BadgeWeight::getValue(BadgeWeight::USER_LOGIN_COUNT);
 
                 // created event count
                 $eventCreated = $events->clone()->where('added_by_user_id', $user->id)->count();
@@ -131,9 +136,9 @@ class AssignUserPoint extends Command
                     + $loan->clone()->where('selected_user_id', $user->id)->debited()->sum('amount');
 
                 if ($lendLoanSum != 0) {
-                    $weight += $lendLoanSum > 5000 ? BadgeWeight::LOAN_ABOVE_5000 :
-                            (
-                            ($lendLoanSum < 5000 && $lendLoanSum > 1500) ? BadgeWeight::getValue(BadgeWeight::LOAN_ABOVE_1500) :
+                    $weight += $lendLoanSum > 5000 ? BadgeWeight::getValue(BadgeWeight::LOAN_ABOVE_5000) :
+                        (
+                        ($lendLoanSum < 5000 && $lendLoanSum > 1500) ? BadgeWeight::getValue(BadgeWeight::LOAN_ABOVE_1500) :
                             (
                             ($lendLoanSum > 500 && $lendLoanSum < 1500) ? BadgeWeight::getValue(BadgeWeight::LOAN_500_TO_1500) :
                                 BadgeWeight::getValue(BadgeWeight::LOAN_BELOW_500)

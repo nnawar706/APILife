@@ -10,16 +10,25 @@ class EventImage extends Model
 {
     protected $guarded = ['id'];
 
-    public $timestamps = false;
+    protected $hidden = ['created_at','updated_at'];
 
     public function event()
     {
         return $this->belongsTo(Event::class);
     }
 
+    public function addedBy()
+    {
+        return $this->belongsTo(User::class, 'added_by');
+    }
+
     public static function boot()
     {
         parent::boot();
+
+        static::creating(function ($model) {
+            $model->added_by = auth()->user()->id;
+        });
 
         static::deleted(function ($model) {
             deleteFile($model->image_url);
