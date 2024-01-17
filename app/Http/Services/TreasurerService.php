@@ -78,16 +78,15 @@ class TreasurerService
 
                         $response[$key]['liabilities'][$index]['late_in_days'] = $diffInDays;
 
-                        if ($diffInDays - 15 > 0) {
-                            $response[$key]['liabilities'][$index]['fine'] = round(($diffInDays - 15) * ($value->amount * 5 / 100), 2);
-                        }
+                        $response[$key]['liabilities'][$index]['fine'] = ($diffInDays - 15 > 0) ?
+                            round(($diffInDays - 15) * ($value->amount * 5 / 100), 2) : 0;
                     } else {
-                        $response[$key]['liabilities'][$index]['late_in_days'] = null;
-                        $response[$key]['liabilities'][$index]['fine']         = null;
+                        $response[$key]['liabilities'][$index]['late_in_days'] = 0;
+                        $response[$key]['liabilities'][$index]['fine']         = 0;
                     }
                 } else {
-                    $response[$key]['liabilities'][$index]['late_in_days'] = null;
-                    $response[$key]['liabilities'][$index]['fine'] = null;
+                    $response[$key]['liabilities'][$index]['late_in_days'] = 0;
+                    $response[$key]['liabilities'][$index]['fine'] = 0;
                 }
                 $response[$key]['liabilities'][$index]['user'] = $value->user;
             }
