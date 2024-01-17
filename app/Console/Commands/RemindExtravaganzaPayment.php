@@ -33,8 +33,6 @@ class RemindExtravaganzaPayment extends Command
             ->with('liabilities')
             ->get();
 
-        $response = [];
-
         if (count($treasures) != 0)
         {
             foreach ($treasures as $item)
@@ -54,7 +52,6 @@ class RemindExtravaganzaPayment extends Command
                     ));
                 }
             }
-            return response()->json($response);
         }
     }
 }
