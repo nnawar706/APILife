@@ -19,6 +19,7 @@ return new class extends Migration
             $table->float('width');
             $table->float('height');
             $table->foreignId('added_by')->constrained('user_id')->onDelete('cascade');
+            $table->timestamps();
         });
     }
 
