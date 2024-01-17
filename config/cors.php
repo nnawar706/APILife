@@ -19,9 +19,7 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => ['*'],
-
-//    'allowed_origins' => ['https://lifeplus.selopian.us'],
+    'allowed_origins' => ['https://lifeplus.selopian.us'],
 
     'allowed_origins_patterns' => [],
 
