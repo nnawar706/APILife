@@ -44,8 +44,6 @@ class EventService
 
             $event->participants()->sync($participants);
 
-            $event->guests()->sync($request->guests);
-
             foreach ($request->designation_gradings as $item)
             {
                 $event->designationGradings()->create([

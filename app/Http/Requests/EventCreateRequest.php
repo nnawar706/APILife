@@ -72,28 +72,6 @@ class EventCreateRequest extends FormRequest
                                             $fail('Lead user must be present in participant list.');
                                         }
                                     }],
-            'guests'             => ['sometimes','array','min:1',
-                                    function($attr, $val, $fail) {
-                                        try {
-                                            $users = User::whereIn('id', $val)
-                                                ->status()->count();
-
-                                            if (count(array_unique($val)) != count($val)) {
-                                                $fail('Duplicate guests detected.');
-                                            }
-                                            else if (count($val) !== $users) {
-                                                $fail('Some of the guests are not active.');
-                                            }
-                                            else if (in_array($this->input('lead_user_id'), $val)) {
-                                                $fail('Lead user must not be present in guest list.');
-                                            }
-                                            else if (!empty(array_intersect($val, $this->input('participants')))) {
-                                                $fail('Participants can not be present in the guest list.');
-                                            }
-                                        } catch (\Throwable $th) {
-                                            $fail('Invalid payload, some fields are missing.');
-                                        }
-                                    }],
             'designation_gradings'          => ['required','array', new EventDesignationGradingValidationRule()],
             'designation_gradings.*.amount' => 'required|numeric|min:0',
             'is_public'                     => 'sometimes|in:1',
