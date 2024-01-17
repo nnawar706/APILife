@@ -2,10 +2,8 @@
 
 namespace App\Models;
 
-use App\Jobs\NotifyUsers;
 use App\Notifications\UserNotification;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Cache;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
 
@@ -19,7 +17,7 @@ class TreasurerLiability extends Model
         'status' => 'boolean'
     ];
 
-    protected $hidden = ['created_at', 'updated_at'];
+//    protected $hidden = ['created_at', 'updated_at'];
 
     protected static $recordEvents = ['updated'];
 

@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use App\Notifications\UserNotification;
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
 use Spatie\Activitylog\LogOptions;
@@ -26,6 +28,13 @@ class Treasurer extends Model
             ->logOnly(['user_id','completion_status'])
             ->useLogName('Treasurer')
             ->logAll();
+    }
+
+    protected function deadline(): Attribute
+    {
+        return Attribute::make(
+            get: fn(string $value) => Carbon::parse($value)->format('F d, Y')
+        );
     }
 
     public function getDescriptionForEvent(string $eventName): string

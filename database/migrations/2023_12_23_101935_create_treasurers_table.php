@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('treasurers', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('restrict');
+            $table->date('deadline');
             $table->tinyInteger('completion_status', false, true)->default(0)->comment('1:completed');
             $table->timestamps();
         });

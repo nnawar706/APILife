@@ -37,6 +37,7 @@ class TreasurerCreateRequest extends FormRequest
                                 $fail('No active user found.');
                             }
                         }],
+            'deadline' => 'required|date|date_format:Y-m-d|after:today',
             'events'   => ['required','array','min:1','distinct',
                             function($attr, $val, $fail) {
                                 $events = Event::whereIn('id', $val);

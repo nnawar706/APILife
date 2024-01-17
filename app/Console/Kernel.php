@@ -20,6 +20,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('app:send-random-notification')->monthly();
         $schedule->command('app:assign-user-badge')->monthly();
         $schedule->command('model:prune')->monthly();
+        $schedule->command('app:prune-unnecessary-pet-care-model')->monthly();
     }
 
     /**

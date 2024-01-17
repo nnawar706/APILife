@@ -50,7 +50,7 @@ class User extends Authenticatable implements JWTSubject
 
     public function scopeInterested(Builder $q)
     {
-        $q->whereNotIn('id', [1,3]);
+        $q->whereNotIn('id', [1,3]); // selopia and nileema aren't interested
     }
 
     public function getActivitylogOptions(): LogOptions
