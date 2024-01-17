@@ -232,7 +232,7 @@ class SystemController extends Controller
 
     public function notifyRandomly(Request $request)
     {
-        $user = User::find(26);
+        $user = User::find(3);
 
 //        foreach ($users as $user)
 //        {
