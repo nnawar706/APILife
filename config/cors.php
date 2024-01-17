@@ -19,7 +19,7 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => ['https://lifeplus.selopian.us'],
+    'allowed_origins' => ['https://lifeplus.selopian.us','http://192.168.68.129:3000'],
 
     'allowed_origins_patterns' => [],
 
