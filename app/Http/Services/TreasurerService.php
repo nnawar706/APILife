@@ -63,13 +63,14 @@ class TreasurerService
 
             $response[$key] = $item;
 
-            $deadline = $item->deadline;
+            $deadline = Carbon::parse($item->deadline);
 
             foreach ($liabilities as $index => $value) {
                 $response[$key]['liabilities'][$index] = $value;
                 if ($value->amount > 0)
                 {
-                    $toDate = $value->status ? $value->updated_at : Carbon::now('Asia/Dhaka');
+                    $toDate = $value->status ? Carbon::parse($value->updated_at) :
+                        Carbon::now('Asia/Dhaka');
 
                     if ($toDate->gt($deadline)) // deadline crossed
                     {

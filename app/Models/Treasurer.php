@@ -30,12 +30,12 @@ class Treasurer extends Model
             ->logAll();
     }
 
-    protected function deadline(): Attribute
-    {
-        return Attribute::make(
-            get: fn(string $value) => Carbon::parse($value)->format('F d, Y')
-        );
-    }
+//    protected function deadline(): Attribute
+//    {
+//        return Attribute::make(
+//            get: fn(string $value) => Carbon::parse($value)->format('F d, Y')
+//        );
+//    }
 
     public function getDescriptionForEvent(string $eventName): string
     {
