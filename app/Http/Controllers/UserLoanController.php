@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\UserLoanCreateRequest;
+use App\Http\Requests\UserLoanStatusUpdateRequest;
 use App\Http\Services\UserLoanService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
@@ -36,24 +37,8 @@ class UserLoanController extends Controller
         return response()->json(['status' => true], Response::HTTP_CREATED);
     }
 
-    public function updateStatus(Request $request, $id)
+    public function updateStatus(UserLoanStatusUpdateRequest $request, $id)
     {
-        $validate = \Validator::make($request->all(), [
-            'status' => 'required|in:1,2',
-            'decline_reason' => 'required_if:status,2|string'
-        ],[
-            'status.in' => 'Invalid status detected.',
-            'decline_reason.required_if' => 'The decline reason field is required.'
-        ]);
-
-        if ($validate->fails())
-        {
-            return response()->json([
-                'status' => false,
-                'error'  => $validate->errors()->first()
-            ], Response::HTTP_UNPROCESSABLE_ENTITY);
-        }
-
         $response = $this->service->changeStatus($request, $id);
 
         if(!$response)
