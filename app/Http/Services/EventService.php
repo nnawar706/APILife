@@ -296,13 +296,14 @@ class EventService
 
     public function getParticipantBasedEvents()
     {
-        return $this->model->whereHas('eventParticipants', function ($q) {
-            return $q->where('user_id', auth()->user()->id);
-        })->orWhere(function ($q) {
-            return $q->whereHas('eventGuests', function ($q1) {
-                return $q1->where('user_id', auth()->user()->id);
-            });
-        })->get();
+        return $this->model->latest()
+            ->whereHas('eventParticipants', function ($q) {
+                return $q->where('user_id', auth()->user()->id);
+            })->orWhere(function ($q) {
+                return $q->whereHas('eventGuests', function ($q1) {
+                    return $q1->where('user_id', auth()->user()->id);
+                });
+            })->get();
     }
 
     public function getPendingEvents()
