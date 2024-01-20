@@ -28,14 +28,19 @@ class RemindExtravaganzaPayment extends Command
      */
     public function handle()
     {
-        $treasures = Treasurer::where('completion_status','=',0)
-            ->whereDate('deadline','<',Carbon::now('Asia/Dhaka'))
+        $treasuresExpired = Treasurer::where('completion_status', '=', 0)
+            ->whereDate('deadline', '<', Carbon::now('Asia/Dhaka'))
             ->with('liabilities')
             ->get();
 
-        if (count($treasures) != 0)
+        $treasuresToday = Treasurer::where('completion_status', '=', 0)
+            ->whereDate('deadline', '=', Carbon::now('Asia/Dhaka'))
+            ->with('liabilities')
+            ->get();
+
+        if (count($treasuresExpired) != 0)
         {
-            foreach ($treasures as $item)
+            foreach ($treasuresExpired as $item)
             {
                 $liabilities = $item->liabilities()
                     ->where('status', '=', 0)
@@ -47,6 +52,27 @@ class RemindExtravaganzaPayment extends Command
                     $value->user->notify(new UserNotification(
                         'pages/payments',
                         'Gentle Reminder: You have ' . $value->amount . ' tk due to pay for a treasure hunt.',
+                        'Life++',
+                        null
+                    ));
+                }
+            }
+        }
+
+        if (count($treasuresToday) != 0)
+        {
+            foreach ($treasuresToday as $item)
+            {
+                $liabilities = $item->liabilities()
+                    ->where('status', '=', 0)
+                    ->where('amount','>',0)
+                    ->get();
+
+                foreach ($liabilities as $value)
+                {
+                    $value->user->notify(new UserNotification(
+                        'pages/payments',
+                        'Gentle Reminder: Deadline for an extravaganza settlement is expiring today.',
                         'Life++',
                         null
                     ));
