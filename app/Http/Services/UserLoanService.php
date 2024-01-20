@@ -35,7 +35,7 @@ class UserLoanService
             ->latest()->get();
     }
 
-    public function changeStatus($status, $id)
+    public function changeStatus($request, $id)
     {
         $loan = $this->model->findOrFail($id);
 
@@ -48,7 +48,14 @@ class UserLoanService
             return 'Unable to update status once the loan is accepted.';
         }
 
-        $loan->update(['status' => $status]);
+        $loan->status = $request->status;
+
+        if ($request->status == 2)
+        {
+            $loan->decline_reason = $request->decline_reason;
+        }
+
+        $loan->save();
 
         return null;
     }

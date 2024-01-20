@@ -39,9 +39,11 @@ class UserLoanController extends Controller
     public function updateStatus(Request $request, $id)
     {
         $validate = \Validator::make($request->all(), [
-            'status' => 'required|in:1,2'
+            'status' => 'required|in:1,2',
+            'decline_reason' => 'required_if:status,2|string'
         ],[
-            'status.in' => 'Invalid status detected.'
+            'status.in' => 'Invalid status detected.',
+            'decline_reason.required_if' => 'The decline reason field is required.'
         ]);
 
         if ($validate->fails())
@@ -52,7 +54,7 @@ class UserLoanController extends Controller
             ], Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
-        $response = $this->service->changeStatus($request->status, $id);
+        $response = $this->service->changeStatus($request, $id);
 
         if(!$response)
         {
