@@ -217,8 +217,11 @@ class EventService
             ->groupBy('expense_categories.id','expense_categories.name','expense_categories.icon_url')
             ->get();
 
+        $rating_status = $event->eventParticipants()->where('user_id', auth()->user()->id)->first()->rated;
+
         return array(
             'additional_data' => array(
+                'rated'                     => $rating_status,
                 'budget'                    => $totalBudget, // w/o sponsored amount
                 'budget_overflow'           => round($estimatedExpense - $totalBudget, 2), // if neg, no overflow
                 'expense'                   => round($estimatedExpense, 2), // w/o sponsored amount
