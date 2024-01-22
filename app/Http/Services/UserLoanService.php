@@ -180,9 +180,9 @@ class UserLoanService
             return 'You are not allowed to perform this action.';
         }
 
-        if ($loan->staus == 1)
+        if ($loan->staus != 0)
         {
-            return 'You are not allowed to delete accepted loans.';
+            return 'You are not allowed to delete accepted/declined loans.';
         }
 
         $loan->delete();
