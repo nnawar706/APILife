@@ -79,6 +79,7 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('events/participants/{id}', 'eventParticipants');
             Route::get('events/designation_gradings/{id}', 'eventDesignations');
             Route::get('events/expense_log/{id}', 'eventExpenseLog');
+            Route::post('events/rating/{id}', 'eventRating');
         });
 
         Route::get('events/images/{id}', 'getImages')->middleware('event.participant.checker:all');

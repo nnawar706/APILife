@@ -14,7 +14,8 @@ class EventParticipant extends Model
     public $timestamps = false;
 
     protected $casts = [
-        'approval_status' => 'boolean'
+        'approval_status' => 'boolean',
+        'rated'           => 'boolean'
     ];
 
     public function event()

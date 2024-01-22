@@ -475,4 +475,30 @@ class EventService
             return $ex->getMessage();
         }
     }
+
+    public function addRating(Request $request, $id)
+    {
+        $event = $this->model->findOrFail($id);
+
+        if (!in_array($event->event_status_id, [3,4]))
+        {
+            return 'You cannot rate an extravaganza before it gets approved.';
+        }
+
+        $participant = $event->eventParticipants()->where('user_id', auth()->user()->id)->first();
+
+        if ($participant->rated)
+        {
+            return 'You can rate an extravaganza only once.';
+        }
+
+        $participant->update([
+            'rated' => 1
+        ]);
+
+        $event->rating->rating += $request->rating;
+        $event->rating->save();
+
+        return null;
+    }
 }

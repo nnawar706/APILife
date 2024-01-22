@@ -11,14 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('event_participants', function (Blueprint $table) {
+        Schema::create('event_ratings', function (Blueprint $table) {
             $table->id();
             $table->foreignId('event_id')->constrained('events')->onDelete('cascade');
-            $table->foreignId('user_id')->constrained('users')->onDelete('restrict');
-            $table->tinyInteger('approval_status', false, true)->default(0)->comment('1:approved');
-            $table->tinyInteger('rated', false, true)->default(0)->comment('1: rating done');
-
-            $table->unique(['event_id', 'user_id']);
+            $table->integer('rating');
+            $table->timestamps();
         });
     }
 
@@ -27,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('event_participants');
+        Schema::dropIfExists('event_ratings');
     }
 };

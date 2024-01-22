@@ -5,6 +5,7 @@ namespace App\Observers;
 use App\Jobs\NotifyEventParticipants;
 use App\Jobs\NotifyUsers;
 use App\Models\Event;
+use App\Models\EventRating;
 use Illuminate\Support\Facades\Cache;
 
 class EventObserver
@@ -16,6 +17,13 @@ class EventObserver
     {
         $model->event_status_id  = 1;
         $model->added_by_user_id = auth()->user()->id;
+    }
+
+    public function created($model): void
+    {
+        EventRating::create([
+            'event_id' => $model->id
+        ]);
     }
 
     /**

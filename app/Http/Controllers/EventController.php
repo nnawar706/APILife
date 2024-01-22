@@ -6,6 +6,7 @@ use App\Http\Requests\EventAddGuestsRequest;
 use App\Http\Requests\EventAddParticipantsRequest;
 use App\Http\Requests\EventApproveLockRequest;
 use App\Http\Requests\EventCreateRequest;
+use App\Http\Requests\EventRatingCreateRequest;
 use App\Http\Requests\EventRemoveGuestsRequest;
 use App\Http\Requests\EventRemoveParticipantsRequest;
 use App\Http\Requests\EventUpdateRequest;
@@ -221,5 +222,22 @@ class EventController extends Controller
             'status' => false,
             'error'  => 'Unable to delete event when it has payment data.'
         ], Response::HTTP_BAD_REQUEST);
+    }
+
+    public function eventRating(EventRatingCreateRequest $request, $id)
+    {
+        $response = $this->service->addRating($request, $id);
+
+        if ($response)
+        {
+            return response()->json([
+                'status' => false,
+                'error'  => $response
+            ], Response::HTTP_FORBIDDEN);
+        }
+
+        return response()->json([
+            'status' => true,
+        ], Response::HTTP_CREATED);
     }
 }
