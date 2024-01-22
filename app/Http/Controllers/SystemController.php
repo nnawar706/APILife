@@ -176,7 +176,7 @@ class SystemController extends Controller
         $expense_categories_lifetime = $expense_categories->clone()
             ->selectRaw('
                 COALESCE(SUM(CASE
-                    WHEN events.event_status_id = 4 THEN expense_payers.amount
+                    WHEN events.event_status_id != 5 THEN expense_payers.amount
                     ELSE 0 END
                 ), 0) AS expense_amount,
                 expense_categories.id,expense_categories.name,expense_categories.icon_url
@@ -187,7 +187,7 @@ class SystemController extends Controller
         $expense_categories_monthly = $expense_categories->clone()
             ->selectRaw('
                 COALESCE(SUM(CASE
-                    WHEN events.event_status_id = 4 AND
+                    WHEN events.event_status_id != 5 AND
                     expense_payers.created_at BETWEEN "'. $start_date .'" AND "'. $end_date .'" THEN expense_payers.amount
                     ELSE 0 END
                 ), 0) AS expense_amount,
@@ -199,7 +199,7 @@ class SystemController extends Controller
         $expense_categories_weekly = $expense_categories->clone()
             ->selectRaw('
                 COALESCE(SUM(CASE
-                    WHEN events.event_status_id = 4 AND
+                    WHEN events.event_status_id != 5 AND
                     expense_payers.created_at BETWEEN "'. $start_date_week .'" AND "'. $end_date .'" THEN expense_payers.amount
                     ELSE 0 END
                 ), 0) AS expense_amount,
