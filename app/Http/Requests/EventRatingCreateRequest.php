@@ -26,7 +26,8 @@ class EventRatingCreateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'rating' => 'required|integer|min:1|max:10'
+            'rating' => 'required|integer|min:1|max:10',
+            'note'   => 'sometimes|string|max:300'
         ];
     }
 

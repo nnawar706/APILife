@@ -498,9 +498,14 @@ class EventService
         $new_rating = $event->rating->rating + $request->rating;
         $rated_by   = $event->rating->rated_by + 1;
 
+        $notes = json_decode($event->rating->notes, true);
+
+        $notes[] = $request->note;
+
         $event->rating->rating     = $new_rating;
         $event->rating->rated_by   = $rated_by;
         $event->rating->avg_rating = round($new_rating / $rated_by, 2);
+        $event->rating->notes      = json_encode($notes);
         $event->rating->save();
 
         $participant->rated = 1;
