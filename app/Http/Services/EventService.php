@@ -122,7 +122,7 @@ class EventService
     public function getInfo($id)
     {
         $event = $this->model
-            ->with('lead','participants','guests','images','category','status',
+            ->with('lead','participants','guests','images','category','status','rating',
                 'designationGradings.designation','expenses.category','expenses.bearers',
                 'expenses.payers','expenseBearers','expensePayers')
             ->find($id);
@@ -492,12 +492,17 @@ class EventService
             return 'You can rate an extravaganza only once.';
         }
 
+        $new_rating = $event->rating->rating + $request->rating;
+        $rated_by   = $event->rating->rated_by + 1;
+
+        $event->rating->rating     = $new_rating;
+        $event->rating->rated_by   = $rated_by;
+        $event->rating->avg_rating = round($new_rating / $rated_by, 2);
+        $event->rating->save();
+
         $participant->update([
             'rated' => 1
         ]);
-
-        $event->rating->rating += $request->rating;
-        $event->rating->save();
 
         return null;
     }

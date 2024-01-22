@@ -22,7 +22,7 @@ class EventObserver
     public function created($model): void
     {
         EventRating::create([
-            'event_id' => $model->id
+            'event_id' => $model->id,
         ]);
     }
 

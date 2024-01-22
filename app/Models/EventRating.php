@@ -8,6 +8,8 @@ class EventRating extends Model
 {
     protected $guarded = ['id'];
 
+    protected $hidden = ['rating', 'rated_by'];
+
     public $timestamps = false;
 
     public function event()
