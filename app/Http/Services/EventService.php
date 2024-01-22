@@ -503,9 +503,8 @@ class EventService
         $event->rating->avg_rating = round($new_rating / $rated_by, 2);
         $event->rating->save();
 
-        $participant->update([
-            'rated' => 1
-        ]);
+        $participant->rated = 1;
+        $participant->saveQuietly();
 
         return null;
     }
