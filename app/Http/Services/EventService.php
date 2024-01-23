@@ -498,7 +498,7 @@ class EventService
             return 'You can rate an extravaganza only once.';
         }
 
-        $new_rating = $event->rating->rating + $request->rating;
+        $new_rating = round(($event->rating->rating + ($request->rating / 10)), 2);
         $rated_by   = $event->rating->rated_by + 1;
 
         if ($request->note){
