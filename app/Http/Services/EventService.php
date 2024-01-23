@@ -288,7 +288,7 @@ class EventService
                         });
                     });
             })
-            ->with('lead','category')
+            ->with('lead','category','rating')
             ->with(['participants' => function($q) {
                 return $q->select('users.id','name','photo_url');
             }])
