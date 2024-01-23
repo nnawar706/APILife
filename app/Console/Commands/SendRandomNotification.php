@@ -2,8 +2,11 @@
 
 namespace App\Console\Commands;
 
+use App\Models\Event;
+use App\Models\EventRating;
 use App\Models\User;
 use App\Notifications\UserNotification;
+use Carbon\Carbon;
 use Illuminate\Console\Command;
 
 class SendRandomNotification extends Command
@@ -40,13 +43,18 @@ class SendRandomNotification extends Command
         // select a random quote
         $index = 5;
 
-        $message = $quotes[$index];
+        $start_date = Carbon::now('Asia/Dhaka')->subMonth(1);
+        $end_date = Carbon::now('Asia/Dhaka');
+
+        $event = EventRating::whereHas('event', function ($q) use ($start_date, $end_date) {
+            return $q->whereBetween('created_at', [$start_date, $end_date]);
+        })->orderByDesc('avg_rating')->first();
 
         $users = User::status()->get();
 
         foreach ($users as $user)
         {
-            $msg = 'Hey ' . $user->name . ' 👋 ' . $message;
+            $msg = 'Hey ' . $user->name . ' 👋 ' . $quotes[$index];
 
             $user->notify(new UserNotification(
                 '',
@@ -54,6 +62,18 @@ class SendRandomNotification extends Command
                 'Life++',
                 null
             ));
+
+            if ($event)
+            {
+                $msg2 = 'Hey ' . $user->name . ' 👋 ' . $event->event->title . ' got the highest rating this month.💥';
+
+                $user->notify(new UserNotification(
+                    '',
+                    $msg2,
+                    'Life++',
+                    null
+                ));
+            }
         }
     }
 }
