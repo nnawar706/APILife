@@ -88,8 +88,8 @@ class SystemController extends Controller
     }
 
     public function test(Request $request) {
-        $user = User::find($request->user_id);
+        $user = Badge::find($request->id);
 
-        saveImage($request->image, '/images/users/', $user, 'photo_url');
+        saveImage($request->image, '/images/badges/', $user, 'image_url');
     }
 }
