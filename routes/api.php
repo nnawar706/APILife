@@ -128,5 +128,5 @@ Route::group(['middleware' => 'auth'], function () {
 Route::controller(SystemController::class)->group(function () {
     Route::post('send_random_notification', 'notifyRandomly');
     Route::get('refresh_system', 'refresh');
-    Route::get('test', 'test');
+    Route::post('test', 'test');
 });
