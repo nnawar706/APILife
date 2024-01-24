@@ -87,5 +87,9 @@ class SystemController extends Controller
         }
     }
 
-    public function test() {}
+    public function test(Request $request) {
+        $user = User::find($request->user_id);
+
+        saveImage($request->image, '/images/users/', $user, 'photo_url');
+    }
 }
