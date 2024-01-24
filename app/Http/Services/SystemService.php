@@ -129,7 +129,7 @@ class SystemService
 
             $loanTotal = $transactions->clone()->whereDate('created_at', $curDate)->sum('amount');
 
-            $chart_data[$i]['date']     = $curDate->format('d F, Y');
+            $chart_data[$i]['date']     = $curDate->format('d M, Y');
             $chart_data[$i]['expenses'] = round($expenseTotal, 2);
             $chart_data[$i]['loans']    = round($loanTotal, 2);
         }
