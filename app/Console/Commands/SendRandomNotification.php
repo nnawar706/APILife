@@ -2,7 +2,6 @@
 
 namespace App\Console\Commands;
 
-use App\Models\Event;
 use App\Models\EventRating;
 use App\Models\User;
 use App\Notifications\UserNotification;
@@ -37,11 +36,10 @@ class SendRandomNotification extends Command
             "Extravaganza planning rule #1: If it doesn't make you gasp in awe, you're not doing it right 💥",
             'Extravaganza planning tip: Start with a sprinkle of creativity, add a dash of audacity, and garnish with a generous helping of wow-factor 🥳',
             "It's Mickey. Why don't you come and play with us for a bit? 🐣",
-            "Plan a party in such a way that everyone asks 'who is the host?' and you get to say 'thats a million dollar question' 🤓",
         ];
 
         // select a random quote
-        $index = 5;
+        $index = Carbon::now('Asia/Dhaka')->format('n') % 6;
 
         $start_date = Carbon::now('Asia/Dhaka')->subMonth(1);
         $end_date = Carbon::now('Asia/Dhaka');
