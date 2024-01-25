@@ -24,7 +24,7 @@ class SystemService
         $dues                = 0;
         $monthly_user_badges = [];
         $user_wise_badge1    = [];
-//        $user_wise_badge2    = [];
+        $user_wise_badge2    = [];
         $current_user_points = [];
         $chart_data          = [];
 
@@ -105,19 +105,19 @@ class SystemService
             }
         }
 
-//        foreach ($badges as $key => $badge)
-//        {
-//            $user_wise_badge2[$key]['badge'] = $badge;
-//
-//            foreach ($users as $index => $user)
-//            {
-//                $user_wise_badge2[$key]['user_data'][$index]['user'] = $user;
-//                $user_wise_badge2[$key]['user_data'][$index]['count'] = $user_badge->clone()
-//                    ->where('user_id', $user->id)
-//                    ->where('badge_id', $badge->id)
-//                    ->count();
-//            }
-//        }
+        foreach ($badges as $key => $badge)
+        {
+            $user_wise_badge2[$key]['badge'] = $badge;
+
+            foreach ($users as $index => $user)
+            {
+                $user_wise_badge2[$key]['user_data'][$index]['user'] = $user;
+                $user_wise_badge2[$key]['user_data'][$index]['count'] = $user_badge->clone()
+                    ->where('user_id', $user->id)
+                    ->where('badge_id', $badge->id)
+                    ->count();
+            }
+        }
 
         for ($i=0;$i<30;$i++)
         {
@@ -191,7 +191,7 @@ class SystemService
             'transaction_30days_amount'   => $transaction_amount_30days,
             'current_month_badges'        => $monthly_user_badges,
             'user_badges_1'               => $user_wise_badge1,
-//            'user_badges_2'               => $user_wise_badge2,
+            'user_badges_2'               => $user_wise_badge2,
             'user_points'                 => $current_user_points,
             'expense_categories_lifetime' => $expense_categories_lifetime,
             'expense_categories_monthly'  => $expense_categories_monthly,
