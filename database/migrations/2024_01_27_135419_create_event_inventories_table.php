@@ -18,6 +18,8 @@ return new class extends Migration
             $table->string('title', 200);
             $table->integer('quantity');
             $table->string('notes', 300)->nullable();
+            $table->foreignId('created_by')->constrained('users')->onDelete('restrict');
+            $table->foreignId('last_updated_by')->nullable()->constrained('users')->onDelete('restrict');
             $table->timestamps();
         });
     }

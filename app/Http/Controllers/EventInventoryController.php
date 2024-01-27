@@ -15,6 +15,16 @@ class EventInventoryController extends Controller
         $this->service = $service;
     }
 
+    public function getInventory($id, $inventory_id)
+    {
+        $data = $this->service->getInventoryData($inventory_id);
+
+        return response()->json([
+            'status' => true,
+            'data'   => $data
+        ], $data ? Response::HTTP_OK : Response::HTTP_NO_CONTENT);
+    }
+
 
     public function addInventory(EventInventoryCreateRequest $request, $id)
     {

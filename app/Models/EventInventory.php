@@ -21,6 +21,16 @@ class EventInventory extends Model
         return $this->belongsTo(InventoryCategory::class, 'inventory_category_id');
     }
 
+    public function createdByInfo()
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function updatedByInfo()
+    {
+        return $this->belongsTo(User::class, 'last_updated_by');
+    }
+
     public function participants()
     {
         return $this->belongsToMany(User::class, 'event_inventory_participants', 'event_inventory_id');
@@ -34,6 +44,14 @@ class EventInventory extends Model
     public static function boot()
     {
         parent::boot();
+
+        static::creating(function ($model) {
+            $model->created_by = auth()->user()->id;
+        });
+
+        static::updating(function ($model) {
+            $model->last_updated_by = auth()->user()->id;
+        });
 
         static::updated(function ($model) {
             $model->inventoryParticipants()->where('approval_status', 1)->update([

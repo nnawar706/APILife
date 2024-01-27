@@ -95,32 +95,8 @@ class InventoryService
         $inventory->delete();
     }
 
-    public function addParticipants($users, $inventory_id): void
+    public function getInventoryData($inventory_id)
     {
-        $inventory = $this->model->findOrFail($inventory_id);
-
-        foreach ($users as $user) {
-            $inventory->inventoryParticipants()->firstOrCreate([
-                    'user_id' => $user
-            ]);
-        }
-    }
-
-    public function removeParticipant($user_id, $inventory_id): void
-    {
-        $inventory = $this->model->findOrFail($inventory_id);
-
-        $participant = $inventory->inventoryParticipants()->where('user_id', $user_id)->first();
-
-        if ($participant) {
-            $participant->user->notify(new UserNotification(
-                'pages/update-vaganza/' . $inventory->event_id,
-                auth()->user()->name . ' removed you from an inventory of ' . $inventory->event->title . '.',
-                auth()->user()->name,
-                auth()->user()->photo_url
-            ));
-
-            $participant->deleteQuietly();
-        }
+        return $this->model->with('category','participants','createdByInfo','updatedByInfo')->find($inventory_id);
     }
 }
