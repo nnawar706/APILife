@@ -6,6 +6,7 @@ use App\Http\Requests\EventAddGuestsRequest;
 use App\Http\Requests\EventAddParticipantsRequest;
 use App\Http\Requests\EventApproveLockRequest;
 use App\Http\Requests\EventCreateRequest;
+use App\Http\Requests\EventInventoryCreateRequest;
 use App\Http\Requests\EventRatingCreateRequest;
 use App\Http\Requests\EventRemoveGuestsRequest;
 use App\Http\Requests\EventRemoveParticipantsRequest;

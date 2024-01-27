@@ -5,6 +5,7 @@ use App\Http\Controllers\DesignationController;
 use App\Http\Controllers\EventCategoryController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\EventImageController;
+use App\Http\Controllers\EventInventoryController;
 use App\Http\Controllers\EventStatusController;
 use App\Http\Controllers\ExpenseCategoryController;
 use App\Http\Controllers\ExpenseController;
@@ -101,6 +102,12 @@ Route::group(['middleware' => 'auth'], function () {
             Route::post('events/add_guests/{id}', 'addGuests');
             Route::put('events/remove_participants/{id}', 'removeParticipant');
             Route::put('events/remove_guests/{id}', 'removeGuest');
+        });
+    });
+
+    Route::controller(EventInventoryController::class)->group(function () {
+        Route::group(['middleware' => 'event.participant.checker:participant'], function () {
+            Route::post('events/inventories/{id}', 'addInventory');
         });
     });
 

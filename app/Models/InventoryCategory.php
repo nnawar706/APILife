@@ -21,6 +21,11 @@ class InventoryCategory extends Model
         $q->where('status', '=', true);
     }
 
+    public function inventories()
+    {
+        return $this->hasMany(EventInventory::class);
+    }
+
     public static function boot()
     {
         parent::boot();

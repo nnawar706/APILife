@@ -60,6 +60,11 @@ class Event extends Model
         return $this->hasMany(EventImage::class);
     }
 
+    public function inventories()
+    {
+        return $this->hasMany(EventInventory::class);
+    }
+
     public function rating()
     {
         return $this->hasOne(EventRating::class);
