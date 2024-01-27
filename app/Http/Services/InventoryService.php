@@ -104,7 +104,7 @@ class InventoryService
     {
         return $this->model->whereHas('inventoryParticipants', function ($q) {
             return $q->where('user_id', auth()->user()->id);
-        })->with('category','event','participants')->get();
+        })->with('category','event','participants','inventoryParticipants')->get();
     }
 
     public function changeInventoryStatus($status, $inventory_id): void
