@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\EventInventoryAddParticipantRequest;
 use App\Http\Requests\EventInventoryCreateRequest;
+use App\Http\Requests\EventInventoryRemoveParticipantRequest;
 use App\Http\Requests\EventInventoryUpdateRequest;
 use App\Http\Services\InventoryService;
 use Symfony\Component\HttpFoundation\Response;
@@ -47,6 +48,15 @@ class EventInventoryController extends Controller
     public function addInventoryParticipants(EventInventoryAddParticipantRequest $request, $id, $inventory_id)
     {
         $this->service->addParticipants($request->users, $inventory_id);
+
+        return response()->json([
+            'status' => true
+        ], Response::HTTP_OK);
+    }
+
+    public function removeInventoryParticipants(EventInventoryRemoveParticipantRequest $request, $id, $inventory_id)
+    {
+        $this->service->removeParticipant($request->user_id, $inventory_id);
 
         return response()->json([
             'status' => true
