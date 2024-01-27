@@ -4,6 +4,7 @@ namespace App\Http\Services;
 
 use App\Models\EventInventory;
 use App\Notifications\UserNotification;
+use Carbon\Carbon;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -56,14 +57,31 @@ class InventoryService
     {
         $inventory = $this->model->findOrFail($inventory_id);
 
-        $inventory->update([
-            'inventory_category_id' => $request->inventory_category_id,
-            'title'                 => $request->title,
-            'quantity'              => $request->quantity,
-            'notes'                 => $request->notes
-        ]);
+        DB::beginTransaction();
 
-        return $inventory->wasChanged();
+        try {
+            $inventory->inventoryParticipants()->each(function ($participant) {
+                $participant->deleteQuietly();
+            });
+
+            $inventory->participants()->sync($request->users);
+
+            $inventory->update([
+                'inventory_category_id' => $request->inventory_category_id,
+                'title'                 => $request->title,
+                'quantity'              => $request->quantity,
+                'notes'                 => $request->notes,
+                'updated_at'            => Carbon::now('Asia/Dhaka')
+            ]);
+
+            DB::commit();
+
+            return null;
+        } catch (QueryException $ex) {
+            DB::rollback();
+
+            return $ex->getMessage();
+        }
     }
 
     public function removeInventory($inventory_id): void

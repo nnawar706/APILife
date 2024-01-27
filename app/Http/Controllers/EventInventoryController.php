@@ -2,10 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\EventInventoryAddParticipantRequest;
 use App\Http\Requests\EventInventoryCreateRequest;
-use App\Http\Requests\EventInventoryRemoveParticipantRequest;
-use App\Http\Requests\EventInventoryUpdateRequest;
 use App\Http\Services\InventoryService;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -28,7 +25,7 @@ class EventInventoryController extends Controller
             return response()->json([
                 'status' => false,
                 'error'  => $response
-            ], Response::HTTP_FORBIDDEN);
+            ], Response::HTTP_BAD_REQUEST);
         }
 
         return response()->json([
@@ -36,30 +33,20 @@ class EventInventoryController extends Controller
         ], Response::HTTP_CREATED);
     }
 
-    public function updateInventory(EventInventoryUpdateRequest $request, $id, $inventory_id)
+    public function updateInventory(EventInventoryCreateRequest $request, $id, $inventory_id)
     {
         $response = $this->service->updateEventInventory($request, $inventory_id);
 
-        return response()->json([
-            'status' => true
-        ], $response ? Response::HTTP_OK : Response::HTTP_NOT_MODIFIED);
-    }
-
-    public function addInventoryParticipants(EventInventoryAddParticipantRequest $request, $id, $inventory_id)
-    {
-        $this->service->addParticipants($request->users, $inventory_id);
-
-        return response()->json([
-            'status' => true
-        ], Response::HTTP_OK);
-    }
-
-    public function removeInventoryParticipants(EventInventoryRemoveParticipantRequest $request, $id, $inventory_id)
-    {
-        $this->service->removeParticipant($request->user_id, $inventory_id);
+        if ($response)
+        {
+            return response()->json([
+                'status' => false,
+                'error'  => $response
+            ], Response::HTTP_BAD_REQUEST);
+        }
 
         return response()->json([
-            'status' => true
+            'status' => true,
         ], Response::HTTP_OK);
     }
 
