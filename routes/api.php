@@ -107,7 +107,8 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::controller(EventInventoryController::class)->group(function () {
         Route::group(['middleware' => 'event.participant.checker:participant'], function () {
-            Route::post('events/inventories/{id}', 'addInventory');
+            Route::post('events/inventories/create/{id}', 'addInventory');
+//            Route::post('events/inventories/update/{id}', 'addInventory');
         });
     });
 
