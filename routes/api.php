@@ -106,7 +106,9 @@ Route::group(['middleware' => 'auth'], function () {
     });
 
     Route::controller(EventInventoryController::class)->group(function () {
+        Route::get('events/assigned_inventories', 'getUserInventories');
         Route::group(['middleware' => ['event.participant.checker:participant', 'event.checker']], function () {
+            Route::put('events/inventories/update_status/{id}/{inventory_id}', 'changeStatus');
             Route::post('events/inventories/create/{id}', 'addInventory');
             Route::get('events/inventories/get/{id}/{inventory_id}', 'getInventory');
             Route::put('events/inventories/update/{id}/{inventory_id}', 'updateInventory');

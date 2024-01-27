@@ -99,4 +99,20 @@ class InventoryService
     {
         return $this->model->with('category','participants','createdByInfo','updatedByInfo')->find($inventory_id);
     }
+
+    public function assignedInventoryList()
+    {
+        return $this->model->whereHas('inventoryParticipants', function ($q) {
+            return $q->where('user_id', auth()->user()->id);
+        })->with('category','event','participants')->get();
+    }
+
+    public function changeInventoryStatus($status, $inventory_id): void
+    {
+        $inventory = $this->model->findOrFail($inventory_id);
+
+        $inventory->inventoryParticipants()
+            ->where('user_id', auth()->user()->id)
+            ->update(['approval_status' => $status]);
+    }
 }

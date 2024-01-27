@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\EventInventoryCreateRequest;
 use App\Http\Services\InventoryService;
+use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class EventInventoryController extends Controller
@@ -23,6 +24,17 @@ class EventInventoryController extends Controller
             'status' => true,
             'data'   => $data
         ], $data ? Response::HTTP_OK : Response::HTTP_NO_CONTENT);
+    }
+
+    public function getUserInventories()
+    {
+        $data = $this->service->assignedInventoryList();
+
+
+        return response()->json([
+            'status' => true,
+            'data'   => $data
+        ], count($data) != 0 ? Response::HTTP_OK : Response::HTTP_NO_CONTENT);
     }
 
 
@@ -57,6 +69,15 @@ class EventInventoryController extends Controller
 
         return response()->json([
             'status' => true,
+        ], Response::HTTP_OK);
+    }
+
+    public function changeStatus(Request $request, $id, $inventory_id)
+    {
+        $this->service->changeInventoryStatus($request->status, $inventory_id);
+
+        return response()->json([
+            'status' => true
         ], Response::HTTP_OK);
     }
 
