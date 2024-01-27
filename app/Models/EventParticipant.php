@@ -50,6 +50,10 @@ class EventParticipant extends Model
                 false
             ));
 
+            EventInventoryParticipant::whereHas('eventInventory', function ($q) use ($model) {
+                return $q->where('event_id', $model->event_id);
+            })->where('user_id', $model->user_id)->delete();
+
             if (auth()->user()->id != $model->user_id)
             {
                 $model->user->notify(new UserNotification(
