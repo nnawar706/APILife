@@ -8,6 +8,7 @@ use App\Http\Controllers\EventImageController;
 use App\Http\Controllers\EventStatusController;
 use App\Http\Controllers\ExpenseCategoryController;
 use App\Http\Controllers\ExpenseController;
+use App\Http\Controllers\InventoryCategoryController;
 use App\Http\Controllers\SystemController;
 use App\Http\Controllers\TreasurerController;
 use App\Http\Controllers\TreasurerLiabilitiesController;
@@ -65,6 +66,14 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('expense_categories/update/{id}', 'update');
         Route::get('expense_categories/change_status/{id}', 'updateStatus');
         Route::delete('expense_categories/delete/{id}', 'delete');
+    });
+
+    Route::controller(InventoryCategoryController::class)->group(function () {
+        Route::get('inventory_categories/all', 'index');
+        Route::post('inventory_categories/create', 'create');
+        Route::post('inventory_categories/update/{id}', 'update');
+        Route::get('inventory_categories/change_status/{id}', 'updateStatus');
+        Route::delete('inventory_categories/delete/{id}', 'delete');
     });
 
     Route::controller(EventController::class)->group(function () {
