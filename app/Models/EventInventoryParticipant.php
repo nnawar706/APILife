@@ -11,10 +11,6 @@ class EventInventoryParticipant extends Model
 
     public $timestamps = false;
 
-    protected $casts = [
-        'approval_status' => 'boolean'
-    ];
-
     public function eventInventory()
     {
         return $this->belongsTo(EventInventory::class);
