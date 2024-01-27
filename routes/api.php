@@ -109,6 +109,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::group(['middleware' => ['event.participant.checker:participant', 'event.checker']], function () {
             Route::post('events/inventories/create/{id}', 'addInventory');
             Route::post('events/inventories/update/{id}/{inventory_id}', 'updateInventory');
+            Route::post('events/inventories/add_participants/{id}/{inventory_id}', 'addInventoryParticipants');
             Route::delete('events/inventories/delete/{id}/{inventory_id}', 'deleteInventory');
         });
     });

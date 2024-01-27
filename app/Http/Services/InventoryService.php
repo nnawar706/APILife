@@ -76,4 +76,15 @@ class InventoryService
 
         $inventory->delete();
     }
+
+    public function addParticipants($users, $inventory_id)
+    {
+        $inventory = $this->model->findOrFail($inventory_id);
+
+        foreach ($users as $user) {
+            $inventory->inventoryParticipants()->firstOrCreate([
+                    'user_id' => $user
+            ]);
+        }
+    }
 }

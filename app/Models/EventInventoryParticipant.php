@@ -29,13 +29,28 @@ class EventInventoryParticipant extends Model
     {
         parent::boot();
 
+        static::created(function ($model) {
+            if ($model->user_id != auth()->user()->id)
+            {
+                $model->user->notify(new UserNotification(
+                    'pages/update-vaganza/' . $model->eventInventory->event_id,
+                    auth()->user()->name . ' added you to an inventory of ' . $model->eventInventory->event->title . '.',
+                    auth()->user()->name,
+                    auth()->user()->photo_url
+                ));
+            }
+        });
+
         static::deleted(function ($model) {
-            $model->user->notify(new UserNotification(
-                'pages/update-vaganza/' . $model->eventInventory->event_id,
-                auth()->user()->name . ' removed an inventory from ' . $model->eventInventory->event->title . '.',
-                auth()->user()->name,
-                auth()->user()->photo_url
-            ));
+            if ($model->user_id != auth()->user()->id)
+            {
+                $model->user->notify(new UserNotification(
+                    'pages/update-vaganza/' . $model->eventInventory->event_id,
+                    auth()->user()->name . ' removed an inventory from ' . $model->eventInventory->event->title . '.',
+                    auth()->user()->name,
+                    auth()->user()->photo_url
+                ));
+            }
         });
     }
 }

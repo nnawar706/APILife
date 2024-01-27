@@ -41,12 +41,15 @@ class EventInventory extends Model
             ]);
 
             $model->inventoryParticipants()->each(function ($participant) use ($model) {
-                $participant->user->notify(new UserNotification(
-                    'pages/update-vaganza/' . $model->event_id,
-                    auth()->user()->name . ' updated an inventory from ' . $model->event->title . '.',
-                    auth()->user()->name,
-                    auth()->user()->photo_url
-                ));
+                if ($participant->user_id != auth()->user()->id)
+                {
+                    $participant->user->notify(new UserNotification(
+                        'pages/update-vaganza/' . $model->event_id,
+                        auth()->user()->name . ' updated an inventory from ' . $model->event->title . '.',
+                        auth()->user()->name,
+                        auth()->user()->photo_url
+                    ));
+                }
             });
         });
     }
