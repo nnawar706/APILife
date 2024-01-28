@@ -14,6 +14,7 @@ use App\Http\Controllers\SystemController;
 use App\Http\Controllers\TreasurerController;
 use App\Http\Controllers\TreasurerLiabilitiesController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\UserIncomeController;
 use App\Http\Controllers\UserLoanController;
 use Illuminate\Support\Facades\Route;
 use Pusher\PushNotifications\PushNotifications;
@@ -146,6 +147,13 @@ Route::group(['middleware' => 'auth'], function () {
     Route::controller(SystemController::class)->group(function () {
         Route::get('activity_logs/all', 'activities');
         Route::get('dashboard', 'dashboardData');
+    });
+
+    Route::controller(UserIncomeController::class)->group(function () {
+        Route::get('user_incomes/all', 'index');
+        Route::get('user_incomes/create', 'create');
+        Route::get('user_incomes/update/{id}', 'update');
+        Route::get('user_incomes/delete/{id}', 'delete');
     });
 });
 
