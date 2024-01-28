@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Notifications\UserNotification;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
 
@@ -11,6 +12,11 @@ class EventInventory extends Model
     protected $guarded = ['id'];
 
     protected $hidden = ['updated_at'];
+
+    public function scopePending(Builder $q)
+    {
+        $q->where('approval_status', '=', 0);
+    }
 
     public function event()
     {

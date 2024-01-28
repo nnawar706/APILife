@@ -43,18 +43,6 @@ class UserController extends Controller
         ], count($data) === 0 ? Response::HTTP_NO_CONTENT : Response::HTTP_OK);
     }
 
-    public function read($id)
-    {
-        $data = Cache::remember('user_profile'.$id, 24*60*60*60, function () use ($id) {
-            return $this->service->getUserData($id);
-        });
-
-        return response()->json([
-            'status' => true,
-            'data'   => $data
-        ], $data ? Response::HTTP_OK : Response::HTTP_NO_CONTENT);
-    }
-
     public function create(UserCreateRequest $request)
     {
         $this->service->storeNewUser($request);

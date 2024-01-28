@@ -26,12 +26,6 @@ class UserService
             ->with('designation')->get();
     }
 
-    public function getUserData($id)
-    {
-        return $this->model->with('designation')
-            ->find($id);
-    }
-
     public function storeNewUser(Request $request): void
     {
         $user = $this->model->create([

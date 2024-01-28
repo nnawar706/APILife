@@ -38,7 +38,6 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::controller(UserController::class)->group(function () {
         Route::get('users/all', 'index');
-        Route::get('users/get/{id}', 'read');
         Route::post('users/create', 'create');
         Route::post('users/update', 'update');
         Route::get('users/change_status/{id}', 'updateStatus');

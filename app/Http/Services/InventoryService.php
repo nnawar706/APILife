@@ -56,7 +56,8 @@ class InventoryService
 
     public function assignedInventoryList()
     {
-        return $this->model->where('assigned_to', auth()->user()->id)->with('category','event')->get();
+        return $this->model->pending()->where('assigned_to', auth()->user()->id)
+            ->with('category','event')->get();
     }
 
     public function changeInventoryStatus($status, $inventory_id)

@@ -47,7 +47,8 @@ class AuthService
 
     public function getAuthUserProfile()
     {
-        return (new UserService(new User()))->getUserData(auth()->user()->id);
+        return User::with('designation')
+            ->find(auth()->user()->id);
     }
 
     public function updateUserPassword(Request $request): void
