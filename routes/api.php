@@ -151,9 +151,9 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::controller(UserIncomeController::class)->group(function () {
         Route::get('user_incomes/all', 'index');
-        Route::get('user_incomes/create', 'create');
-        Route::get('user_incomes/update/{id}', 'update');
-        Route::get('user_incomes/delete/{id}', 'delete');
+        Route::post('user_incomes/create', 'create');
+        Route::put('user_incomes/update/{id}', 'update');
+        Route::delete('user_incomes/delete/{id}', 'delete');
     });
 });
 
