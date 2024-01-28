@@ -7,5 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class UserExpense extends Model
 {
-    use HasFactory;
+    public $timestamps = false;
+
+    public function category()
+    {
+        return $this->belongsTo(ExpenseCategory::class, 'expense_category_id');
+    }
 }

@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\UserIncomeCreateRequest;
 use App\Http\Services\UserIncomeService;
-use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class UserIncomeController extends Controller
@@ -17,7 +16,14 @@ class UserIncomeController extends Controller
     }
 
     public function index()
-    {}
+    {
+        $data = $this->service->getAll();
+
+        return response()->json([
+            'status' => true,
+            'data'   => $data
+        ], count($data) == 0 ? 204 : 200);
+    }
 
     public function create(UserIncomeCreateRequest $request)
     {
