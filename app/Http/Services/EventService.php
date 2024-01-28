@@ -123,7 +123,7 @@ class EventService
     {
         $event = $this->model
             ->with('lead','participants','guests','images','category','status','rating',
-                'inventories.category','inventories.participants',
+                'inventories.category','inventories.assignedToInfo',
                 'designationGradings.designation','expenses.category','expenses.bearers',
                 'expenses.payers','expenseBearers','expensePayers')
             ->find($id);
