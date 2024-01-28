@@ -16,12 +16,12 @@ class EventInventoryParticipantValidationRule implements ValidationRule
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         try {
-            $participantCount = EventParticipant::where('event_id', request()->route('id'))
-                ->whereIn('user_id', $value)->count();
+            $participant = EventParticipant::where('event_id', request()->route('id'))
+                ->where('user_id', $value)->first();
 
-            if ($participantCount != count($value))
+            if (!$participant)
             {
-                $fail('Some of the selected users do not belong to the extravaganza participant list.');
+                $fail('Selected user does not belong to the extravaganza participant list.');
             }
         } catch (\Throwable $th)
         {

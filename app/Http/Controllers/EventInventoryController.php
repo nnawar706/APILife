@@ -39,15 +39,7 @@ class EventInventoryController extends Controller
 
     public function addInventory(EventInventoryCreateRequest $request, $id)
     {
-        $response = $this->service->addEventInventory($request, $id);
-
-        if ($response)
-        {
-            return response()->json([
-                'status' => false,
-                'error'  => $response
-            ], Response::HTTP_BAD_REQUEST);
-        }
+        $this->service->addEventInventory($request, $id);
 
         return response()->json([
             'status' => true,
@@ -58,22 +50,22 @@ class EventInventoryController extends Controller
     {
         $response = $this->service->updateEventInventory($request, $inventory_id);
 
+        return response()->json([
+            'status' => true,
+        ], $response ? Response::HTTP_OK : Response::HTTP_NOT_MODIFIED);
+    }
+
+    public function changeStatus(Request $request, $inventory_id)
+    {
+        $response = $this->service->changeInventoryStatus($request->approval_status, $inventory_id);
+
         if ($response)
         {
             return response()->json([
                 'status' => false,
                 'error'  => $response
-            ], Response::HTTP_BAD_REQUEST);
+            ], Response::HTTP_FORBIDDEN);
         }
-
-        return response()->json([
-            'status' => true,
-        ], Response::HTTP_OK);
-    }
-
-    public function changeStatus(Request $request, $id, $inventory_id)
-    {
-        $this->service->changeInventoryStatus($request->status, $inventory_id);
 
         return response()->json([
             'status' => true

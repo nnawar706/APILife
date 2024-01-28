@@ -31,14 +31,9 @@ class EventInventory extends Model
         return $this->belongsTo(User::class, 'last_updated_by');
     }
 
-    public function participants()
+    public function assignedToInfo()
     {
-        return $this->belongsToMany(User::class, 'event_inventory_participants', 'event_inventory_id');
-    }
-
-    public function inventoryParticipants()
-    {
-        return $this->hasMany(EventInventoryParticipant::class);
+        return $this->belongsTo(User::class, 'assigned_to');
     }
 
     public static function boot()
@@ -49,26 +44,41 @@ class EventInventory extends Model
             $model->created_by = auth()->user()->id;
         });
 
+        static::created(function ($model) {
+            if ($model->assigned_to != auth()->user()->id) {
+                $model->assignedToInfo->notify(new UserNotification(
+                    'pages/inventory-approval',
+                    auth()->user()->name . ' assigned you to an inventory of ' . $model->event->title . '.',
+                    auth()->user()->name,
+                    auth()->user()->photo_url
+                ));
+            }
+        });
+
         static::updating(function ($model) {
             $model->last_updated_by = auth()->user()->id;
         });
 
         static::updated(function ($model) {
-            $model->inventoryParticipants()->where('approval_status', 1)->update([
-                'approval_status' => 0
-            ]);
+            if ($model->assigned_to != auth()->user()->id) {
+                $model->assignedToInfo->notify(new UserNotification(
+                    'pages/inventory-approval',
+                    auth()->user()->name . ' updated an inventory of ' . $model->event->title . ' that was assigned to you.',
+                    auth()->user()->name,
+                    auth()->user()->photo_url
+                ));
+            }
+        });
 
-            $model->inventoryParticipants()->each(function ($participant) use ($model) {
-                if ($participant->user_id != auth()->user()->id)
-                {
-                    $participant->user->notify(new UserNotification(
-                        'pages/update-vaganza/' . $model->event_id,
-                        auth()->user()->name . ' updated an inventory from ' . $model->event->title . '.',
-                        auth()->user()->name,
-                        auth()->user()->photo_url
-                    ));
-                }
-            });
+        static::deleted(function ($model) {
+            if ($model->assigned_to != auth()->user()->id) {
+                $model->assignedToInfo->notify(new UserNotification(
+                    'pages/update-vaganza/' . $model->event_id,
+                    auth()->user()->name . ' deleted an inventory of ' . $model->event->title . ' that was assigned to you.',
+                    auth()->user()->name,
+                    auth()->user()->photo_url
+                ));
+            }
         });
     }
 }

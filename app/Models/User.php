@@ -112,7 +112,7 @@ class User extends Authenticatable implements JWTSubject
 
     public function eventInventories()
     {
-        return $this->belongsToMany(EventInventory::class, 'event_inventory_participants', 'user_id');
+        return $this->hasMany(EventInventory::class, 'assigned_to');
     }
 
     public function eventsViewed()
