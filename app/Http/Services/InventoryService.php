@@ -3,12 +3,7 @@
 namespace App\Http\Services;
 
 use App\Models\EventInventory;
-use App\Models\EventInventoryParticipant;
-use App\Notifications\UserNotification;
-use Carbon\Carbon;
-use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class InventoryService
 {
