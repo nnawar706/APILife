@@ -30,7 +30,6 @@ class EventInventoryController extends Controller
     {
         $data = $this->service->assignedInventoryList();
 
-
         return response()->json([
             'status' => true,
             'data'   => $data

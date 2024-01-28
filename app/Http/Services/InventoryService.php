@@ -3,6 +3,7 @@
 namespace App\Http\Services;
 
 use App\Models\EventInventory;
+use App\Models\EventInventoryParticipant;
 use App\Notifications\UserNotification;
 use Carbon\Carbon;
 use Illuminate\Database\QueryException;
@@ -102,9 +103,8 @@ class InventoryService
 
     public function assignedInventoryList()
     {
-        return $this->model->whereHas('inventoryParticipants', function ($q) {
-            return $q->where('user_id', auth()->user()->id);
-        })->with('category','event','participants','inventoryParticipants')->get();
+        return EventInventoryParticipant::with('eventInventory.event','eventInventory.category')
+            ->where('user_id', auth()->user()->id)->get();
     }
 
     public function changeInventoryStatus($status, $inventory_id): void
