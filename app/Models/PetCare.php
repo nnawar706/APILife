@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 class PetCare extends Model
@@ -10,4 +10,13 @@ class PetCare extends Model
     protected $guarded = ['id'];
 
     public $timestamps = false;
+
+    public static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            $model->created_at = Carbon::now('Asia/Dhaka');
+        });
+    }
 }

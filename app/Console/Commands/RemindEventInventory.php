@@ -30,7 +30,7 @@ class RemindEventInventory extends Command
     {
         $eventsTomorrow = EventInventory::whereHas('event', function ($q) {
             return $q->whereDate('from_date', Carbon::today('Asia/Dhaka')->addDay());
-        })->where('approval_status', 1)->get();
+        })->approved()->get();
 
         foreach ($eventsTomorrow as $item)
         {

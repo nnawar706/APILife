@@ -51,7 +51,6 @@ class SendPetCareReminder extends Command
 
             PetCare::create([
                 'user_id' => $user->id,
-                'created_at' => Carbon::now('Asia/Dhaka')
             ]);
 
             $users = $userModel->clone()->get();

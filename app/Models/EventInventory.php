@@ -18,6 +18,11 @@ class EventInventory extends Model
         $q->where('approval_status', '=', 0);
     }
 
+    public function scopeApproved(Builder $q)
+    {
+        $q->where('approval_status', '=', 1);
+    }
+
     public function event()
     {
         return $this->belongsTo(Event::class);

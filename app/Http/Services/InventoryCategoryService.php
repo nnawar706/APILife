@@ -17,7 +17,7 @@ class InventoryCategoryService
 
     public function getAll()
     {
-        return $this->model->latest()->get();
+        return $this->model->orderBy('id')->get();
     }
 
     public function storeNewCategory(Request $request)
