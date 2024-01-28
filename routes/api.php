@@ -14,6 +14,7 @@ use App\Http\Controllers\SystemController;
 use App\Http\Controllers\TreasurerController;
 use App\Http\Controllers\TreasurerLiabilitiesController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\UserExpenseController;
 use App\Http\Controllers\UserIncomeController;
 use App\Http\Controllers\UserLoanController;
 use Illuminate\Support\Facades\Route;
@@ -154,6 +155,13 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('user_incomes/create', 'create');
         Route::put('user_incomes/update/{id}', 'update');
         Route::delete('user_incomes/delete/{id}', 'delete');
+    });
+
+    Route::controller(UserExpenseController::class)->group(function () {
+        Route::get('user_expenses/all', 'index');
+        Route::post('user_expenses/create', 'create');
+        Route::put('user_expenses/update/{id}', 'update');
+        Route::delete('user_expenses/delete/{id}', 'delete');
     });
 });
 

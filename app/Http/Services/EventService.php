@@ -189,7 +189,7 @@ class EventService
                 return $value['is_sponsored'] && $value['user_id'] === $item['id'];
             }), 'amount'));
 
-            $estimatedPayable = round($estimatedExpense * ($initialPayable / $totalBudget), 2);
+            $estimatedPayable = $totalBudget != 0 ? round($estimatedExpense * ($initialPayable / $totalBudget), 2) : 0;
 
             $totalPaid -= $totalSponsored;
 
