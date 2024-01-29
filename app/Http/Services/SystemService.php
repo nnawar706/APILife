@@ -275,7 +275,7 @@ class SystemService
         }
 
         // generate quotes
-        $remainingPercentage = $target != 0 ? (100 - round(($totalExpense*100/$target), 2)) : 100;
+        $remainingPercentage = $target != 0 ? round(100 - ($totalExpense*100/$target), 2) : 100;
 
         $quotes = getQuotes($remainingPercentage);
 
