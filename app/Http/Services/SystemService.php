@@ -275,13 +275,14 @@ class SystemService
         }
 
         // generate quotes
-        $remainingPercentage = $target != 0 ? ($totalSaving - $target) * 100/$target : 0;
+        $remainingPercentage = $target != 0 ? round(($totalExpense*100/$target), 2) : 0;
 
         $quotes = getQuotes($remainingPercentage);
 
         return array(
             'current_saving'       => $totalSaving,
             'target'               => $target,
+            'remaining_percentage' => $remainingPercentage,
             'expense_total'        => $totalExpense,
             'expense_today'        => $todayExpense,
             'expense_last_7days'   => $lastWeekExpense,
