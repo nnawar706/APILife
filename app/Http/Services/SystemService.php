@@ -218,8 +218,8 @@ class SystemService
 
     public function getAuthBudgetSummary()
     {
-        $income = new UserIncome();
-        $expense = new UserExpense();
+        $income = UserIncome::where('user_id', auth()->user()->id);
+        $expense = UserExpense::where('user_id', auth()->user()->id);
 
         $budgetTarget = UserBudget::where('user_id', auth()->user()->id)->first();
 
