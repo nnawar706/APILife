@@ -227,8 +227,13 @@ class SystemService
         $start_date_week = $end_date->clone()->subWeeks(1);
         $start_date_month = $end_date->clone()->subMonths(1);
 
+        $expense_vs_income = [];
+
+        $expenseCategories = ExpenseCategory::leftJoin('user_expenses','expense_categories.id','=','user_expenses.expense_category_id');
+
         $totalIncome  = $income->clone()->sum('amount');
         $totalExpense = $expense->clone()->sum('amount');
+
         $totalSaving  = $totalIncome - $totalExpense;
 
         $todayExpense = $expense->clone()->whereDate('created_at', $end_date)->sum('amount');
@@ -243,16 +248,36 @@ class SystemService
 
         $currentYearIncome  = $income->clone()->whereYear('created_at', $end_date->format('Y'))->sum('amount');
 
+        $categoryWiseExpense = $expenseCategories
+            ->selectRaw('expense_categories.id,expense_categories.name as category,
+            COALESCE(SUM(CASE
+                    WHEN user_expenses.user_id = ? THEN user_expenses.amount
+                    ELSE 0 END
+                ), 0) AS amount',[auth()->user()->id])
+            ->groupBy('expense_categories.id','expense_categories.name')->get();
+
+        for ($i=0;$i<12;$i++)
+        {
+            $curMonth = $end_date->clone()->subMonths($i+1);
+            $expense_vs_income[$i]['month'] = $curMonth->format('Y-m-d');
+        }
+
         return array(
             'current_saving'       => $totalSaving,
             'target'               => $budgetTarget ? $budgetTarget->target_saving : 0,
+            'expense_total'        => $totalExpense,
             'expense_today'        => $todayExpense,
             'expense_last_7days'   => $lastWeekExpense,
             'expense_last_30days'  => $lastMonthExpense,
+            'income_total'         => $totalIncome,
             'income_last_week'     => $lastWeekIncome,
             'income_current_month' => $currentMonthIncome,
             'income_current_year'  => $currentYearIncome,
             'expense_current_month' => $currentMonthExpense,
+            'charts'                => array(
+                'category_wise_expense' => $categoryWiseExpense,
+//                'expense_vs_income'     => $expense_vs_income
+            )
         );
     }
 
