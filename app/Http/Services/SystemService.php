@@ -231,25 +231,28 @@ class SystemService
         $totalExpense = $expense->clone()->sum('amount');
         $totalSaving  = $totalIncome - $totalExpense;
 
+        $todayExpense = $expense->clone()->whereDate('created_at', $end_date)->sum('amount');
+
         $lastWeekIncome  = $income->clone()->whereBetween('created_at', [$start_date_week, $end_date])->sum('amount');
         $lastWeekExpense = $expense->clone()->whereBetween('created_at', [$start_date_week, $end_date])->sum('amount');
 
-        $lastMonthIncome  = $income->clone()->whereBetween('created_at', [$start_date_month, $end_date])->sum('amount');
+        $currentMonthIncome  = $income->clone()->whereMonth('created_at', $end_date->format('n'))->sum('amount');
+        $currentMonthExpense  = $expense->clone()->whereMonth('created_at', $end_date->format('n'))->sum('amount');
+
         $lastMonthExpense = $expense->clone()->whereBetween('created_at', [$start_date_month, $end_date])->sum('amount');
 
+        $currentYearIncome  = $income->clone()->whereYear('created_at', $end_date->format('Y'))->sum('amount');
+
         return array(
-            'total_income'   => $totalIncome,
-            'total_expense'  => $totalExpense,
-            'total_saving'   => $totalSaving,
-            'target_saving'  => $budgetTarget ? $budgetTarget->target_saving : null,
-            'last_week'      => array(
-                'income'  => $lastWeekIncome,
-                'expense' => $lastWeekExpense
-            ),
-            'last_month'     => array(
-                'income'  => $lastMonthIncome,
-                'expense' => $lastMonthExpense
-            ),
+            'current_saving'       => $totalSaving,
+            'target'               => $budgetTarget ? $budgetTarget->target_saving : 0,
+            'expense_today'        => $todayExpense,
+            'expense_last_7days'   => $lastWeekExpense,
+            'expense_last_30days'  => $lastMonthExpense,
+            'income_last_week'     => $lastWeekIncome,
+            'income_current_month' => $currentMonthIncome,
+            'income_current_year'  => $currentYearIncome,
+            'expense_current_month' => $currentMonthExpense,
         );
     }
 

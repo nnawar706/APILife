@@ -70,9 +70,7 @@ class SystemController extends Controller
 
     public function budgetSummary()
     {
-        $data = Cache::remember('budget_summary' . auth()->user()->id, 24*60*60*60, function () {
-            return $this->service->getAuthBudgetSummary();
-        });
+        $data = $this->service->getAuthBudgetSummary();
 
         return response()->json([
             'status' => true,
