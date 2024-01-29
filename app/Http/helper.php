@@ -69,18 +69,23 @@ function getQuotes($percentage)
     } else if ($percentage > 50)
     {
         return [
+            "Money left: " . $percentage . "%. Feeling like a financial acrobat, balancing between wants and needs. Someone pass me the budget tightrope!",
+            "My budget is currently on a 'mind the gap' adventure with only ". $percentage ."% left. But hey, who needs a full budget anyway?",
             "Don't let all of your saving leave the room. You're gonna need them soon."
         ];
     } else if ($percentage > 25)
     {
         return [
-            "I think the wallet's on a diet, don't let you spending be it's cheat day!",
-            "The piggy bank is shouting 'Enough is enough!'"
+            "Don't let your money sneak out the back door; it's got plans for a brighter future!",
+            "The piggy bank is shouting 'Enough is enough!'",
+            "Don't send all of your savings off on vacation; keep a few in town to tackle any unexpected villains.",
+            "Your savings are like breadcrumbs on the path to financial freedom. Don't throw the whole loaf away; save some for a future feast!"
         ];
     }
     return [
         "Welcome to the broke club! Remember, the best things in life are free – especially when you can't afford anything else",
         "Broke but not broken. Who needs a money tree when you've got the humor to make it through the budget drought?",
-        "The piggy bank suggests 'see no spending, hear no spending, speak no spending' diet."
+        "The piggy bank suggests 'see no spending, hear no spending, speak no spending' diet.",
+        "Budget status: ". $percentage ."% left, but I've got 100% determination to make it work."
     ];
 }
