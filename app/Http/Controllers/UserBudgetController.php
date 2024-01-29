@@ -10,7 +10,7 @@ class UserBudgetController extends Controller
 {
     public function setBudget(UserBudgetCreateTargetRequest $request)
     {
-        UserBudget::updateOrCreate([
+        $budget = UserBudget::updateOrCreate([
             'user_id' => auth()->user()->id
         ], [
             'target_saving' => $request->target_saving
@@ -18,6 +18,6 @@ class UserBudgetController extends Controller
 
         return response()->json([
             'status' => true
-        ], Response::HTTP_CREATED);
+        ], $budget->wasChanged() ? Response::HTTP_CREATED : Response::HTTP_NOT_MODIFIED);
     }
 }

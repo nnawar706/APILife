@@ -35,14 +35,17 @@ class UserIncome extends Model
 
         static::created(function ($model) {
             Cache::forget('user_income' . $model->user_id);
+            Cache::forget('budget_summary' . $model->user_id);
         });
 
         static::updated(function ($model) {
             Cache::forget('user_income' . $model->user_id);
+            Cache::forget('budget_summary' . $model->user_id);
         });
 
         static::deleted(function ($model) {
             Cache::forget('user_income' . $model->user_id);
+            Cache::forget('budget_summary' . $model->user_id);
         });
     }
 }
