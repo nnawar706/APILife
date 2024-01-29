@@ -28,10 +28,12 @@ class RemindEventInventory extends Command
      */
     public function handle()
     {
+        // fetch the approved inventories of events that will be held tomorrow
         $eventsTomorrow = EventInventory::whereHas('event', function ($q) {
             return $q->whereDate('from_date', Carbon::today('Asia/Dhaka')->addDay());
         })->approved()->get();
 
+        // remind each user about their assigned inventory item
         foreach ($eventsTomorrow as $item)
         {
             $item->assignedToInfo->notify(new UserNotification(

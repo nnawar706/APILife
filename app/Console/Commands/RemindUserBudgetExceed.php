@@ -29,7 +29,8 @@ class RemindUserBudgetExceed extends Command
     {
         $users = User::status()->get();
 
-        foreach ($users as $key => $user)
+        // fetch sum of incomes, expenses and min. saving
+        foreach ($users as $user)
         {
             $income = $user->budgetIncomes()->sum('amount');
             $expense = $user->budgetExpenses()->sum('amount');
@@ -37,6 +38,7 @@ class RemindUserBudgetExceed extends Command
 
             if ($budget)
             {
+                // when remaining saving is lower than min. saving amount, alert users
                 if (($income - $expense) < $budget->target_saving)
                 {
                     $user->notify(new UserNotification(
@@ -47,6 +49,7 @@ class RemindUserBudgetExceed extends Command
                     ));
                 }
 
+                // when remaining saving is about to cross min. saving amount, alert users
                 else if (($income - $expense) <= ($budget->target_saving + 500))
                 {
                     $user->notify(new UserNotification(

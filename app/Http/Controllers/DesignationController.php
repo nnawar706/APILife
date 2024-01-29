@@ -17,6 +17,7 @@ class DesignationController extends Controller
 
     public function index()
     {
+        // cache all designations since the data won't get changed
         $data = Cache::rememberForever('designations', function () {
             return $this->model->orderBy('id')->get();
         });

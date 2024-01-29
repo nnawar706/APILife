@@ -30,6 +30,7 @@ class PruneUnnecessaryPetCareModel extends Command
 
         if ($lastPetCare)
         {
+            // delete all pet care entries monthly except the last one
             PetCare::whereNot('id', $lastPetCare->id)->delete();
         }
     }

@@ -28,11 +28,13 @@ class RemindExtravaganzaPayment extends Command
      */
     public function handle()
     {
+        // fetch treasures that have deadlines before today
         $treasuresExpired = Treasurer::where('completion_status', '=', 0)
             ->whereDate('deadline', '<', Carbon::now('Asia/Dhaka'))
             ->with('liabilities')
             ->get();
 
+        // fetch treasures that have deadline of today
         $treasuresToday = Treasurer::where('completion_status', '=', 0)
             ->whereDate('deadline', '=', Carbon::now('Asia/Dhaka'))
             ->with('liabilities')
@@ -42,11 +44,13 @@ class RemindExtravaganzaPayment extends Command
         {
             foreach ($treasuresExpired as $item)
             {
+                // fetch users who have due
                 $liabilities = $item->liabilities()
                     ->where('status', '=', 0)
                     ->where('amount','>',0)
                     ->get();
 
+                // remind users to pay due treasure amount
                 foreach ($liabilities as $value)
                 {
                     $value->user->notify(new UserNotification(
@@ -63,11 +67,13 @@ class RemindExtravaganzaPayment extends Command
         {
             foreach ($treasuresToday as $item)
             {
+                // fetch users who have due
                 $liabilities = $item->liabilities()
                     ->where('status', '=', 0)
                     ->where('amount','>',0)
                     ->get();
 
+                // remind users of deadline expiration
                 foreach ($liabilities as $value)
                 {
                     $value->user->notify(new UserNotification(

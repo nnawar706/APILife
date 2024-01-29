@@ -38,12 +38,13 @@ class SendRandomNotification extends Command
             "It's Mickey. Why don't you come and play with us for a bit? 🐣",
         ];
 
-        // select a random quote
+        // select a random quote from the array
         $index = Carbon::now('Asia/Dhaka')->format('n') % 6;
 
         $start_date = Carbon::now('Asia/Dhaka')->subMonth(1);
         $end_date = Carbon::now('Asia/Dhaka');
 
+        // fetch event that got the highest rating in previous month
         $event = EventRating::whereHas('event', function ($q) use ($start_date, $end_date) {
             return $q->whereBetween('created_at', [$start_date, $end_date]);
         })->orderByDesc('avg_rating')->first();
@@ -54,6 +55,7 @@ class SendRandomNotification extends Command
         {
             $msg = 'Hey ' . $user->name . ' 👋 ' . $quotes[$index];
 
+            // send random quotes to users
             $user->notify(new UserNotification(
                 '',
                 $msg,
@@ -61,6 +63,7 @@ class SendRandomNotification extends Command
                 null
             ));
 
+            // if event exists in previous month, notify users about it
             if ($event)
             {
                 $msg2 = 'Hey ' . $user->name . ' 👋 ' . $event->event->title . ' got the highest rating this month.💥';
