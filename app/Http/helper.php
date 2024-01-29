@@ -68,12 +68,19 @@ function getQuotes($percentage)
         ];
     } else if ($percentage > 50)
     {
-        return [];
+        return [
+            "Don't let all of your saving leave the room. You're gonna need them soon."
+        ];
     } else if ($percentage > 25)
     {
         return [
-            ''
+            "I think the wallet's on a diet, don't let you spending be it's cheat day!",
+            "The piggy bank is shouting 'Enough is enough!'"
         ];
     }
-    return [];
+    return [
+        "Welcome to the broke club! Remember, the best things in life are free – especially when you can't afford anything else",
+        "Broke but not broken. Who needs a money tree when you've got the humor to make it through the budget drought?",
+        "The piggy bank suggests 'see no spending, hear no spending, speak no spending' diet."
+    ];
 }
