@@ -9,6 +9,7 @@ use App\Models\ExpenseCategory;
 use App\Models\ExpensePayer;
 use App\Models\User;
 use App\Models\UserBadge;
+use App\Models\UserBudget;
 use App\Models\UserExpense;
 use App\Models\UserIncome;
 use App\Models\UserLoan;
@@ -220,6 +221,8 @@ class SystemService
         $income = new UserIncome();
         $expense = new UserExpense();
 
+        $budgetTarget = UserBudget::where('user_id', auth()->user()->id)->first();
+
         $end_date = Carbon::now('Asia/Dhaka');
         $start_date_week = $end_date->clone()->subWeeks(1);
         $start_date_month = $end_date->clone()->subMonths(1);
@@ -238,6 +241,7 @@ class SystemService
             'total_income'   => $totalIncome,
             'total_expense'  => $totalExpense,
             'total_saving'   => $totalSaving,
+            'target_saving'  => $budgetTarget ? $budgetTarget->target_saving : null,
             'last_week'      => array(
                 'income'  => $lastWeekIncome,
                 'expense' => $lastWeekExpense

@@ -95,9 +95,6 @@ class SystemController extends Controller
         }
     }
 
-    public function test(Request $request) {
-        $user = Badge::find($request->id);
-
-        saveImage($request->image, '/images/badges/', $user, 'image_url');
-    }
+    public function test(Request $request)
+    {}
 }

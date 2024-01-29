@@ -13,6 +13,7 @@ use App\Http\Controllers\InventoryCategoryController;
 use App\Http\Controllers\SystemController;
 use App\Http\Controllers\TreasurerController;
 use App\Http\Controllers\TreasurerLiabilitiesController;
+use App\Http\Controllers\UserBudgetController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserExpenseController;
 use App\Http\Controllers\UserIncomeController;
@@ -150,6 +151,8 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('dashboard', 'dashboardData');
         Route::get('budget_summary', 'budgetSummary');
     });
+
+    Route::post('user_budget/add_target', [UserBudgetController::class, 'setBudget']);
 
     Route::controller(UserIncomeController::class)->group(function () {
         Route::get('user_incomes/all', 'index');
