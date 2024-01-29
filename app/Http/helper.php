@@ -70,6 +70,7 @@ function getQuotes($percentage)
     {
         return [
             "Money left: " . $percentage . "%. Feeling like a financial acrobat, balancing between wants and needs. Someone pass me the budget tightrope!",
+            "Don't let your money sneak out the back door; it's got plans for a brighter future!",
             "My budget is currently on a 'mind the gap' adventure with only ". $percentage ."% left. But hey, who needs a full budget anyway?",
             "Don't let all of your saving leave the room. You're gonna need them soon."
         ];
