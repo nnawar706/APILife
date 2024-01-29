@@ -222,6 +222,7 @@ class SystemService
         $expense = UserExpense::where('user_id', auth()->user()->id);
 
         $budgetTarget = UserBudget::where('user_id', auth()->user()->id)->first();
+        $expenseCategories = ExpenseCategory::leftJoin('user_expenses','expense_categories.id','=','user_expenses.expense_category_id');
 
         $end_date = Carbon::now('Asia/Dhaka');
         $start_date_week = $end_date->clone()->subWeeks(1);
@@ -229,13 +230,13 @@ class SystemService
 
         $expense_vs_income = [];
         $expense_30days    = [];
-
-        $expenseCategories = ExpenseCategory::leftJoin('user_expenses','expense_categories.id','=','user_expenses.expense_category_id');
+        $quotes            = [];
 
         $totalIncome  = $income->clone()->sum('amount');
         $totalExpense = $expense->clone()->sum('amount');
 
         $totalSaving  = $totalIncome - $totalExpense;
+        $target = $budgetTarget ? $budgetTarget->target_saving : 0;
 
         $todayExpense = $expense->clone()->whereDate('created_at', $end_date)->sum('amount');
 
@@ -273,9 +274,14 @@ class SystemService
             $expense_30days[$i]['amount']    = $expense->clone()->whereDate('created_at', $curDate)->sum('amount');
         }
 
+        // generate quotes
+        $remainingPercentage = $target != 0 ? ($totalSaving - $target) * 100/$target : 0;
+
+        $quotes = getQuotes($remainingPercentage);
+
         return array(
             'current_saving'       => $totalSaving,
-            'target'               => $budgetTarget ? $budgetTarget->target_saving : 0,
+            'target'               => $target,
             'expense_total'        => $totalExpense,
             'expense_today'        => $todayExpense,
             'expense_last_7days'   => $lastWeekExpense,
@@ -285,6 +291,7 @@ class SystemService
             'income_current_month' => $currentMonthIncome,
             'income_current_year'  => $currentYearIncome,
             'expense_current_month' => $currentMonthExpense,
+            'quotes'                => $quotes,
             'charts'                => array(
                 'category_wise_expense' => $categoryWiseExpense,
                 'expense_vs_income'     => $expense_vs_income,

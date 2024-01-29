@@ -55,3 +55,25 @@ function getBeamsClient()
         )
     );
 }
+
+function getQuotes($percentage)
+{
+    if ($percentage > 75)
+    {
+        return [
+            "Budgeting? More like 'buffet-ing' when there's extra dough in the wallet! Let the feast begin!",
+            'Yay, the saving is full! Time to treat my taste buds like the royalty they are!',
+            "They say money can't buy happiness, but it sure can buy a gourmet meal that's pretty darn close!",
+            "Wallet so plump, I'm thinking 'duck and dine'; let's quack the budget a bit!"
+        ];
+    } else if ($percentage > 50)
+    {
+        return [];
+    } else if ($percentage > 25)
+    {
+        return [
+            ''
+        ];
+    }
+    return [];
+}
