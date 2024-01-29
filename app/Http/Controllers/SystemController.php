@@ -68,7 +68,15 @@ class SystemController extends Controller
         ]);
     }
 
+    public function budgetSummary()
+    {
+        $data = $this->service->getAuthBudgetSummary();
 
+        return response()->json([
+            'status' => true,
+            'data'   => $data
+        ], Response::HTTP_OK);
+    }
 
     public function notifyRandomly(Request $request)
     {

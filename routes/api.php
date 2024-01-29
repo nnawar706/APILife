@@ -148,6 +148,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::controller(SystemController::class)->group(function () {
         Route::get('activity_logs/all', 'activities');
         Route::get('dashboard', 'dashboardData');
+        Route::get('budget_summary', 'budgetSummary');
     });
 
     Route::controller(UserIncomeController::class)->group(function () {

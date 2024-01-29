@@ -9,6 +9,8 @@ use App\Models\ExpenseCategory;
 use App\Models\ExpensePayer;
 use App\Models\User;
 use App\Models\UserBadge;
+use App\Models\UserExpense;
+use App\Models\UserIncome;
 use App\Models\UserLoan;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Artisan;
@@ -211,6 +213,40 @@ class SystemService
     public function getActivityLogs()
     {
         return Activity::with('causer','subject')->latest()->paginate(15);
+    }
+
+    public function getAuthBudgetSummary()
+    {
+        $income = new UserIncome();
+        $expense = new UserExpense();
+
+        $end_date = Carbon::now('Asia/Dhaka');
+        $start_date_week = $end_date->clone()->subWeeks(1);
+        $start_date_month = $end_date->clone()->subMonths(1);
+
+        $totalIncome  = $income->clone()->sum('amount');
+        $totalExpense = $expense->clone()->sum('amount');
+        $totalSaving  = $totalIncome - $totalExpense;
+
+        $lastWeekIncome  = $income->clone()->whereBetween('created_at', [$start_date_week, $end_date])->sum('amount');
+        $lastWeekExpense = $expense->clone()->whereBetween('created_at', [$start_date_week, $end_date])->sum('amount');
+
+        $lastMonthIncome  = $income->clone()->whereBetween('created_at', [$start_date_month, $end_date])->sum('amount');
+        $lastMonthExpense = $expense->clone()->whereBetween('created_at', [$start_date_month, $end_date])->sum('amount');
+
+        return array(
+            'total_income'   => $totalIncome,
+            'total_expense'  => $totalExpense,
+            'total_saving'   => $totalSaving,
+            'last_week'      => array(
+                'income'  => $lastWeekIncome,
+                'expense' => $lastWeekExpense
+            ),
+            'last_month'     => array(
+                'income'  => $lastMonthIncome,
+                'expense' => $lastMonthExpense
+            ),
+        );
     }
 
 }
