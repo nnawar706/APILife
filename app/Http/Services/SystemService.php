@@ -228,6 +228,7 @@ class SystemService
         $start_date_month = $end_date->clone()->subMonths(1);
 
         $expense_vs_income = [];
+        $expense_30days    = [];
 
         $expenseCategories = ExpenseCategory::leftJoin('user_expenses','expense_categories.id','=','user_expenses.expense_category_id');
 
@@ -258,8 +259,18 @@ class SystemService
 
         for ($i=0;$i<12;$i++)
         {
-            $curMonth = $end_date->clone()->subMonths($i+1);
-            $expense_vs_income[$i]['month'] = $curMonth->format('Y-m-d');
+            $curMonth  = $end_date->clone()->startOfMonth()->subMonths($i);
+            $expense_vs_income[$i]['month'] = $curMonth->format('M y');
+            $expense_vs_income[$i]['expense'] = $expense->clone()->whereMonth('created_at', $curMonth->format('n'))->sum('amount');
+            $expense_vs_income[$i]['income'] = $income->clone()->whereMonth('created_at', $curMonth->format('n'))->sum('amount');
+        }
+
+        for ($i=0;$i<30;$i++)
+        {
+            $curDate  = $end_date->clone()->subDays($i+1);
+
+            $expense_30days[$i]['date']      = $curDate->format('d M, Y');
+            $expense_30days[$i]['amount']    = $expense->clone()->whereDate('created_at', $curDate)->sum('amount');
         }
 
         return array(
@@ -276,7 +287,8 @@ class SystemService
             'expense_current_month' => $currentMonthExpense,
             'charts'                => array(
                 'category_wise_expense' => $categoryWiseExpense,
-//                'expense_vs_income'     => $expense_vs_income
+                'expense_vs_income'     => $expense_vs_income,
+                'expense_30_days'       => $expense_30days
             )
         );
     }
