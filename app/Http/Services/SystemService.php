@@ -269,7 +269,7 @@ class SystemService
         {
             $curDate  = $end_date->clone()->subDays($i+1);
 
-            $expense_30days[$i]['date']      = $curDate->format('d M, Y');
+            $expense_30days[$i]['date']      = $curDate->format('d M, y');
             $expense_30days[$i]['amount']    = $expense->clone()->whereDate('created_at', $curDate)->sum('amount');
         }
 
