@@ -17,7 +17,6 @@ class UserExpenseService
     public function storeExpense(Request $request)
     {
         $this->model->create([
-            'user_id' => auth()->user()->id,
             'expense_category_id' => $request->expense_category_id,
             'title'   => $request->title,
             'amount'  => $request->amount,

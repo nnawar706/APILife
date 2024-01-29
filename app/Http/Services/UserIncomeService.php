@@ -22,7 +22,6 @@ class UserIncomeService
     public function storeIncome(Request $request): void
     {
         $this->model->create([
-            'user_id' => auth()->user()->id,
             'title'   => $request->title,
             'amount'  => $request->amount,
             'notes'   => $request->notes,

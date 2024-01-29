@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Cache;
 
 class UserIncome extends Model
 {
@@ -11,8 +13,36 @@ class UserIncome extends Model
 
     public $timestamps = false;
 
+    protected function createdAt(): Attribute
+    {
+        return Attribute::make(
+            get: fn(string $value) => Carbon::parse($value)->format('F d, Y')
+        );
+    }
+
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            $model->user_id = auth()->user()->id;
+        });
+
+        static::created(function ($model) {
+            Cache::forget('user_income' . $model->user_id);
+        });
+
+        static::updated(function ($model) {
+            Cache::forget('user_income' . $model->user_id);
+        });
+
+        static::deleted(function ($model) {
+            Cache::forget('user_income' . $model->user_id);
+        });
     }
 }

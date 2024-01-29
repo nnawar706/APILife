@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\UserIncomeCreateRequest;
 use App\Http\Services\UserIncomeService;
+use Illuminate\Support\Facades\Cache;
 use Symfony\Component\HttpFoundation\Response;
 
 class UserIncomeController extends Controller
@@ -17,7 +18,9 @@ class UserIncomeController extends Controller
 
     public function index()
     {
-        $data = $this->service->getAll();
+        $data = Cache::remember('user_income'.auth()->user()->id, 24*60*60*60, function () {
+            return $this->service->getAll();
+        });
 
         return response()->json([
             'status' => true,

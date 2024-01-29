@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\UserExpenseCreateRequest;
 use App\Http\Services\UserExpenseService;
+use Illuminate\Support\Facades\Cache;
 use Symfony\Component\HttpFoundation\Response;
 
 class UserExpenseController extends Controller
@@ -17,7 +18,9 @@ class UserExpenseController extends Controller
 
     public function index()
     {
-        $data = $this->service->getAll();
+        $data = Cache::remember('user_expense' . auth()->user()->id, 24*60*60*60, function () {
+            return $this->service->getAll();
+        });
 
         return response()->json([
             'status' => true,
