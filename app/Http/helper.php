@@ -61,32 +61,32 @@ function getQuotes($percentage)
     if ($percentage > 75)
     {
         return [
+            'Fresh paycheck? Every day is a Payday if you invest it right!',
+            "Wallet so plump, I'm thinking 'duck and dine'; let's quack the budget a bit!",
             "Budgeting? More like 'buffet-ing' when there's extra dough in the wallet! Let the feast begin!",
-            'Yay, the saving is full! Time to treat my taste buds like the royalty they are!',
             "They say money can't buy happiness, but it sure can buy a gourmet meal that's pretty darn close!",
-            "Wallet so plump, I'm thinking 'duck and dine'; let's quack the budget a bit!"
         ];
     } else if ($percentage > 50)
     {
         return [
-            "Money left: " . $percentage . "%. Feeling like a financial acrobat, balancing between wants and needs. Someone pass me the budget tightrope!",
-            "Don't let your money sneak out the back door; it's got plans for a brighter future!",
+            "Don't let all of your saving leave the room. You're gonna need them soon.",
+            "Wasting money again? It's okay 🤷🏻‍♂️ Money isn't the most important thing in life, but it's reasonably close to oxygen!",
             "My budget is currently on a 'mind the gap' adventure with only ". $percentage ."% left. But hey, who needs a full budget anyway?",
-            "Don't let all of your saving leave the room. You're gonna need them soon."
+            "Money left: " . $percentage . "%. Feeling like a financial acrobat, balancing between wants and needs. Someone pass me the budget tightrope!",
         ];
     } else if ($percentage > 25)
     {
         return [
-            "Don't let your money sneak out the back door; it's got plans for a brighter future!",
             "The piggy bank is shouting 'Enough is enough!'",
             "Don't send all of your savings off on vacation; keep a few in town to tackle any unexpected villains.",
-            "Your savings are like breadcrumbs on the path to financial freedom. Don't throw the whole loaf away; save some for a future feast!"
+            $percentage . '% spent? The safest way to double your money is to fold it over and put it in your pocket!',
+            "Salary is vanishing like magic? Just a reminder, money is essential in case you don’t die tomorrow. RIP, I guess?",
         ];
     }
     return [
-        "Welcome to the broke club! Remember, the best things in life are free – especially when you can't afford anything else",
+        "Budget status: ". $percentage ."% left, but I've got 100% determination to make it work.",
         "Broke but not broken. Who needs a money tree when you've got the humor to make it through the budget drought?",
-        "The piggy bank suggests 'see no spending, hear no spending, speak no spending' diet.",
-        "Budget status: ". $percentage ."% left, but I've got 100% determination to make it work."
+        "Welcome to the broke club! Remember, the best things in life are free – especially when you can't afford anything else",
+        "Expenses flooding the salary? Time for a dramatic survival plan: beg boss for night shifts or else quit wasting habit!",
     ];
 }
