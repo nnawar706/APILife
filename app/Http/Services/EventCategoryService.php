@@ -17,6 +17,7 @@ class EventCategoryService
 
     public function getAll()
     {
+        // fetch all event categories with their corresponding event count
         return $this->model->latest()
             ->withCount('events')->get();
     }
@@ -38,6 +39,7 @@ class EventCategoryService
             'name' => $request->name
         ]);
 
+        // if request has image file, delete previous icon and save new one
         if ($request->file('icon'))
         {
             deleteFile($category->icon_url);
@@ -45,6 +47,7 @@ class EventCategoryService
             saveImage($request->file('icon'), '/images/event_categories_icons/', $category, 'icon_url');
         }
 
+        // return if any changes were made to the model or not
         return $category->wasChanged();
     }
 

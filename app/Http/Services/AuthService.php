@@ -53,7 +53,7 @@ class AuthService
 
     public function updateUserPassword(Request $request): void
     {
-        // update auth user password
+        // update auth user password quietly so that no update event is triggered
         auth()->user()->updateQuietly([
             'password' => $request->password
         ]);

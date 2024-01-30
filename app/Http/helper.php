@@ -56,7 +56,7 @@ function getBeamsClient()
     );
 }
 
-function getQuotes($percentage)
+function getQuotes($percentage): array
 {
     if ($percentage > 75)
     {
@@ -82,11 +82,19 @@ function getQuotes($percentage)
             $percentage . '% spent? The safest way to double your money is to fold it over and put it in your pocket!',
             "Salary is vanishing like magic? Just a reminder, money is essential in case you don’t die tomorrow. RIP, I guess?",
         ];
+    } else if ($percentage > 0)
+    {
+        return [
+            "Budget status: ". $percentage ."% left, but I've got 100% determination to make it work.",
+            "Broke but not broken. Who needs a money tree when you've got the humor to make it through the budget drought?",
+            "Welcome to the broke club! Remember, the best things in life are free – especially when you can't afford anything else",
+            "Expenses flooding the salary? Time for a dramatic survival plan: beg boss for night shifts or else quit wasting habit!",
+        ];
     }
     return [
-        "Budget status: ". $percentage ."% left, but I've got 100% determination to make it work.",
+        "Bank account currently on life support. Try to save some from the next time!",
         "Broke but not broken. Who needs a money tree when you've got the humor to make it through the budget drought?",
         "Welcome to the broke club! Remember, the best things in life are free – especially when you can't afford anything else",
-        "Expenses flooding the salary? Time for a dramatic survival plan: beg boss for night shifts or else quit wasting habit!",
+        "No money left? Time for a dramatic survival plan: beg boss for night shifts or else quit wasting habit!",
     ];
 }
