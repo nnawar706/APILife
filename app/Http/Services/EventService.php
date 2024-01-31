@@ -289,12 +289,12 @@ class EventService
                         });
                     });
             })
-            ->with('lead','category')
-            ->with(['rating' => function($q) {
-                return $q->select('id','event_id','avg_rating');
-            }])
+            ->with('lead','category','rating')
             ->with(['participants' => function($q) {
                 return $q->select('users.id','name','photo_url');
+            }])
+            ->with(['eventParticipants' => function($q) {
+                return $q->where('user_id', auth()->user()->id);
             }])
             ->with(['guests' => function($q) {
                 return $q->select('users.id','name','photo_url');
