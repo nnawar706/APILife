@@ -18,6 +18,6 @@ class UserBudgetController extends Controller
 
         return response()->json([
             'status' => true
-        ], $budget->wasChanged() ? Response::HTTP_CREATED : Response::HTTP_NOT_MODIFIED);
+        ], Response::HTTP_CREATED);
     }
 }
