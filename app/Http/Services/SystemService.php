@@ -230,7 +230,6 @@ class SystemService
 
         $expense_vs_income = [];
         $expense_30days    = [];
-        $quotes            = [];
 
         $totalIncome  = $income->clone()->sum('amount');
         $totalExpense = $expense->clone()->sum('amount');
@@ -275,7 +274,7 @@ class SystemService
         }
 
         // generate quotes
-        $remainingPercentage = $target != 0 ? round(100 - ($totalExpense*100/$target), 2) : 100;
+        $remainingPercentage = $target != 0 ? round(100 - ($currentMonthExpense*100/$target), 2) : 100;
 
         $quotes = getQuotes($remainingPercentage);
 
