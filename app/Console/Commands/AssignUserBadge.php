@@ -12,6 +12,7 @@ use App\Models\UserLoan;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -65,6 +66,10 @@ class AssignUserBadge extends Command
 
             // get thresholds based on the fetched user weights
             $thresholds = getThresholds(max($weights), min($weights));
+
+            Cache::remember('threshold', 24*60*60*3, function () use ($thresholds) {
+                return $thresholds;
+            });
 
             DB::beginTransaction();
 

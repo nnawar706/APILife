@@ -96,5 +96,9 @@ class SystemController extends Controller
     }
 
     public function test(Request $request)
-    {}
+    {
+        return response()->json([
+            'threshold' => Cache::get('threshold')
+        ]);
+    }
 }
