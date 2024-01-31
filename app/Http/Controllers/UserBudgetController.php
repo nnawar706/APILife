@@ -10,7 +10,7 @@ class UserBudgetController extends Controller
 {
     public function setBudget(UserBudgetCreateTargetRequest $request)
     {
-        $budget = UserBudget::updateOrCreate([
+        UserBudget::updateOrCreate([
             'user_id' => auth()->user()->id
         ], [
             'target_saving' => $request->target_saving
