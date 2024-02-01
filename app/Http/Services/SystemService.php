@@ -51,7 +51,7 @@ class SystemService
             ->leftJoin('expense_payers','expenses.id','=','expense_payers.expense_id')
             ->leftJoin('events','expenses.event_id','=','events.id');
 
-        $monthly_user_badges['month'] = Carbon::parse($end_date)->format('F');
+        $monthly_user_badges['month'] = Carbon::parse($end_date)->subMonth()->format('F');
         $monthly_user_badges['user_data'] = $user_badge->clone()
             ->whereMonth('created_at', Carbon::parse($end_date)->format('n'))
             ->orderByDesc('point')
@@ -88,7 +88,7 @@ class SystemService
             }
 
             $current_user_points[$key]['user'] = $item;
-            $current_user_points[$key]['earned_points'] = intval($item->points()->sum('point'));
+            $current_user_points[$key]['earned_points'] = intval($item->points()->current()->sum('point'));
 
             $debited = $transactions->clone()->where('user_id', $item->id)->debited()->sum('amount')
                 +
@@ -124,7 +124,7 @@ class SystemService
 
         for ($i=0;$i<30;$i++)
         {
-            $curDate = $end_date->clone()->subDay($i + 1);
+            $curDate = $end_date->clone()->subDays($i + 1);
 
             $expenseTotal = $expense_categories->clone()
                 ->whereDate('expense_payers.created_at', $curDate)

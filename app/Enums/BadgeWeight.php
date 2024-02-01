@@ -18,53 +18,53 @@ enum BadgeWeight: int
     case LOAN_BELOW_500          = 18;
 
     // expense cases
-    case EXPENSE_BEAR_ABOVE_1500  = 16;
-    case EXPENSE_BEAR_500_TO_1500 = 14;
-    case EXPENSES_BEAR_BELOW_500  = 12;
-    case EXPENSE_PAID_ABOVE_1500  = 10;
-    case EXPENSE_PAID_500_TO_1500 = 8;
-    case EXPENSES_PAID_BELOW_500  = 6;
+    case EXPENSE_BEAR_ABOVE_1500  = 23;
+    case EXPENSE_BEAR_500_TO_1500 = 21;
+    case EXPENSES_BEAR_BELOW_500  = 19;
+    case EXPENSE_PAID_ABOVE_1500  = 17;
+    case EXPENSE_PAID_500_TO_1500 = 15;
+    case EXPENSES_PAID_BELOW_500  = 13;
 
     // event cases
-    case EVENTS_TREASURED        = 5;
-    case EVENTS_LED              = 4;
-    case EVENTS_ATTENDED         = 3;
-    case EVENTS_CREATED          = 2;
+    case EVENTS_TREASURED        = 29;
+    case EVENTS_LED              = 25;
+    case EVENTS_ATTENDED         = 7;
+    case EVENTS_CREATED          = 3;
 
     // login cases
-    case USER_LOGIN_COUNT        = 1;
+    case USER_LOGIN_COUNT        = 2;
 
     public static function getValue($enum): int
     {
         return match ($enum)
         {
-            self::USER_LOGIN_COUNT          => 1,
+            self::USER_LOGIN_COUNT          => 2,
 
-            self::EVENTS_CREATED            => 2,
+            self::EVENTS_CREATED            => 3,
 
-            self::EVENTS_ATTENDED           => 3,
+            self::EVENTS_ATTENDED           => 7,
 
-            self::EVENTS_LED                => 4,
+            self::EVENTS_LED                => 25,
 
-            self::EVENTS_TREASURED          => 5,
+            self::EVENTS_TREASURED          => 29,
 
-            self::EXPENSES_PAID_BELOW_500   => 6,
+            self::EXPENSES_PAID_BELOW_500   => 13,
 
-            self::EXPENSE_PAID_500_TO_1500  => 8,
+            self::EXPENSE_PAID_500_TO_1500  => 15,
 
-            self::EXPENSE_PAID_ABOVE_1500   => 10,
-
-            self::EXPENSES_BEAR_BELOW_500   => 12,
-
-            self::EXPENSE_BEAR_500_TO_1500  => 14,
-
-            self::EXPENSE_BEAR_ABOVE_1500   => 16,
+            self::EXPENSE_PAID_ABOVE_1500   => 17,
 
             self::LOAN_BELOW_500            => 18,
 
+            self::EXPENSES_BEAR_BELOW_500   => 19,
+
             self::LOAN_500_TO_1500          => 20,
 
+            self::EXPENSE_BEAR_500_TO_1500  => 21,
+
             self::LOAN_ABOVE_1500           => 22,
+
+            self::EXPENSE_BEAR_ABOVE_1500   => 23,
 
             self::SPONSOR_BELOW_200         => 24,
 

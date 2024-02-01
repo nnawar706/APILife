@@ -2,7 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
 class UserPoint extends Model
@@ -10,6 +11,11 @@ class UserPoint extends Model
     protected $guarded = ['id'];
 
     protected $hidden = ['created_at', 'updated_at'];
+
+    public function scopeCurrent(Builder $q)
+    {
+        $q->whereMonth('created_at', Carbon::now('Asia/Dhaka')->format('n'));
+    }
 
     public function user()
     {
