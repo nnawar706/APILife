@@ -72,7 +72,7 @@ class AuthController extends Controller
 
         return response()->json([
             'status' => true,
-            'data' => $data
+            'data' => $data,
         ], Response::HTTP_OK);
     }
 

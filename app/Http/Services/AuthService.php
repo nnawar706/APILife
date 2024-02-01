@@ -3,6 +3,7 @@
 namespace App\Http\Services;
 
 use App\Models\User;
+use App\Models\UserBadge;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -48,6 +49,9 @@ class AuthService
     public function getAuthUserProfile()
     {
         return User::with('designation')
+            ->with(['userBadge' => function($q) {
+                return $q->with('badge')->whereMonth('created_at', Carbon::now('Asia/Dhaka')->format('n'));
+            }])
             ->find(auth()->user()->id);
     }
 
@@ -76,5 +80,12 @@ class AuthService
         auth()->user()->unreadNotifications()->update(['send_status' => 1]);
 
         return auth()->user()->notifications()->latest()->paginate(15);
+    }
+
+    public function getAuthBadge()
+    {
+        return UserBadge::where('user_id', auth()->user()->id)
+            ->whereMonth('created_at', Carbon::now('Asia/Dhaka')->format('n'))
+            ->first();
     }
 }

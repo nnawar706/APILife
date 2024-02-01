@@ -110,6 +110,11 @@ class User extends Authenticatable implements JWTSubject
         return $this->belongsToMany(Badge::class, 'user_badges', 'user_id');
     }
 
+    public function userBadge()
+    {
+        return $this->hasMany(UserBadge::class, 'user_id');
+    }
+
     public function events()
     {
         return $this->belongsToMany(Event::class, 'event_participants', 'user_id');
