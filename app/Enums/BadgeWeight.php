@@ -28,7 +28,7 @@ enum BadgeWeight: int
     // event cases
     case EVENTS_TREASURED        = 29;
     case EVENTS_LED              = 25;
-    case EVENTS_ATTENDED         = 7;
+    case EVENTS_ATTENDED         = 11;
     case EVENTS_CREATED          = 3;
 
     // login cases
@@ -42,7 +42,7 @@ enum BadgeWeight: int
 
             self::EVENTS_CREATED            => 3,
 
-            self::EVENTS_ATTENDED           => 7,
+            self::EVENTS_ATTENDED           => 11,
 
             self::EVENTS_LED                => 25,
 
