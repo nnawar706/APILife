@@ -16,7 +16,7 @@ class CheckStoryCreateEligibility
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $curTime = Carbon::now('Asia/Dhaka');
+//        $curTime = Carbon::now('Asia/Dhaka');
 
 //        $officeStarts = Carbon::createFromTime(10); // 10 am
 //        $officeEnds   = Carbon::createFromTime(18); // 6 pm
@@ -37,15 +37,15 @@ class CheckStoryCreateEligibility
 //            ], Response::HTTP_LOCKED);
 //        }
 
-        $storiesAddedToday = auth()->user()->stories()->whereDate('created_at', $curTime->clone()->format('Y-m-d'))->count();
-
-        if ($storiesAddedToday == 3)
-        {
-            return response()->json([
-                'status' => false,
-                'error'  => 'You cannot upload more than 3 stories in one day.'
-            ], Response::HTTP_FORBIDDEN);
-        }
+//        $storiesAddedToday = auth()->user()->stories()->whereDate('created_at', $curTime->clone()->format('Y-m-d'))->count();
+//
+//        if ($storiesAddedToday == 3)
+//        {
+//            return response()->json([
+//                'status' => false,
+//                'error'  => 'You cannot upload more than 3 stories in one day.'
+//            ], Response::HTTP_FORBIDDEN);
+//        }
 
         return $next($request);
     }
