@@ -22,7 +22,7 @@ class UserStoryController extends Controller
         return response()->json([
             'status' => true,
             'data'   => $data
-        ]);
+        ], count($data) == 0 ? Response::HTTP_NO_CONTENT : Response::HTTP_OK);
     }
 
     public function create(UserStoryCreateRequest $request)
