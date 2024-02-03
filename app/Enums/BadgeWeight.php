@@ -34,10 +34,15 @@ enum BadgeWeight: int
     // login cases
     case USER_LOGIN_COUNT        = 2;
 
+    // story views
+    case USER_STORY_VIEW_COUNT   = 1;
+
     public static function getValue($enum): int
     {
         return match ($enum)
         {
+            self::USER_STORY_VIEW_COUNT     => 1,
+
             self::USER_LOGIN_COUNT          => 2,
 
             self::EVENTS_CREATED            => 3,

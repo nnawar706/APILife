@@ -42,7 +42,7 @@ class AssignUserPoint extends Command
 
         $end = Carbon::now('Asia/Dhaka');
         // define start date from the time when the last point data was calculated
-        $start = $totalPoint == 0 ? Carbon::now('Asia/Dhaka')->subCenturies(1)->format('Y-m-d H:i') :
+        $start = $totalPoint == 0 ? Carbon::now('Asia/Dhaka')->subCentury()->format('Y-m-d H:i') :
             Carbon::parse($points->clone()->latest()->first()->created_at)->format('Y-m-d H:i');
 
         // loan data that have type "lend" and status accepted between the specified time interval
@@ -71,18 +71,31 @@ class AssignUserPoint extends Command
         DB::beginTransaction();
 
         try {
-            foreach ($users as $user) {
+            foreach ($users as $user)
+            {
                 $weight = 0;
 
                 // login count
                 $loginCount = $user->accessLogs()->whereBetween('logged_in_at', [$start, $end])->count();
 
+                // seen story count
+                $storySeenCount = $user->seenStories()->whereBetween('created_at', [$start, $end])->count();
+
                 // added extravaganza image count
                 $addedImageCount = $user->addedImages()->whereBetween('created_at', [$start, $end])->count();
+
+                // added story image count
+                $addedStoryCount = $user->stories()->withTrashed()->whereBetween('created_at', [$start, $end])->count();
+
+                $multiply = $user->current_streak == 0 ? 1 : $user->current_streak;
 
                 $weight += $loginCount * BadgeWeight::getValue(BadgeWeight::USER_LOGIN_COUNT);
 
                 $weight += $addedImageCount * BadgeWeight::getValue(BadgeWeight::USER_LOGIN_COUNT);
+
+                $weight += $storySeenCount * BadgeWeight::getValue(BadgeWeight::USER_STORY_VIEW_COUNT);
+
+                $weight += $addedStoryCount * $multiply;
 
                 // created event count
                 $eventCreated = $events->clone()->where('added_by_user_id', $user->id)->count();

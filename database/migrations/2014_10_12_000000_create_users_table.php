@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('birthday', 5);
             $table->string('photo_url', 100)->nullable();
             $table->string('password');
+            $table->integer('current_streak', false, true)->default(0);
             $table->tinyInteger('status', false, true)->default(1)->comment('0: inactive, 1: active');
             $table->timestamps();
         });
