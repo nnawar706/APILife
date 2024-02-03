@@ -79,23 +79,23 @@ class AssignUserPoint extends Command
                 $loginCount = $user->accessLogs()->whereBetween('logged_in_at', [$start, $end])->count();
 
                 // seen story count
-                $storySeenCount = $user->seenStories()->whereBetween('created_at', [$start, $end])->count();
+//                $storySeenCount = $user->seenStories()->whereBetween('created_at', [$start, $end])->count();
 
                 // added extravaganza image count
-                $addedImageCount = $user->addedImages()->whereBetween('created_at', [$start, $end])->count();
+//                $addedImageCount = $user->addedImages()->whereBetween('created_at', [$start, $end])->count();
 
                 // added story image count
-                $addedStoryCount = $user->stories()->withTrashed()->whereBetween('created_at', [$start, $end])->count();
+//                $addedStoryCount = $user->stories()->withTrashed()->whereBetween('created_at', [$start, $end])->count();
 
-                $multiply = $user->current_streak == 0 ? 1 : $user->current_streak;
+//                $multiply = $user->current_streak == 0 ? 1 : $user->current_streak;
 
                 $weight += $loginCount * BadgeWeight::getValue(BadgeWeight::USER_LOGIN_COUNT);
 
-                $weight += $addedImageCount * BadgeWeight::getValue(BadgeWeight::USER_LOGIN_COUNT);
-
-                $weight += $storySeenCount * BadgeWeight::getValue(BadgeWeight::USER_STORY_VIEW_COUNT);
-
-                $weight += $addedStoryCount * $multiply;
+//                $weight += $addedImageCount * BadgeWeight::getValue(BadgeWeight::USER_LOGIN_COUNT);
+//
+//                $weight += $storySeenCount * BadgeWeight::getValue(BadgeWeight::USER_STORY_VIEW_COUNT);
+//
+//                $weight += $addedStoryCount * $multiply;
 
                 // created event count
                 $eventCreated = $events->clone()->where('added_by_user_id', $user->id)->count();
