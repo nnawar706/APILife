@@ -9,6 +9,7 @@ use App\Models\ExpensePayer;
 use App\Models\User;
 use App\Models\UserBadge;
 use App\Models\UserLoan;
+use App\Notifications\UserNotification;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Database\QueryException;
@@ -39,12 +40,13 @@ class AssignUserBadge extends Command
     {
         $start = Carbon::now('Asia/Dhaka')->subMonths(1);
         $end   = Carbon::now('Asia/Dhaka');
+        $curMonth = $end->clone()->format('n');
 
         $badge = new UserBadge();
 
         // calculate badge weights if no user badge object exists for current month
         if ($badge->clone()
-            ->whereMonth('created_at', Carbon::now()->format('n'))
+            ->whereMonth('created_at', $curMonth)
             ->doesntExist())
         {
             // fetch users that are active
@@ -56,7 +58,23 @@ class AssignUserBadge extends Command
             foreach ($users as $key => $user)
             {
                 $data[$key]['user_id'] = $user->id;
-                $data[$key]['weight'] = intval($user->points()->whereBetween('created_at', [$start, $end])->sum('point'));
+                $petCareDays           = $user->petCares()->whereBetween('created_at', [$start, $end])->count() * 3;
+                $weight                = intval($user->points()->whereBetween('created_at', [$start, $end])->sum('point'));
+
+                if ($petCareDays != 0) {
+                    $from = $curMonth % 2 == 0 ? 'Mickie' : 'Minnie';
+
+                    // notify user about bonus points
+                    $user->notify(new UserNotification(
+                        'pages/accounts/notification',
+                        'Hey '. ' 👋 ' . "it's " . $from . "! You've got " . $petCareDays . ' bonus points for taking care of us. 💝',
+                        'Life++',
+                        null
+                    ));
+                }
+
+                // add bonus points for pet care days
+                $data[$key]['weight']  = $weight + $petCareDays;
             }
 
             // retrieve the weights in an array

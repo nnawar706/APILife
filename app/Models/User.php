@@ -204,6 +204,11 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasMany(UserExpense::class, 'user_id');
     }
 
+    public function petCares()
+    {
+        return $this->hasMany(PetCare::class);
+    }
+
     public static function boot()
     {
         parent::boot();
