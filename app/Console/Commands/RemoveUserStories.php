@@ -29,8 +29,8 @@ class RemoveUserStories extends Command
      */
     public function handle()
     {
-        $deleteTime = Carbon::now('Asia/Dhaka')->addDay()->subHours(24);
-        $curTime    = Carbon::now('Asia/Dhaka')->addDay();
+        $deleteTime = Carbon::now('Asia/Dhaka')->subHours(24);
+        $curTime    = Carbon::now('Asia/Dhaka');
 
         UserStory::where('created_at', '<', $deleteTime)->each(function ($story) {
             deleteFile($story->story_url);
