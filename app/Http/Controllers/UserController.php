@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\UserCreateRequest;
 use App\Http\Requests\UserUpdateRequest;
 use App\Http\Services\UserService;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Validator;
@@ -33,7 +34,7 @@ class UserController extends Controller
             ], Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
-        $data = Cache::remember('users'.$request->status, 24*60*60*60, function () use ($request) {
+        $data = Cache::remember('users'.$request->status.Carbon::now('Asia/Dhaka')->format('n'), 24*60*60*30, function () use ($request) {
             return $this->service->getAll($request);
         });
 

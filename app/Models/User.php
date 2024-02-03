@@ -209,8 +209,8 @@ class User extends Authenticatable implements JWTSubject
         parent::boot();
 
         static::created(function ($model) {
-            Cache::forget('users');
-            Cache::forget('userstrue');
+            Cache::forget('users'.Carbon::now('Asia/Dhaka')->format('n'));
+            Cache::forget('userstrue'.Carbon::now('Asia/Dhaka')->format('n'));
 
             UserBadge::create([
                 'user_id'  => $model->id,
@@ -242,8 +242,8 @@ class User extends Authenticatable implements JWTSubject
         });
 
         static::deleted(function ($model) {
-            Cache::forget('users');
-            Cache::forget('userstrue');
+            Cache::forget('users'.Carbon::now('Asia/Dhaka')->format('n'));
+            Cache::forget('userstrue'.Carbon::now('Asia/Dhaka')->format('n'));
             Cache::forget('user_profile'.$model->id);
 
             deleteFile($model->photo_url);

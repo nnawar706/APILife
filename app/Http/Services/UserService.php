@@ -3,6 +3,7 @@
 namespace App\Http\Services;
 
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 
@@ -23,7 +24,9 @@ class UserService
                 return $q->status();
             })
             ->orderBy('designation_id')
-            ->with('designation')->get();
+            ->with('designation')->with(['userBadge' => function($q) {
+                return $q->with('badge')->whereMonth('created_at', Carbon::now('Asia/Dhaka')->format('n'));
+            }])->get();
     }
 
     public function storeNewUser(Request $request): void
