@@ -209,6 +209,16 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasMany(PetCare::class);
     }
 
+    public function stories()
+    {
+        return $this->hasMany(UserStory::class);
+    }
+
+    public function seenStories()
+    {
+        return $this->hasMany(UserStoryView::class, 'seen_by');
+    }
+
     public static function boot()
     {
         parent::boot();

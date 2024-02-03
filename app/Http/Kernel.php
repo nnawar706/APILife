@@ -2,6 +2,7 @@
 
 namespace App\Http;
 
+use App\Http\Middleware\CheckStoryCreateEligibility;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
@@ -65,8 +66,9 @@ class Kernel extends HttpKernel
         'signed' => \App\Http\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
+        'user.stories' => \App\Http\Middleware\CheckStoryCreateEligibility::class,
         'event.checker' => \App\Http\Middleware\CheckUpdateDeleteEventEligibility::class,
         'expense.checker' => \App\Http\Middleware\CheckUpdateDeleteExpenseEligibility::class,
-        'event.participant.checker' => \App\Http\Middleware\CheckEventReadEligibility::class
+        'event.participant.checker' => \App\Http\Middleware\CheckEventReadEligibility::class,
     ];
 }

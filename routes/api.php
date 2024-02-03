@@ -18,6 +18,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserExpenseController;
 use App\Http\Controllers\UserIncomeController;
 use App\Http\Controllers\UserLoanController;
+use App\Http\Controllers\UserStoryController;
 use Illuminate\Support\Facades\Route;
 use Pusher\PushNotifications\PushNotifications;
 
@@ -166,6 +167,12 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('user_expenses/create', 'create');
         Route::put('user_expenses/update/{id}', 'update');
         Route::delete('user_expenses/delete/{id}', 'delete');
+    });
+
+    Route::controller(UserStoryController::class)->group(function () {
+        Route::get('user_stories/all', 'index');
+        Route::get('user_stories/mark_as_seen/{id}', 'markSeen');
+        Route::post('user_stories/create', 'create')->middleware('user.stories');
     });
 });
 
