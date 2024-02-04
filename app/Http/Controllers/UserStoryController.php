@@ -27,7 +27,15 @@ class UserStoryController extends Controller
 
     public function create(UserStoryCreateRequest $request)
     {
-        $this->service->storeStory($request);
+        $response = $this->service->storeStory($request);
+
+        if ($response)
+        {
+            return response()->json([
+                'status' => false,
+                'error'  => $response
+            ], Response::HTTP_BAD_REQUEST);
+        }
 
         return response()->json([
             'status' => true

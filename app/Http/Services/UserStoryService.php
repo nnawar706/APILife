@@ -4,6 +4,7 @@ namespace App\Http\Services;
 
 use App\Models\UserStory;
 use Illuminate\Http\Request;
+use Intervention\Image\Facades\Image;
 
 class UserStoryService
 {
@@ -23,13 +24,28 @@ class UserStoryService
         }])->latest()->get();
     }
 
-    public function storeStory(Request $request): void
+    public function storeStory(Request $request)
     {
-        $story = $this->model->create([
-            'user_id' => auth()->user()->id,
-        ]);
+        try {
+            $storyImage = Image::make($request->image);
 
-        saveImage($request->image, '/images/user_stories/', $story, 'story_url');
+            $compressedStoryImage = $storyImage->orientate()
+                ->resize(1200, 1200, function ($constraint) {
+                    $constraint->aspectRatio();
+                });
+
+            $imageName = time() . rand(100, 9999) . '.' . $request->image->getClientOriginalExtension();
+            $compressedStoryImage->save(public_path('/images/user_stories/' . $imageName));
+
+            $this->model->create([
+                'user_id' => auth()->user()->id,
+                'story_url' => '/images/user_stories/' . $imageName
+            ]);
+            return null;
+        } catch (\Throwable $th)
+        {
+            return $th->getMessage();
+        }
     }
 
     public function markStoryAsSeen($id): void

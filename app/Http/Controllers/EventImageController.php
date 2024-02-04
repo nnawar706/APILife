@@ -7,7 +7,6 @@ use App\Models\Event;
 use App\Models\EventImage;
 use Illuminate\Support\Facades\Cache;
 use Intervention\Image\Facades\Image;
-use Intervention\Image\ImageManager;
 use Symfony\Component\HttpFoundation\Response;
 
 class EventImageController extends Controller
