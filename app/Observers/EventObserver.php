@@ -33,6 +33,19 @@ class EventObserver
     {
         Cache::forget('event_expenses'.$model->id);
 
+        if ($model->event_status_id == 2)
+        {
+            $message = auth()->user()->name . ' recently locked ' . $model->title . ' and is requesting you to approve it.';
+
+            dispatch(new NotifyEventParticipants(
+                $model,
+                null,
+                'pages/pending-vaganza' . $model->id,
+                $message,
+                false
+            ));
+        }
+
         if ($model->event_status_id == 3 || $model->event_status_id == 4)
         {
             $message = $model->event_status_id == 3 ? $model->title . ' has been approved by all participants.'
