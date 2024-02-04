@@ -40,7 +40,7 @@ class EventObserver
             dispatch(new NotifyEventParticipants(
                 $model,
                 null,
-                'pages/pending-vaganza' . $model->id,
+                'pages/pending-vaganza',
                 $message,
                 false
             ));
