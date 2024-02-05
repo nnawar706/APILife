@@ -2,6 +2,7 @@
 
 namespace App\Http\Services;
 
+use App\Jobs\NotifyEventParticipants;
 use App\Models\EventInventory;
 use Illuminate\Http\Request;
 
@@ -71,6 +72,17 @@ class InventoryService
 
         $inventory->approval_status = $status;
         $inventory->saveQuietly();
+
+        $statusMessage = $status == 1 ? 'accepted' : 'declined';
+
+        dispatch(new NotifyEventParticipants(
+            $inventory->event,
+            auth()->user(),
+            'pages/update-vaganza/' . $inventory->event_id,
+            auth()->user()->name . ' ' . $statusMessage . ' an assigned inventory: ' . $inventory->title,
+            false,
+            false
+        ));
 
         return null;
     }

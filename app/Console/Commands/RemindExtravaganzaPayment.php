@@ -56,6 +56,7 @@ class RemindExtravaganzaPayment extends Command
                     $value->user->notify(new UserNotification(
                         'pages/payments',
                         'Gentle Reminder: You have ' . $value->amount . ' tk due to pay for a treasure hunt.',
+                        null,
                         'Life++',
                         null
                     ));
@@ -79,6 +80,7 @@ class RemindExtravaganzaPayment extends Command
                     $value->user->notify(new UserNotification(
                         'pages/payments',
                         'Gentle Reminder: Deadline for an extravaganza settlement is expiring today.',
+                        null,
                         'Life++',
                         null
                     ));

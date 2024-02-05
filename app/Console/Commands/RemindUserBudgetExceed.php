@@ -44,6 +44,7 @@ class RemindUserBudgetExceed extends Command
                     $user->notify(new UserNotification(
                         'pages/accounts/pocket-devil',
                         'Gentle Reminder: Your expense has exceeded your target saving amount.',
+                        null,
                         'Life++',
                         null
                     ));
@@ -55,6 +56,7 @@ class RemindUserBudgetExceed extends Command
                     $user->notify(new UserNotification(
                         'pages/accounts/pocket-devil',
                         'Gentle Reminder: Your expense will exceed your target saving amount soon.',
+                        null,
                         'Life++',
                         null
                     ));

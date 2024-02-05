@@ -119,6 +119,7 @@ class ExpenseService
                 auth()->user(),
                 'pages/timeline-page/'.$expense->event_id,
                 auth()->user()->name . ' updated expense data for ' . $expense->event->title,
+                false,
                 false
             ));
 

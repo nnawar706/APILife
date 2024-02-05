@@ -47,12 +47,16 @@ class NotifyUsers implements ShouldQueue
         {
             foreach ($users as $item)
             {
-                $item->notify(new UserNotification(
-                    $this->link,
-                    $this->message,
-                    $this->user ? $this->user->name : 'Life++',
-                    $this->user ? $this->user->photo_url : null
-                ));
+                if ($this->user && $this->user->id != $item->id)
+                {
+                    $item->notify(new UserNotification(
+                        $this->link,
+                        $this->message,
+                        $this->user ? $this->user->id : null,
+                        $this->user ? $this->user->name : 'Life++',
+                        $this->user ? $this->user->photo_url : null
+                    ));
+                }
             }
         }
     }

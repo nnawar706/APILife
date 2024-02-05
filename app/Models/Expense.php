@@ -72,6 +72,7 @@ class Expense extends Model
                 auth()->user(),
                 'pages/timeline-page/'.$model->event_id,
                 auth()->user()->name . ' added new expense to ' . $model->event->title,
+                false,
                 false
             ));
         });
@@ -85,6 +86,7 @@ class Expense extends Model
                 auth()->user(),
                 'pages/timeline-page/'.$model->event_id,
                 auth()->user()->name . ' removed an expense data from ' . $model->event->title,
+                false,
                 false
             ));
         });

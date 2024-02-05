@@ -39,6 +39,7 @@ class RemindEventInventory extends Command
             $item->assignedToInfo->notify(new UserNotification(
                 'pages/update-vaganza/' . $item->event_id,
                 "Don't forget to bring " . $item->title . ' for ' . $item->event->title . '.',
+                null,
                 'Life++',
                 null
             ));

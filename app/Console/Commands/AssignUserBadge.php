@@ -68,6 +68,7 @@ class AssignUserBadge extends Command
                     $user->notify(new UserNotification(
                         'pages/accounts/notification',
                         'Hey '. ' 👋 ' . "it's " . $from . "! You've got " . $petCareDays . ' bonus points for taking care of us. 💝',
+                        null,
                         'Life++',
                         null
                     ));
@@ -75,6 +76,9 @@ class AssignUserBadge extends Command
 
                 // add bonus points for pet care days
                 $data[$key]['weight']  = $weight + $petCareDays;
+
+                $user->current_streak = 0;
+                $user->saveQuietly();
             }
 
             // retrieve the weights in an array
@@ -115,9 +119,14 @@ class AssignUserBadge extends Command
                                 'badge_id' => $i + 1,
                                 'point'    => $user['weight']
                             ]);
+
+                            Cache::forget('user_profile' . $user['user_id']);
                         }
                     }
                 }
+
+                Cache::forget('users');
+                Cache::forget('userstrue');
 
                 DB::commit();
             } catch (QueryException $ex) {

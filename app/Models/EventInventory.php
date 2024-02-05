@@ -61,6 +61,7 @@ class EventInventory extends Model
                 $model->assignedToInfo->notify(new UserNotification(
                     'pages/inventory-approval',
                     auth()->user()->name . ' assigned you to an inventory of ' . $model->event->title . '.',
+                    auth()->user()->id,
                     auth()->user()->name,
                     auth()->user()->photo_url
                 ));
@@ -76,6 +77,7 @@ class EventInventory extends Model
                 $model->assignedToInfo->notify(new UserNotification(
                     'pages/inventory-approval',
                     auth()->user()->name . ' updated an inventory of ' . $model->event->title . ' that was assigned to you.',
+                    auth()->user()->id,
                     auth()->user()->name,
                     auth()->user()->photo_url
                 ));
@@ -87,6 +89,7 @@ class EventInventory extends Model
                 $model->assignedToInfo->notify(new UserNotification(
                     'pages/update-vaganza/' . $model->event_id,
                     auth()->user()->name . ' deleted an inventory of ' . $model->event->title . ' that was assigned to you.',
+                    auth()->user()->id,
                     auth()->user()->name,
                     auth()->user()->photo_url
                 ));

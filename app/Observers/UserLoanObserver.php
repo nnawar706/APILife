@@ -2,6 +2,7 @@
 
 namespace App\Observers;
 
+use App\Jobs\NotifyUsers;
 use App\Notifications\UserNotification;
 use Illuminate\Support\Facades\Cache;
 
@@ -27,8 +28,19 @@ class UserLoanObserver
         $model->selectedUser->notify(new UserNotification(
             'pages/financial-assistance/transaction-log',
             auth()->user()->name . ' has initialized a loan for you. 💸',
+            auth()->user()->id,
             auth()->user()->name,
             auth()->user()->photo_url
+        ));
+
+        $type = $model->loan_type == 1 ? 'lend' : 'return';
+
+        dispatch(new NotifyUsers(
+            null,
+            true,
+            'pages/accounts/notification',
+            'Someone initiated a loan of type ' . $type . '👀',
+            null,
         ));
     }
 
@@ -46,6 +58,7 @@ class UserLoanObserver
         $model->user->notify(new UserNotification(
             'pages/financial-assistance/transaction-log',
             auth()->user()->name . ' updated a loan status.',
+            auth()->user()->id,
             auth()->user()->name,
             auth()->user()->photo_url
         ));
@@ -62,6 +75,7 @@ class UserLoanObserver
         $model->selectedUser->notify(new UserNotification(
             'pages/financial-assistance/transaction-log',
             auth()->user()->name . ' deleted a loan that was initiated for you.',
+            auth()->user()->id,
             auth()->user()->name,
             auth()->user()->photo_url
         ));

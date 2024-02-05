@@ -54,6 +54,7 @@ class NotifyPendingLoanPayable extends Command
                 $item->notify(new UserNotification(
                     'pages/financial-assistance/transaction-log',
                     'Gentle Reminder: Your remaining loan payable is ' . abs($adjustment) . ' Taka.',
+                    null,
                     'Life++',
                     null
                 ));

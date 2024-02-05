@@ -59,6 +59,7 @@ class SendRandomNotification extends Command
             $user->notify(new UserNotification(
                 '',
                 $msg,
+                null,
                 'Life++',
                 null
             ));
@@ -71,6 +72,7 @@ class SendRandomNotification extends Command
                 $user->notify(new UserNotification(
                     '',
                     $msg2,
+                    null,
                     'Life++',
                     null
                 ));

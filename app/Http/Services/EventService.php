@@ -59,7 +59,8 @@ class EventService
                 auth()->user(),
                 'pages/extra-vaganza',
                 'Mark your calendars for '. $event->title .' and join the party 🥳✨',
-                true
+                true,
+                false
             ));
 
             return null;
@@ -107,7 +108,8 @@ class EventService
                 auth()->user(),
                 'pages/update-vaganza/'.$event->id,
                 auth()->user()->name . ' updated an extravaganza information.',
-                $lead_id != $event->lead_user_id
+                $lead_id != $event->lead_user_id,
+                false
             ));
 
             return null;
@@ -258,6 +260,7 @@ class EventService
                 auth()->user(),
                 'pages/extra-vaganza',
                 auth()->user()->name . ' added new participants to ' . $event->title . '.',
+                false,
                 false
             ));
 
@@ -472,6 +475,7 @@ class EventService
                 auth()->user(),
                 'pages/extra-vaganza',
                 auth()->user()->name . ' added new guests to ' . $event->title . '.',
+                false,
                 false
             ));
 

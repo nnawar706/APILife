@@ -52,7 +52,7 @@ class EventCreateRequest extends FormRequest
             'from_date'         => 'required|date_format:Y-m-d H:i',
             'to_date'           => 'nullable|date_format:Y-m-d H:i|after:from_date',
             'remarks'           => 'nullable|string|max:500',
-            'participants'      => ['required','array','min:1',
+            'participants'      => ['required','array','min:3',
                                     function($attr, $val, $fail) {
                                         $users = User::whereIn('id', $val)
                                             ->status()->count();

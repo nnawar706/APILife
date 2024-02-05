@@ -60,6 +60,7 @@ class Treasurer extends Model
                 $model->treasurer->notify(new UserNotification(
                     'pages/payments',
                     auth()->user()->name . ' selected you as a treasurer. 👑',
+                    auth()->user()->id,
                     auth()->user()->name,
                     auth()->user()->photo_url
                 ));
@@ -73,6 +74,7 @@ class Treasurer extends Model
                     '',
                     'Thank you for completing a treasure hunt sincerely. 🔥',
                     null,
+                    'Life++',
                     null
                 ));
             }

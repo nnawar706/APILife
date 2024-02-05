@@ -50,6 +50,7 @@ class RemoveUserStories extends Command
                     $item->notify(new UserNotification(
                         '/pages/accounts/notification',
                         'Your streak for ' . $item->current_streak . ' days ended today. 🥺',
+                        null,
                         'Life++',
                         null
                     ));

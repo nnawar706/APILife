@@ -78,6 +78,7 @@ class SendPetCareReminder extends Command
                 $item->notify(new UserNotification(
                     'pages/accounts/notification',
                     $msg,
+                    null,
                     'Life++',
                     null
                 ));

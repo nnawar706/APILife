@@ -4,7 +4,6 @@ namespace App\Observers;
 
 use App\Jobs\NotifyEventParticipants;
 use App\Jobs\NotifyUsers;
-use App\Models\Event;
 use App\Models\EventRating;
 use Illuminate\Support\Facades\Cache;
 
@@ -24,6 +23,14 @@ class EventObserver
         EventRating::create([
             'event_id' => $model->id,
         ]);
+
+        dispatch(new NotifyUsers(
+            null,
+            true,
+            'pages/accounts/notification',
+            auth()->user()->name . ' created a new extravaganza.',
+            auth()->user()
+        ));
     }
 
     /**
@@ -39,9 +46,10 @@ class EventObserver
 
             dispatch(new NotifyEventParticipants(
                 $model,
-                null,
+                auth()->user(),
                 'pages/pending-vaganza',
                 $message,
+                false,
                 false
             ));
         }
@@ -56,6 +64,7 @@ class EventObserver
                 null,
                 'pages/update-vaganza/' . $model->id,
                 $message,
+                false,
                 false
             ));
         }

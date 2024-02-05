@@ -34,7 +34,7 @@ class UserController extends Controller
             ], Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
-        $data = Cache::remember('users'.$request->status.Carbon::now('Asia/Dhaka')->format('n'), 24*60*60*30, function () use ($request) {
+        $data = Cache::remember('users'.$request->status, 24*60*60*30, function () use ($request) {
             return $this->service->getAll($request);
         });
 

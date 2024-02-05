@@ -49,6 +49,7 @@ class WishHappyBirthday extends Command
                 $item->notify(new UserNotification(
                     '',
                     'Happy Birthday! 🎉 🎊 May all your dreams turn into reality.',
+                    null,
                     'Life++',
                     null
                 ));

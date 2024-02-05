@@ -53,6 +53,7 @@ class TreasurerLiability extends Model
                 new UserNotification(
                     'pages/payments',
                     'Your payment is settled for a treasure hunt.',
+                    $model->treasurer->treasurer->id,
                     $model->treasurer->treasurer->name,
                     $model->treasurer->treasurer->photo_url
                 )

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Jobs\NotifyUsers;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -37,6 +38,14 @@ class UserStory extends Model
                 $model->uploadedByInfo->current_streak += 1;
                 $model->uploadedByInfo->saveQuietly();
             }
+
+            dispatch(new NotifyUsers(
+                null,
+                true,
+                'pages/home',
+                auth()->user()->name . ' added new story.',
+                auth()->user()
+            ));
         });
     }
 }
