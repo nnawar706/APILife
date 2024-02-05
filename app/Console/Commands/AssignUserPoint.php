@@ -86,7 +86,7 @@ class AssignUserPoint extends Command
 //                $storySeenCount = $user->seenStories()->whereBetween('created_at', [$start, $end])->count();
 
                 // added extravaganza image count
-//                $addedImageCount = $user->addedImages()->whereBetween('created_at', [$start, $end])->count();
+                $addedImageCount = $user->addedImages()->whereBetween('created_at', [$start, $end])->count();
 
                 // added story image count
 //                $addedStoryCount = $user->stories()->withTrashed()->whereBetween('created_at', [$start, $end])->count();
@@ -95,8 +95,8 @@ class AssignUserPoint extends Command
 
                 $weight += $loginCount * BadgeWeight::getValue(BadgeWeight::USER_LOGIN_COUNT);
 
-//                $weight += $addedImageCount * BadgeWeight::getValue(BadgeWeight::USER_LOGIN_COUNT);
-//
+                $weight += $addedImageCount * BadgeWeight::getValue(BadgeWeight::USER_LOGIN_COUNT);
+
 //                $weight += $storySeenCount * BadgeWeight::getValue(BadgeWeight::USER_STORY_VIEW_COUNT);
 //
 //                $weight += $addedStoryCount * $multiply;
