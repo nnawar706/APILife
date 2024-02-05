@@ -26,7 +26,7 @@ class UserStoryCreateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'image' => 'required|image|mimes:jpg,png,jpeg,gif|max:5120'
+            'image' => 'required|image|mimes:jpg,png,jpeg|max:5120'
         ];
     }
 
