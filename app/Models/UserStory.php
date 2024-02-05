@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use App\Jobs\NotifyUsers;
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -32,7 +31,7 @@ class UserStory extends Model
         static::created(function ($model) {
 
             if ($model->uploadedByInfo->current_streak == 0) {
-                $message = auth()->user()->name . "just added a new snap after a while. Don't miss out on the latest moments! 🌟";
+                $message = auth()->user()->name . " just added a new snap after a while. Don't miss out on the latest moments! 🌟";
             } else {
                 $message = "New story added to today's collection. 🌟 Don't miss out the vibrant snap shared by " . auth()->user()->name;
             }
