@@ -16,6 +16,7 @@ enum BadgeWeight: int
     case LOAN_ABOVE_1500         = 22;
     case LOAN_500_TO_1500        = 20;
     case LOAN_BELOW_500          = 18;
+    case LOAN_RETURNED           = 10;
 
     // expense cases
     case EXPENSE_BEAR_ABOVE_1500  = 23;
@@ -46,6 +47,8 @@ enum BadgeWeight: int
             self::USER_LOGIN_COUNT          => 2,
 
             self::EVENTS_CREATED            => 3,
+
+            self::LOAN_RETURNED             => 10,
 
             self::EVENTS_ATTENDED           => 11,
 

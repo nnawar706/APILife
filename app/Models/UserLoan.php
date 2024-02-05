@@ -33,6 +33,11 @@ class UserLoan extends Model
         $q->where('loan_type', '=', 1);
     }
 
+    public function scopeReturned(Builder $q)
+    {
+        $q->where('loan_type', '=', 2);
+    }
+
     public function user()
     {
         return $this->belongsTo(User::class);

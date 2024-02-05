@@ -46,7 +46,11 @@ class AssignUserPoint extends Command
             Carbon::parse($points->clone()->latest()->first()->created_at)->format('Y-m-d H:i');
 
         // loan data that have type "lend" and status accepted between the specified time interval
-        $loan = UserLoan::lend()->accepted()
+        $loanLend = UserLoan::lend()->accepted()
+            ->whereBetween('updated_at', [$start, $end]);
+
+        // loan data that have type "returned" and status accepted between the specified time interval
+        $loanReturned = UserLoan::returned()->accepted()
             ->whereBetween('updated_at', [$start, $end]);
 
         // event data that have been completed between specified time interval
@@ -144,9 +148,9 @@ class AssignUserPoint extends Command
                         );
                 }
 
-                // loans
-                $lendLoanSum = $loan->clone()->where('user_id', $user->id)->credited()->sum('amount')
-                    + $loan->clone()->where('selected_user_id', $user->id)->debited()->sum('amount');
+                // loans lend
+                $lendLoanSum = $loanLend->clone()->where('user_id', $user->id)->credited()->sum('amount')
+                    + $loanLend->clone()->where('selected_user_id', $user->id)->debited()->sum('amount');
 
                 if ($lendLoanSum != 0) {
                     $weight += $lendLoanSum > 5000 ? BadgeWeight::getValue(BadgeWeight::LOAN_ABOVE_5000) :
@@ -159,8 +163,18 @@ class AssignUserPoint extends Command
                         );
                 }
 
+                // loans returned
+                $loanReturnedSum = $loanReturned->clone()->where('user_id', $user->id)->credited()->count()
+                    + $loanReturned->clone()->where('selected_user_id', $user->id)->debited()->count();
+
+                if ($loanReturnedSum != 0)
+                {
+                    $weight += BadgeWeight::getValue(BadgeWeight::LOAN_RETURNED) * $loanReturnedSum;
+                }
+
                 // sponsors
-                $sponsorSum = $bearers->clone()->where('is_sponsored', 1)->where('user_id', $user->id)->sum('amount');
+                $sponsorSum = $bearers->clone()->where('is_sponsored', '=', 1)
+                    ->where('user_id', $user->id)->sum('amount');
 
                 if ($sponsorSum != 0) {
                     $weight += $sponsorSum > 1500 ? BadgeWeight::getValue(BadgeWeight::SPONSOR_ABOVE_1500) :
