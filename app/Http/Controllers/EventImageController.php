@@ -59,7 +59,7 @@ class EventImageController extends Controller
             $event,
             auth()->user(),
             'pages/random-snaps',
-            auth()->user->name . ' shared some memories of ' . $event->title . '. 🌸',
+            auth()->user()->name . ' shared some memories of ' . $event->title . '. 🌸',
             false,
             true
         ));
