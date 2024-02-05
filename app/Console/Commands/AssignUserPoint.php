@@ -2,12 +2,11 @@
 
 namespace App\Console\Commands;
 
-use App\Enums\BadgeWeight;
+use App\Enums\UserPointWeight;
 use App\Models\Event;
 use App\Models\ExpenseBearer;
 use App\Models\ExpensePayer;
 use App\Models\User;
-use App\Models\UserBadge;
 use App\Models\UserLoan;
 use App\Models\UserPoint;
 use Carbon\Carbon;
@@ -85,54 +84,57 @@ class AssignUserPoint extends Command
                 // seen story count
 //                $storySeenCount = $user->seenStories()->whereBetween('created_at', [$start, $end])->count();
 
+//                $weight += $storySeenCount * UserPointWeight::getValue(UserPointWeight::POINT_1);
+
                 // added extravaganza image count
                 $addedImageCount = $user->addedImages()->whereBetween('created_at', [$start, $end])->count();
 
-                // added story image count
-//                $addedStoryCount = $user->stories()->withTrashed()->whereBetween('created_at', [$start, $end])->count();
-
-//                $multiply = $user->current_streak == 0 ? 1 : $user->current_streak;
-
-                $weight += $loginCount * BadgeWeight::getValue(BadgeWeight::USER_LOGIN_COUNT);
-
-                $weight += $addedImageCount * BadgeWeight::getValue(BadgeWeight::USER_LOGIN_COUNT);
-
-//                $weight += $storySeenCount * BadgeWeight::getValue(BadgeWeight::USER_STORY_VIEW_COUNT);
+//                if ($user->current_streak > 7)
+//                {
+//                    // added story image count
+//                    $addedStoryCount = $user->stories()->withTrashed()->whereBetween('created_at', [$start, $end])->count();
 //
-//                $weight += $addedStoryCount * $multiply;
+//                    $multiply = $user->current_streak - 7;
+//
+//                    $weight += $addedStoryCount * $multiply;
+//                }
+
+                $weight += $loginCount * UserPointWeight::getValue(UserPointWeight::POINT_1);
+
+                $weight += $addedImageCount * UserPointWeight::getValue(UserPointWeight::POINT_5);
 
                 // created event count
                 $eventCreated = $events->clone()->where('added_by_user_id', $user->id)->count();
 
-                $weight += $eventCreated * BadgeWeight::getValue(BadgeWeight::EVENTS_CREATED);
+                $weight += $eventCreated * UserPointWeight::getValue(UserPointWeight::POINT_10);
 
                 // attended event count
                 $eventAttended = $events->clone()->whereHas('addParticipants', function ($q) use ($user) {
                     return $q->where('user_id', $user->id);
                 })->count();
 
-                $weight += $eventAttended * BadgeWeight::getValue(BadgeWeight::EVENTS_ATTENDED);
+                $weight += $eventAttended * UserPointWeight::getValue(UserPointWeight::POINT_20);
 
                 // lead event count
                 $eventLead = $events->clone()->where('lead_user_id', $user->id)->count();
 
-                $weight += $eventLead * BadgeWeight::getValue(BadgeWeight::EVENTS_LED);
+                $weight += $eventLead * UserPointWeight::getValue(UserPointWeight::POINT_40);
 
                 // treasured event count
                 $eventTreasured = $events->clone()->whereHas('treasurer.treasurer', function ($q) use ($user) {
                     return $q->where('user_id', $user->id);
                 })->count();
 
-                $weight += $eventTreasured * BadgeWeight::getValue(BadgeWeight::EVENTS_TREASURED);
+                $weight += $eventTreasured * UserPointWeight::getValue(UserPointWeight::POINT_35);
 
                 // expense paid
                 $expensePayers = $payers->clone()->where('user_id', $user->id)->sum('amount');
 
                 if ($expensePayers != 0) {
-                    $weight += $expensePayers > 1500 ? BadgeWeight::getValue(BadgeWeight::EXPENSE_PAID_ABOVE_1500) :
+                    $weight += $expensePayers > 1500 ? UserPointWeight::getValue(UserPointWeight::POINT_17) :
                         (
-                        ($expensePayers > 500 && $expensePayers < 1500) ? BadgeWeight::getValue(BadgeWeight::EXPENSE_PAID_500_TO_1500) :
-                            BadgeWeight::getValue(BadgeWeight::EXPENSES_PAID_BELOW_500)
+                        ($expensePayers > 500 && $expensePayers < 1500) ? UserPointWeight::getValue(UserPointWeight::POINT_13) :
+                            UserPointWeight::getValue(UserPointWeight::POINT_9)
                         );
                 }
 
@@ -141,10 +143,10 @@ class AssignUserPoint extends Command
                     ->where('user_id', $user->id)->sum('amount');
 
                 if ($expenseBears != 0) {
-                    $weight += $expenseBears > 1500 ? BadgeWeight::getValue(BadgeWeight::EXPENSE_BEAR_ABOVE_1500) :
+                    $weight += $expenseBears > 1500 ? UserPointWeight::getValue(UserPointWeight::POINT_23) :
                         (
-                        ($expenseBears > 500 && $expenseBears < 1500) ? BadgeWeight::getValue(BadgeWeight::EXPENSE_BEAR_500_TO_1500) :
-                            BadgeWeight::getValue(BadgeWeight::EXPENSES_BEAR_BELOW_500)
+                        ($expenseBears > 500 && $expenseBears < 1500) ? UserPointWeight::getValue(UserPointWeight::POINT_15) :
+                            UserPointWeight::getValue(UserPointWeight::POINT_12)
                         );
                 }
 
@@ -152,13 +154,13 @@ class AssignUserPoint extends Command
                 $lendLoanSum = $loanLend->clone()->where('user_id', $user->id)->credited()->sum('amount')
                     + $loanLend->clone()->where('selected_user_id', $user->id)->debited()->sum('amount');
 
-                if ($lendLoanSum != 0) {
-                    $weight += $lendLoanSum > 5000 ? BadgeWeight::getValue(BadgeWeight::LOAN_ABOVE_5000) :
+                if ($lendLoanSum > 100) {
+                    $weight += $lendLoanSum > 5000 ? UserPointWeight::getValue(UserPointWeight::POINT_20) :
                         (
-                        ($lendLoanSum < 5000 && $lendLoanSum > 1500) ? BadgeWeight::getValue(BadgeWeight::LOAN_ABOVE_1500) :
+                        ($lendLoanSum < 5000 && $lendLoanSum > 1500) ? UserPointWeight::getValue(UserPointWeight::POINT_15) :
                             (
-                            ($lendLoanSum > 500 && $lendLoanSum < 1500) ? BadgeWeight::getValue(BadgeWeight::LOAN_500_TO_1500) :
-                                BadgeWeight::getValue(BadgeWeight::LOAN_BELOW_500)
+                            ($lendLoanSum > 500 && $lendLoanSum < 1500) ? UserPointWeight::getValue(UserPointWeight::POINT_10) :
+                                UserPointWeight::getValue(UserPointWeight::POINT_5)
                             )
                         );
                 }
@@ -169,7 +171,7 @@ class AssignUserPoint extends Command
 
                 if ($loanReturnedSum != 0)
                 {
-                    $weight += BadgeWeight::getValue(BadgeWeight::LOAN_RETURNED) * $loanReturnedSum;
+                    $weight += UserPointWeight::getValue(UserPointWeight::POINT_10) * $loanReturnedSum;
                 }
 
                 // sponsors
@@ -177,14 +179,14 @@ class AssignUserPoint extends Command
                     ->where('user_id', $user->id)->sum('amount');
 
                 if ($sponsorSum != 0) {
-                    $weight += $sponsorSum > 1500 ? BadgeWeight::getValue(BadgeWeight::SPONSOR_ABOVE_1500) :
+                    $weight += $sponsorSum > 1500 ? UserPointWeight::getValue(UserPointWeight::POINT_32) :
                         (
-                        ($sponsorSum > 1000 && $sponsorSum < 1500) ? BadgeWeight::getValue(BadgeWeight::SPONSOR_1000_TO_1500) :
+                        ($sponsorSum > 1000 && $sponsorSum < 1500) ? UserPointWeight::getValue(UserPointWeight::POINT_24) :
                             (
-                            ($sponsorSum > 500 && $sponsorSum < 1000) ? BadgeWeight::getValue(BadgeWeight::SPONSOR_500_TO_1000) :
+                            ($sponsorSum > 500 && $sponsorSum < 1000) ? UserPointWeight::getValue(UserPointWeight::POINT_20) :
                                 (
-                                ($sponsorSum > 200 && $sponsorSum < 500) ? BadgeWeight::getValue(BadgeWeight::SPONSOR_200_TO_500) :
-                                    BadgeWeight::getValue(BadgeWeight::SPONSOR_BELOW_200)
+                                ($sponsorSum > 200 && $sponsorSum < 500) ? UserPointWeight::getValue(UserPointWeight::POINT_16) :
+                                    UserPointWeight::getValue(UserPointWeight::POINT_12)
                                 )
                             )
                         );
