@@ -82,22 +82,22 @@ class AssignUserPoint extends Command
                 $loginCount = $user->accessLogs()->whereBetween('logged_in_at', [$start, $end])->count();
 
                 // seen story count
-//                $storySeenCount = $user->seenStories()->whereBetween('created_at', [$start, $end])->count();
+                $storySeenCount = $user->seenStories()->whereBetween('created_at', [$start, $end])->count();
 
-//                $weight += $storySeenCount * UserPointWeight::getValue(UserPointWeight::POINT_1);
+                $weight += $storySeenCount * UserPointWeight::getValue(UserPointWeight::POINT_1);
 
                 // added extravaganza image count
                 $addedImageCount = $user->addedImages()->whereBetween('created_at', [$start, $end])->count();
 
-//                if ($user->current_streak > 7)
-//                {
-//                    // added story image count
-//                    $addedStoryCount = $user->stories()->withTrashed()->whereBetween('created_at', [$start, $end])->count();
-//
-//                    $multiply = $user->current_streak - 7;
-//
-//                    $weight += $addedStoryCount * $multiply;
-//                }
+                if ($user->current_streak > 7)
+                {
+                    // added story image count
+                    $addedStoryCount = $user->stories()->withTrashed()->whereBetween('created_at', [$start, $end])->count();
+
+                    $multiply = $user->current_streak - 7;
+
+                    $weight += $addedStoryCount * $multiply;
+                }
 
                 $weight += $loginCount * UserPointWeight::getValue(UserPointWeight::POINT_1);
 

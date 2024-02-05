@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
 
@@ -34,6 +35,27 @@ class EventImage extends Model
             deleteFile($model->thumbnail_url);
 
             Cache::forget('event_images'.$model->event_id);
+
+            $curMonth = Carbon::now('Asia/Dhaka')->format('n');
+
+            if (Carbon::parse($model->created_at)->format('n') == $curMonth)
+            {
+                $lastPoint = UserPoint::latest()->first();
+
+                if ($lastPoint && Carbon::parse($model->created_at)->lt($lastPoint->created_at))
+                {
+                    $lastUserPoint = UserPoint::whereMonth('created_at', $curMonth)
+                        ->where('user_id', $model->added_by)
+                        ->where('point', '>=', 5)
+                        ->first();
+
+                    if ($lastUserPoint)
+                    {
+                        $lastUserPoint->point -= 5;
+                        $lastUserPoint->saveQuietly();
+                    }
+                }
+            }
         });
     }
 }

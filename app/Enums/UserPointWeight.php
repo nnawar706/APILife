@@ -39,6 +39,7 @@ enum UserPointWeight: int
             self::POINT_24 => 24,
             self::POINT_32 => 32,
             self::POINT_35 => 35,
+            self::POINT_40 => 40,
         };
     }
 }
