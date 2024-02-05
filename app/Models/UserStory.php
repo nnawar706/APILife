@@ -30,6 +30,13 @@ class UserStory extends Model
         parent::boot();
 
         static::created(function ($model) {
+
+            if ($model->uploadedByInfo->current_streak == 0) {
+                $message = auth()->user()->name . "just added a new snap after a while. Don't miss out on the latest moments! 🌟";
+            } else {
+                $message = "New story added to today's collection. 🌟 Don't miss out the vibrant snap shared by " . auth()->user()->name;
+            }
+
             $storyCount = UserStory::whereDate('created_at', $model->created_at)
                 ->where('user_id', $model->user_id)->count();
 
@@ -43,7 +50,7 @@ class UserStory extends Model
                 null,
                 true,
                 'pages/home',
-                auth()->user()->name . ' added new story.',
+                $message,
                 auth()->user()
             ));
         });
