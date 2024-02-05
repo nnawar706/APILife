@@ -80,19 +80,20 @@ class SystemController extends Controller
 
     public function notifyRandomly(Request $request)
     {
-        $users = User::status()->get();
+        $user = User::find(26);
 
-        foreach ($users as $user)
-        {
+//        foreach ($users as $user)
+//        {
             $msg = 'Hey ' . $user->name . ' 👋 ' . $request->message;
 
             $user->notify(new UserNotification(
                 '',
                 $msg,
+                null,
                 'Life++',
                 null
             ));
-        }
+//        }
     }
 
     public function test(Request $request)
