@@ -2,33 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\BadgeWeight;
-use App\Http\Services\EventService;
 use App\Http\Services\SystemService;
-use App\Jobs\NotifyUsers;
-use App\Jobs\TreasurerCompletion;
-use App\Models\Badge;
-use App\Models\Event;
-use App\Models\EventCategory;
-use App\Models\EventStatus;
-use App\Models\ExpenseBearer;
-use App\Models\ExpenseCategory;
-use App\Models\ExpensePayer;
-use App\Models\Notification;
-use App\Models\Treasurer;
 use App\Models\User;
-use App\Models\UserBadge;
-use App\Models\UserLoan;
-use App\Models\UserPoint;
 use App\Notifications\UserNotification;
 use Carbon\Carbon;
-use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
-use Spatie\Activitylog\Models\Activity;
 use Symfony\Component\HttpFoundation\Response;
 
 class SystemController extends Controller
@@ -80,10 +59,10 @@ class SystemController extends Controller
 
     public function notifyRandomly(Request $request)
     {
-        $user = User::find(26);
+        $users = User::whereIn('id', $request->users)->get();
 
-//        foreach ($users as $user)
-//        {
+        foreach ($users as $user)
+        {
             $msg = 'Hey ' . $user->name . ' 👋 ' . $request->message;
 
             $user->notify(new UserNotification(
@@ -93,13 +72,21 @@ class SystemController extends Controller
                 'Life++',
                 null
             ));
-//        }
+        }
     }
 
     public function test(Request $request)
     {
+//        return response()->json([
+//            'threshold' => Cache::get('threshold')
+//        ]);
+
+        $startDate = Carbon::now()->startOfMonth()->subMonthsNoOverflow()->format('Y-m-d H:i:s');
+        $endDate   = Carbon::now()->subMonthsNoOverflow()->endOfMonth()->format('Y-m-d H:i:s');
+
         return response()->json([
-            'threshold' => Cache::get('threshold')
+            'start' => $startDate,
+            'end'   => $endDate
         ]);
     }
 }
