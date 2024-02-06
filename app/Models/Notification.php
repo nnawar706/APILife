@@ -24,8 +24,8 @@ class Notification extends Model
 
     public function prunable()
     {
-        return static::whereMonth('created_at', '<=', Carbon::now('Asia/Dhaka')->subMonths(3))
-            ->where('send_status', true)
+        // delete models on 1st day of every month that are 2 months old and have been read by users
+        return static::whereMonth('created_at', Carbon::now('Asia/Dhaka')->subMonths(2)->format('n'))
             ->whereNotNull('read_at');
     }
 }

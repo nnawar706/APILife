@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Badge extends Model
 {
+    protected $guarded = ['id', 'name', 'image_url'];
+
     public $timestamps = false;
 
     public function users()

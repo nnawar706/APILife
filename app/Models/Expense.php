@@ -61,12 +61,15 @@ class Expense extends Model
         parent::boot();
 
         static::creating(function ($model) {
+            // while new expense, add auth user as model's created by user
             $model->created_by = auth()->user()->id;
         });
 
         static::created(function ($model) {
+            // invalidate necessary caches
             Cache::forget('event_expenses'.$model->event_id);
 
+            // notify participants about newly added expense
             dispatch(new NotifyEventParticipants(
                 $model->event,
                 auth()->user(),
@@ -78,9 +81,11 @@ class Expense extends Model
         });
 
         static::deleted(function ($model) {
+            // invalidate necessary caches
             Cache::forget('expense_info'.$model->id);
             Cache::forget('event_expenses'.$model->event_id);
 
+            // notify participants about deleted expense
             dispatch(new NotifyEventParticipants(
                 $model->event,
                 auth()->user(),

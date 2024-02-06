@@ -32,6 +32,7 @@ class EventGuest extends Model
                 auth()->user(),
                 'pages/extra-vaganza',
                 auth()->user()->name . ' removed ' . $model->user->name . ' from ' . $model->event->title . ' guest list.',
+                false,
                 false
             ));
 
@@ -40,6 +41,7 @@ class EventGuest extends Model
                 $model->user->notify(new UserNotification(
                     'pages/extra-vaganza',
                     auth()->user()->name . ' removed you from ' . $model->event->title . ' guest list.',
+                    auth()->user()->id,
                     auth()->user()->name,
                     auth()->user()->photo_url
                 ));

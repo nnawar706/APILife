@@ -18,7 +18,7 @@ class EventCategoryService
     public function getAll()
     {
         // fetch all event categories with their corresponding event count
-        return $this->model->latest()
+        return $this->model->orderByDesc('id')
             ->withCount('events')->get();
     }
 

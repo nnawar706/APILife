@@ -21,11 +21,11 @@ class NotifyEventParticipants implements ShouldQueue
      */
     public function __construct(Event $event, $user, $link, $message, $sendToLead, $sendToGuests)
     {
-        $this->event        = $event;
-        $this->user         = $user; // auth user
-        $this->link         = $link;
-        $this->message      = $message;
-        $this->sendToLead   = $sendToLead; // boolean
+        $this->event        = $event;        // event model
+        $this->user         = $user;         // auth user
+        $this->link         = $link;         // link to redirect
+        $this->message      = $message;      // notification message
+        $this->sendToLead   = $sendToLead;   // boolean
         $this->sendToGuests = $sendToGuests; // boolean
     }
 
@@ -40,6 +40,7 @@ class NotifyEventParticipants implements ShouldQueue
 
         foreach ($participants as $item)
         {
+            // notify all participants except auth user
             if (is_null($this->user) || ($this->user && ($item->id != $this->user->id))) {
                 $item->notify(new UserNotification(
                     $this->link,
@@ -51,6 +52,7 @@ class NotifyEventParticipants implements ShouldQueue
             }
         }
 
+        // notify event lead if sendToLead flag is true and auth user is not selected as lead
         if ($this->sendToLead && $lead && $lead->id != $this->user->id)
         {
             $lead->notify(new UserNotification(
@@ -62,6 +64,7 @@ class NotifyEventParticipants implements ShouldQueue
             ));
         }
 
+        // if sendToGuests flag is true, notify event guests
         if ($this->sendToGuests)
         {
             $auth = $this->user;

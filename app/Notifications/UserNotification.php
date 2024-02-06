@@ -18,11 +18,11 @@ class UserNotification extends Notification
      */
     public function __construct($link, $message, $triggered_by_id, $triggered_by, $triggered_by_image_url)
     {
-        $this->link                     = $link;
-        $this->message                  = $message;
-        $this->triggered_by_id          = $triggered_by_id;
-        $this->triggered_by             = $triggered_by;
-        $this->triggered_by_image_url   = $triggered_by_image_url;
+        $this->link                     = $link;                    // link to redirect
+        $this->message                  = $message;                 // notification message
+        $this->triggered_by_id          = $triggered_by_id;         // auth user id, if present
+        $this->triggered_by             = $triggered_by;            // auth username, if present
+        $this->triggered_by_image_url   = $triggered_by_image_url;  // auth user profile photo url, if present
     }
 
     /**
@@ -46,7 +46,7 @@ class UserNotification extends Notification
             'message'                   => $this->message,
             'link'                      => $this->link,
             'triggered_by_id'           => $this->triggered_by_id,
-            'triggered_by'              => $this->triggered_by ?? 'Life++',
+            'triggered_by'              => $this->triggered_by ?? 'Life++', // if auth not present, assign Life++ as triggered by user
             'triggered_by_image_url'    => $this->triggered_by_image_url
         ];
     }

@@ -14,8 +14,7 @@ return new class extends Migration
         Schema::create('user_budgets', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            $table->float('max_expense')->default(0);
-            $table->timestamps();
+            $table->float('target_saving')->default(0);
         });
     }
 

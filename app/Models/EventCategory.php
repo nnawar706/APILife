@@ -15,7 +15,7 @@ class EventCategory extends Model
 
     protected $guarded = ['id'];
 
-    protected $hidden = ['created_at', 'updated_at'];
+    public $timestamps = false;
 
     protected $casts = [
         'status'        => 'boolean'
@@ -49,16 +49,19 @@ class EventCategory extends Model
         parent::boot();
 
         static::created(function ($model) {
+            // invalidate necessary caches
             Cache::forget('event_categories');
         });
 
         static::updated(function ($model) {
+            // invalidate necessary caches
             Cache::forget('event_categories');
         });
 
         static::deleted(function ($model) {
+            // invalidate necessary caches
             Cache::forget('event_categories');
-
+            // delete category image file
             deleteFile($model->icon_url);
         });
     }

@@ -6,7 +6,6 @@ use App\Models\Badge;
 use App\Models\EventCategory;
 use App\Models\EventStatus;
 use App\Models\ExpenseCategory;
-use App\Models\ExpensePayer;
 use App\Models\User;
 use App\Models\UserBadge;
 use App\Models\UserBudget;

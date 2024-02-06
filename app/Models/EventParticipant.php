@@ -47,18 +47,21 @@ class EventParticipant extends Model
                 auth()->user(),
                 'pages/extra-vaganza',
                 auth()->user()->name . ' removed ' . $model->user->name . ' from ' . $model->event->title,
+                false,
                 false
             ));
 
-            EventInventoryParticipant::whereHas('eventInventory', function ($q) use ($model) {
-                return $q->where('event_id', $model->event_id);
-            })->where('user_id', $model->user_id)->delete();
+            // remove inventories associated with that event where this participant was selected
+            EventInventory::where('event_id', $model->event_id)
+                ->where('assigned_to', $model->user_id)->delete();
 
+            // notify if this participant and current logged-in user are not same
             if (auth()->user()->id != $model->user_id)
             {
                 $model->user->notify(new UserNotification(
                     'pages/extra-vaganza',
                     auth()->user()->name . ' removed you from ' . $model->event->title,
+                    auth()->user()->id,
                     auth()->user()->name,
                     auth()->user()->photo_url
                 ));

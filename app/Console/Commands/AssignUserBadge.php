@@ -2,20 +2,14 @@
 
 namespace App\Console\Commands;
 
-use App\Enums\BadgeWeight;
-use App\Models\Event;
-use App\Models\ExpenseBearer;
-use App\Models\ExpensePayer;
 use App\Models\User;
 use App\Models\UserBadge;
-use App\Models\UserLoan;
 use App\Notifications\UserNotification;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 
 class AssignUserBadge extends Command
 {
@@ -38,9 +32,13 @@ class AssignUserBadge extends Command
      */
     public function handle()
     {
-        $start = Carbon::now('Asia/Dhaka')->subMonths(1);
-        $end   = Carbon::now('Asia/Dhaka');
-        $curMonth = $end->clone()->format('n');
+        $curTime = Carbon::now('Asia/Dhaka');
+
+        $start = $curTime->clone()->startOfMonth()->subMonthsNoOverflow()->format('Y-m-d H:i:s');
+        $end   = $curTime->clone()->subMonthsNoOverflow()->endOfMonth()->format('Y-m-d H:i:s');
+
+        $curMonth = $curTime->format('n');
+        $prevMonth = $curTime->clone()->startOfMonth()->subMonthsNoOverflow()->format('n');
 
         $badge = new UserBadge();
 
@@ -58,7 +56,8 @@ class AssignUserBadge extends Command
             foreach ($users as $key => $user)
             {
                 $data[$key]['user_id'] = $user->id;
-                $petCareDays           = $user->petCares()->whereBetween('created_at', [$start, $end])->count() * 3;
+                $pocketDevil           = 0;
+                $petCareDays           = $user->petCares()->whereBetween('created_at', [$start, $end])->count() * 2;
                 $weight                = intval($user->points()->whereBetween('created_at', [$start, $end])->sum('point'));
 
                 if ($petCareDays != 0) {
@@ -74,11 +73,30 @@ class AssignUserBadge extends Command
                     ));
                 }
 
+                $expenses = $user->budgetExpenses()->whereMonth('created_at', $prevMonth)->sum('amount');
+                $initialBudget = $user->budget()->first();
+
+                $target = $initialBudget ? $initialBudget->target_saving : 0;
+
+                if ($target - $expenses > 500)
+                {
+                    $pocketDevil = 2;
+                    $user->notify(new UserNotification(
+                        'pages/accounts/notification',
+                        'Hey ' . ' 👋 ' . "it's your pocket devil speaking 👻 here's your bonus 2 points for saving your budget a bit.",
+                        null,
+                        'Life++',
+                        null
+                    ));
+                }
+
                 // add bonus points for pet care days
-                $data[$key]['weight']  = $weight + $petCareDays;
+                $data[$key]['weight']  = $weight + $petCareDays + $pocketDevil;
 
                 $user->current_streak = 0;
                 $user->saveQuietly();
+
+                Cache::forget('user_profile' . $user->id);
             }
 
             // retrieve the weights in an array
@@ -119,8 +137,6 @@ class AssignUserBadge extends Command
                                 'badge_id' => $i + 1,
                                 'point'    => $user['weight']
                             ]);
-
-                            Cache::forget('user_profile' . $user['user_id']);
                         }
                     }
                 }

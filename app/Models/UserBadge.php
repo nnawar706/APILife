@@ -30,12 +30,13 @@ class UserBadge extends Model
         parent::boot();
 
         static::created(function ($model) {
-            $message = $model->badge_id == 4 ? 'Congratulations! 🎉 ✨ You have become the Extravaganza Overlord this month.'
+            $message = $model->badge_id == 5 ? 'Congratulations! 🎉 ✨ You have become the '. $model->badge->name .' this month.'
                 : 'Yayy! 🎉 You have earned a new badge this month.';
 
             $model->user->notify(new UserNotification(
                 'pages/accounts/notification',
                 $message,
+                null,
                 'Badge',
                 $model->badge->image_url));
         });

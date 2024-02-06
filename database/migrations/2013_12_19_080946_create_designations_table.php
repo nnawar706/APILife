@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('designations', function (Blueprint $table) {
             $table->id();
             $table->string('name', 50)->unique()->index();
-            $table->timestamps();
         });
     }
 

@@ -14,6 +14,6 @@ class ActivityLog extends Model
 
     public function prunable()
     {
-        return static::whereMonth('created_at', '<=', Carbon::now('Asia/Dhaka')->subMonths(3));
+        return static::whereMonth('created_at', Carbon::now('Asia/Dhaka')->subMonths(2)->format('n'));
     }
 }

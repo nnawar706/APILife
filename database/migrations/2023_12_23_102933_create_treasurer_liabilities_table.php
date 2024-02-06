@@ -18,6 +18,8 @@ return new class extends Migration
             $table->float('amount');
             $table->tinyInteger('status', false, true)->default(0)->comment('1:completed');
             $table->timestamps();
+
+            $table->unique(['treasurer_id', 'user_id']);
         });
     }
 

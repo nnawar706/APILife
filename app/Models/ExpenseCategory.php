@@ -23,6 +23,7 @@ class ExpenseCategory extends Model
 
     public function scopeStatus(Builder $q)
     {
+        // filter models where status is active
         $q->where('status', '=', true);
     }
 
@@ -54,16 +55,19 @@ class ExpenseCategory extends Model
         parent::boot();
 
         static::created(function ($model) {
+            // invalidate necessary caches
             Cache::forget('expense_categories');
         });
 
         static::updated(function ($model) {
+            // invalidate necessary caches
             Cache::forget('expense_categories');
         });
 
         static::deleted(function ($model) {
+            // invalidate necessary caches
             Cache::forget('expense_categories');
-
+            // delete category image file
             deleteFile($model->icon_url);
         });
     }

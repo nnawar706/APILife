@@ -17,6 +17,7 @@ class ExpensePayerValidationRule implements ValidationRule
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         try {
+            // map user ids from the requested attribute
             $userIds = array_map(function ($item) {
                 return $item['user_id'];
             }, $value);
@@ -46,6 +47,7 @@ class ExpensePayerValidationRule implements ValidationRule
 
                 $adjustment = abs($totalPayable - $totalPaid);
 
+                // if absolute adjustment is less than 0.5, throw error
                 if ($adjustment > 0.5) {
                     $fail("Sum of expense payer's amount does not match total amount.");
                 }

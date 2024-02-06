@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Models\User;
 use App\Notifications\UserNotification;
+use Carbon\Carbon;
 use Illuminate\Console\Command;
 
 class RemindUserBudgetExceed extends Command
@@ -27,23 +28,25 @@ class RemindUserBudgetExceed extends Command
      */
     public function handle()
     {
+        // current month
+        $curMonth = Carbon::now('Asia/Dhaka')->format('n');
+
         $users = User::status()->get();
 
         // fetch sum of incomes, expenses and min. saving
         foreach ($users as $user)
         {
-            $income = $user->budgetIncomes()->sum('amount');
-            $expense = $user->budgetExpenses()->sum('amount');
+            $expense = $user->budgetExpenses()->whereMonth('created_at', $curMonth)->sum('amount');
             $budget  = $user->budget()->first();
 
             if ($budget)
             {
                 // when remaining saving is lower than min. saving amount, alert users
-                if (($income - $expense) < $budget->target_saving)
+                if ($expense >= $budget->target_saving)
                 {
                     $user->notify(new UserNotification(
                         'pages/accounts/pocket-devil',
-                        'Gentle Reminder: Your expense has exceeded your target saving amount.',
+                        'Gentle Reminder: Your current month expense has exceeded the allocated amount.',
                         null,
                         'Life++',
                         null
@@ -51,7 +54,7 @@ class RemindUserBudgetExceed extends Command
                 }
 
                 // when remaining saving is about to cross min. saving amount, alert users
-                else if (($income - $expense) <= ($budget->target_saving + 500))
+                else if (round(100 - ($expense*100/$budget->target_saving), 2) < 35)
                 {
                     $user->notify(new UserNotification(
                         'pages/accounts/pocket-devil',
