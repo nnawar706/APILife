@@ -11,9 +11,7 @@ function saveImage($image, $path, $model, $field): void
         $image->move(public_path($path), $image_name);
         $model->$field = $path . $image_name;
         $model->save();
-    } catch (Throwable $th) {
-        Log::error('save image: ' . $th->getMessage());
-    }
+    } catch (Throwable $th) {}
 }
 
 function deleteFile($filepath): void

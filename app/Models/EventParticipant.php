@@ -11,6 +11,8 @@ class EventParticipant extends Model
 {
     protected $guarded = ['id'];
 
+    protected $hidden = ['rated_at'];
+
     public $timestamps = false;
 
     protected $casts = [

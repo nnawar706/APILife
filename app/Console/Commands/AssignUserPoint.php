@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Enums\UserPointWeight;
 use App\Models\Event;
+use App\Models\EventParticipant;
 use App\Models\ExpenseBearer;
 use App\Models\ExpensePayer;
 use App\Models\User;
@@ -55,6 +56,10 @@ class AssignUserPoint extends Command
         // event data that have been completed between specified time interval
         $events = Event::where('event_status_id', '=', 4)
             ->whereBetween('updated_at', [$start, $end]);
+
+        // participant data of events that have been completed between specified time interval
+        $participantsRated = EventParticipant::whereNotNull('rated_at')
+            ->where('rated', '=', true);
 
         // expense bearer data of events that have been completed between specified time interval
         $bearers = ExpenseBearer::whereHas('expense.event', function ($q) use ($start, $end) {
@@ -149,6 +154,11 @@ class AssignUserPoint extends Command
                             UserPointWeight::getValue(UserPointWeight::POINT_12)
                         );
                 }
+
+                // event rating
+                $ratedEvents = $participantsRated->clone()->where('user_id', $user->id)->count();
+
+                $weight += $ratedEvents;
 
                 // loans lend
                 $lendLoanSum = $loanLend->clone()->where('user_id', $user->id)->credited()->sum('amount')
