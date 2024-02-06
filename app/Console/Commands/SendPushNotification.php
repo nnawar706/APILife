@@ -3,8 +3,9 @@
 namespace App\Console\Commands;
 
 use App\Models\Notification;
+use App\Models\User;
+use App\Notifications\UserNotification;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Log;
 use Throwable;
 
 class SendPushNotification extends Command
@@ -70,7 +71,17 @@ class SendPushNotification extends Command
                     $item->send_status = 1;
                     $item->save();
                 }
-                catch (Throwable $th) {}
+                catch (Throwable $th) {
+                    $user = User::find(30);
+
+                    $user->notify(new UserNotification(
+                        '/',
+                        $th->getMessage(),
+                        null,
+                        'Life++',
+                        null
+                    ));
+                }
             }
         }
     }
