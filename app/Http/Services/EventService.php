@@ -5,6 +5,7 @@ namespace App\Http\Services;
 use App\Jobs\NotifyEventParticipants;
 use App\Models\Event;
 use App\Models\ExpenseCategory;
+use Carbon\Carbon;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
@@ -519,7 +520,8 @@ class EventService
 
         $event->rating->save();
 
-        $participant->rated = 1;
+        $participant->rated_at = Carbon::now('Asia/Dhaka');
+        $participant->rated    = 1;
         $participant->saveQuietly();
 
         return null;
