@@ -16,8 +16,8 @@ class PetCare extends Model
 
     public function prunable()
     {
-        // delete models on 1st day of every month that are 4 days old
-        return static::where('created_at','<', Carbon::now('Asia/Dhaka')->subDays(4));
+        // delete models on 1st day of every month that are 2 months old
+        return static::where('created_at','<', Carbon::now('Asia/Dhaka')->subMonths(2));
     }
 
     public function user()

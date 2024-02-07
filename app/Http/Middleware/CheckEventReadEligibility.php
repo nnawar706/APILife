@@ -16,15 +16,21 @@ class CheckEventReadEligibility
      */
     public function handle(Request $request, Closure $next, $user_type): Response
     {
+        // fetch event
         $event = Event::find($request->route('id'));
 
         if ($event) {
+            // check if auth user is in the event participant list
             $argumentParticipant = $event->eventParticipants()->where('user_id', auth()->user()->id)
                 ->doesntExist();
 
+            // check if auth user is in the event guest list
             $argumentGuest = $event->eventGuests()->where('user_id', auth()->user()->id)
                 ->doesntExist();
 
+            /** if the event is private, user check type is participant but user not present in participant list
+             * or user check type is all and not present in either guest or participant list, return error
+             **/
             if (!$event->is_public &&
                 (($user_type == 'participant' && $argumentParticipant) ||
                     ($user_type == 'all' && $argumentGuest && $argumentParticipant)))
@@ -38,6 +44,7 @@ class CheckEventReadEligibility
             return $next($request);
         }
 
+        // if event not found, return error
         return response()->json([
             'status' => false,
             'error'  => 'Invalid event detected.'
