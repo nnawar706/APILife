@@ -55,16 +55,16 @@ class UserStory extends Model
                 $model->uploadedByInfo->current_streak += 1;
                 // save quietly not to trigger any update events
                 $model->uploadedByInfo->saveQuietly();
-            }
 
-            // notify all users about new story
-            dispatch(new NotifyUsers(
-                null,
-                true,
-                'pages/home',
-                $message,
-                auth()->user()
-            ));
+                // notify all users about new story of a user once a day
+                dispatch(new NotifyUsers(
+                    null,
+                    true,
+                    'pages/home',
+                    $message,
+                    auth()->user()
+                ));
+            }
         });
     }
 }

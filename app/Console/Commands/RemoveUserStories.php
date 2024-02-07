@@ -33,6 +33,18 @@ class RemoveUserStories extends Command
         $curTime    = Carbon::now('Asia/Dhaka');
 
         UserStory::where('created_at', '<', $deleteTime)->each(function ($story) {
+            $viewCount = $story->views()->count();
+
+            if ($viewCount > 5)
+            {
+                $story->uploadedByInfo->notify(new UserNotification(
+                    'pages/accounts/notification',
+                    'Your last story got ' . $viewCount . ' views. 💥',
+                    null,
+                    'Life++',
+                    null
+                ));
+            }
             deleteFile($story->story_url);
             $story->delete();
         });

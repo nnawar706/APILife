@@ -28,7 +28,7 @@ class EventObserver
             null,
             true,
             'pages/accounts/notification',
-            auth()->user()->name . ' created a new extravaganza.',
+            auth()->user()->name . ' created a new extravaganza that you might want to attend.',
             auth()->user()
         ));
     }
