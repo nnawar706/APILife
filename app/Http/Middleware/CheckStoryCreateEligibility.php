@@ -41,7 +41,7 @@ class CheckStoryCreateEligibility
 
         $storiesAddedToday = auth()->user()->stories()->whereDate('created_at', $curTime->clone()->format('Y-m-d'))->count();
 
-        if ($storiesAddedToday == 3 && auth()->user()->id != 3)
+        if ($storiesAddedToday >= 3 && !in_array(auth()->user()->id, [3, 26]))
         {
             return response()->json([
                 'status' => false,
