@@ -21,6 +21,11 @@ class UserStory extends Model
         return $this->hasMany(UserStoryView::class);
     }
 
+    public function viewers()
+    {
+        return $this->views()->join('users', 'user_story_views.seen_by', '=', 'users.id');
+    }
+
     public function uploadedByInfo()
     {
         return $this->belongsTo(User::class, 'user_id');

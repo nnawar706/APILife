@@ -21,6 +21,8 @@ class UserStoryService
             return $q->where('seen_by', '=', auth()->user()->id);
         })->with(['uploadedByInfo' => function ($q) {
             return $q->select('id','name','photo_url');
+        }])->with(['viewers' => function ($q) {
+            return $q->select('users.id','user_story_id','seen_by','name','photo_url');
         }])->latest()->get();
     }
 
