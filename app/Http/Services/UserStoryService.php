@@ -2,7 +2,9 @@
 
 namespace App\Http\Services;
 
+use App\Jobs\CompressUserStoryVideo;
 use App\Models\UserStory;
+use FFMpeg\FFMpeg;
 use Illuminate\Http\Request;
 use Intervention\Image\Facades\Image;
 
@@ -29,20 +31,41 @@ class UserStoryService
     public function storeStory(Request $request)
     {
         try {
-            $storyImage = Image::make($request->image);
+            $file = $request->file('file');
 
-            $compressedStoryImage = $storyImage->orientate()
-                ->resize(1200, 1200, function ($constraint) {
-                    $constraint->aspectRatio();
-                });
+            $extension = $file->getClientOriginalExtension();
 
-            $imageName = time() . rand(100, 9999) . '.' . $request->image->getClientOriginalExtension();
-            $compressedStoryImage->save(public_path('/images/user_stories/' . $imageName));
+            if ($extension == 'mp4')
+            {
+                $videoName = 'tmp_' . time() . rand(100, 999) . '.' . $extension;
 
-            $this->model->create([
-                'user_id' => auth()->user()->id,
-                'story_url' => '/images/user_stories/' . $imageName
+                $file->move(public_path('/videos/user_stories/'), $videoName);
+
+                $url = '/videos/user_stories/' . $videoName;
+            } else {
+                $storyImage = Image::make($file);
+
+                $compressedStoryImage = $storyImage->orientate()
+                    ->resize(1200, 1200, function ($constraint) {
+                        $constraint->aspectRatio();
+                    });
+
+                $imageName = time() . rand(100, 9999) . '.' . $extension;
+                $compressedStoryImage->save(public_path('/images/user_stories/' . $imageName));
+
+                $url = '/images/user_stories/' . $imageName;
+            }
+
+            $story = $this->model->create([
+                'user_id'   => auth()->user()->id,
+                'story_url' => $url
             ]);
+
+            if ($extension == 'mp4')
+            {
+                dispatch(new CompressUserStoryVideo($story, $extension));
+            }
+
             return null;
         } catch (\Throwable $th)
         {

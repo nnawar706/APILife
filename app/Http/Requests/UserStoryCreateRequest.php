@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\UserStoryVideoDurationRule;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
@@ -26,7 +27,15 @@ class UserStoryCreateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'image' => 'required|image|mimes:jpg,png,jpeg|max:10240'
+            'file'  => ['required','file','mimetypes:image/jpeg,image/jpg,image/png,video/mp4',
+                'max:16384', new UserStoryVideoDurationRule()]
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'max' => 'File size must not exceed 16MB.'
         ];
     }
 
