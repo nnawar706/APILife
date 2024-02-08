@@ -39,15 +39,15 @@ class CheckStoryCreateEligibility
 //            ], Response::HTTP_LOCKED);
 //        }
 
-        $storiesAddedToday = auth()->user()->stories()->whereDate('created_at', $curTime->clone()->format('Y-m-d'))->count();
-
-        if ($storiesAddedToday >= 3 && !in_array(auth()->user()->id, [3, 26]))
-        {
-            return response()->json([
-                'status' => false,
-                'error'  => 'You cannot upload more than 3 stories in one day.'
-            ], Response::HTTP_FORBIDDEN);
-        }
+//        $storiesAddedToday = auth()->user()->stories()->whereDate('created_at', $curTime->clone()->format('Y-m-d'))->count();
+//
+//        if ($storiesAddedToday >= 3 && !in_array(auth()->user()->id, [3, 26]))
+//        {
+//            return response()->json([
+//                'status' => false,
+//                'error'  => 'You cannot upload more than 3 stories in one day.'
+//            ], Response::HTTP_FORBIDDEN);
+//        }
 
         return $next($request);
     }
