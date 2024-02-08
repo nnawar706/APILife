@@ -2,12 +2,21 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\UserPointWeight;
 use App\Http\Services\SystemService;
+use App\Models\Event;
+use App\Models\EventParticipant;
+use App\Models\ExpenseBearer;
+use App\Models\ExpensePayer;
 use App\Models\User;
+use App\Models\UserLoan;
+use App\Models\UserPoint;
 use App\Notifications\UserNotification;
 use Carbon\Carbon;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\Response;
 
 class SystemController extends Controller
@@ -77,16 +86,8 @@ class SystemController extends Controller
 
     public function test(Request $request)
     {
-//        return response()->json([
-//            'threshold' => Cache::get('threshold')
-//        ]);
-
-        $startDate = Carbon::now()->startOfMonth()->subMonthsNoOverflow()->format('Y-m-d H:i:s');
-        $endDate   = Carbon::now()->subMonthsNoOverflow()->endOfMonth()->format('Y-m-d H:i:s');
-
         return response()->json([
-            'start' => $startDate,
-            'end'   => $endDate
+            'threshold' => Cache::get('threshold')
         ]);
     }
 }

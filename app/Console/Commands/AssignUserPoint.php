@@ -58,7 +58,7 @@ class AssignUserPoint extends Command
             ->whereBetween('updated_at', [$start, $end]);
 
         // participant data of events that have been completed between specified time interval
-        $participantsRated = EventParticipant::whereNotNull('rated_at')
+        $participantsRated = EventParticipant::whereBetween('rated_at', [$start, $end])
             ->where('rated', '=', true);
 
         // expense bearer data of events that have been completed between specified time interval
@@ -94,6 +94,7 @@ class AssignUserPoint extends Command
                 // added extravaganza image count
                 $addedImageCount = $user->addedImages()->whereBetween('created_at', [$start, $end])->count();
 
+                // calculate points if current streak is greater than 7
                 if ($user->current_streak > 7)
                 {
                     // added story image count
@@ -207,7 +208,7 @@ class AssignUserPoint extends Command
                 {
                     $points->clone()->create([
                         'user_id' => $user->id,
-                        'point' => $weight
+                        'point'   => $weight
                     ]);
                 }
             }

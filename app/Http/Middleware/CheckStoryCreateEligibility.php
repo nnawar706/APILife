@@ -27,7 +27,7 @@ class CheckStoryCreateEligibility
 //        {
 //            return response()->json([
 //                'status' => false,
-//                'error'  => 'Currently in office? Try to concentrate on your pending works.'
+//                'error'  => 'Currently at office? Try to concentrate on your pending works.'
 //            ], Response::HTTP_LOCKED);
 //        }
 //

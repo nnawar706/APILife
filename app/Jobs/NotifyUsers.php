@@ -33,7 +33,7 @@ class NotifyUsers implements ShouldQueue
      */
     public function handle(): void
     {
-        // if allUser flag id true fetch all active users
+        // if allUser flag is true fetch all active users
         if ($this->allUser)
         {
             $users = User::status()->get();
@@ -44,21 +44,18 @@ class NotifyUsers implements ShouldQueue
             $users = User::whereIn('id', $this->users)->get();
         }
 
-        if (count($users) != 0)
+        foreach ($users as $item)
         {
-            foreach ($users as $item)
+            // send notification if user is not auth user
+            if (!$this->user || ($this->user->id != $item->id))
             {
-                // send notification if user is not auth user
-                if ($this->user && $this->user->id != $item->id)
-                {
-                    $item->notify(new UserNotification(
-                        $this->link,
-                        $this->message,
-                        $this->user ? $this->user->id : null,
-                        $this->user ? $this->user->name : 'Life++',
-                        $this->user ? $this->user->photo_url : null
-                    ));
-                }
+                $item->notify(new UserNotification(
+                    $this->link,
+                    $this->message,
+                    $this->user ? $this->user->id : null,
+                    $this->user ? $this->user->name : 'Life++',
+                    $this->user ? $this->user->photo_url : null
+                ));
             }
         }
     }
