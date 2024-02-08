@@ -4,7 +4,6 @@ namespace App\Http\Services;
 
 use App\Jobs\CompressUserStoryVideo;
 use App\Models\UserStory;
-use FFMpeg\FFMpeg;
 use Illuminate\Http\Request;
 use Intervention\Image\Facades\Image;
 
