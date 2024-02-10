@@ -30,13 +30,16 @@ class TreasurerCreateRequest extends FormRequest
         return [
             'user_id' => ['required','integer',
                         function($attr, $val, $fail) {
+                            // fetch active user with provided user_id
                             $user = User::status()->find($val);
 
+                            // if not found, show error
                             if (!$user)
                             {
                                 $fail('No active user found.');
                             }
                         }],
+            // deadline must be a date of format Y-m-d and after today
             'deadline' => 'required|date|date_format:Y-m-d|after:today',
             'events'   => ['required','array','min:1','distinct',
                             function($attr, $val, $fail) {

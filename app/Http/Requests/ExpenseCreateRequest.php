@@ -32,8 +32,10 @@ class ExpenseCreateRequest extends FormRequest
         return [
             'expense_category_id' => ['required',
                                         function($attr, $val, $fail) {
+                                            // fetch active category with provided id
                                             $cat = ExpenseCategory::status()->find($val);
 
+                                            // if not found, show error
                                             if (!$cat)
                                             {
                                                 $fail('No active expense category found.');
@@ -41,23 +43,34 @@ class ExpenseCreateRequest extends FormRequest
                                         }],
             'event_id'            => ['required',
                                         function($attr, $val, $fail) {
+                                            // fetch event with provided id
                                             $event = Event::find($val);
 
+                                            // if not found, show error
                                             if (!$event)
                                             {
                                                 $fail('Invalid extravaganza detected.');
                                             }
+                                            // check this only when id is not present in the route, meaning it is expense create route
+                                            // if event is not ongoing, show error
                                             else if ($event->event_status_id != 1 && !$this->route('id'))
                                             {
                                                 $fail('Unable to add expenses to extravaganzas that are not ongoing.');
                                             }
                                         }],
+            // title must be a string of maximum length 150
             'title'               => 'required|string|max:150',
+            // unit cost must be a number with minimum value of 1
             'unit_cost'           => 'required|numeric|min:1',
+            // quantity must be a number with minimum value of 1
             'quantity'            => 'required|integer|min:1',
+            // remarks must be a string of maximum length 150
             'remarks'             => 'nullable|string|max:300',
+            // bearers must be an array of minimum length 1
             'bearers'             => ['required','array','min:1', new ExpenseBearerValidationRule()],
+            // if payers present, it must be an array of minimum length 1
             'payers'              => ['sometimes','array','min:1', new ExpensePayerValidationRule()],
+            // each payer object has amount of minimum value 1
             'payers.*.amount'     => 'required|numeric|min:1'
         ];
     }

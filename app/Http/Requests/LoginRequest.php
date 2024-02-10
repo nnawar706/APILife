@@ -28,15 +28,19 @@ class LoginRequest extends FormRequest
     public function rules(): array
     {
         return [
+            // phone no must be a valid bd number
             'phone_no' => ['required', 'regex:/^(?:\+88|88)?(01[3-9]\d{8})$/',
                             function($attr, $val, $fail) {
+                                // fetch active user with provided phone no
                                 $user = User::status()->where('phone_no', $val)->first();
 
+                                // if not found, show error
                                 if (!$user)
                                 {
                                     $fail('No active account found with given phone number.');
                                 }
                             }],
+            // password must be a string of minimum length 6
             'password' => 'required|string|min:6'
         ];
     }

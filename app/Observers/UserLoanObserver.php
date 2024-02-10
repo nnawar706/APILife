@@ -39,7 +39,7 @@ class UserLoanObserver
             null,
             true,
             'pages/accounts/notification',
-            'Someone initiated a loan of type ' . $type . '👀',
+            'Someone initiated a loan of type ' . $type . ' 👀',
             null,
         ));
     }

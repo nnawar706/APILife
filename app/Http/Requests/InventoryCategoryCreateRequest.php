@@ -26,7 +26,13 @@ class InventoryCategoryCreateRequest extends FormRequest
     public function rules(): array
     {
         return [
+            // name must be a string of maximum length 100
+            // name must be unique in inventory_categories model
+            // if id is present in the route, meaning it is the update route
+            // when id is present check uniqueness among inventory_categories models except where id is route's id
             'name' => 'required|string|max:100|unique:inventory_categories,name,'.$this->route('id'),
+            // icon must be an image of type either jpeg, png or jpg
+            // icon image must be square and maximum of 2MB
             'icon' => ['image', 'mimes:jpeg,png,jpg','max:2048']
         ];
     }
