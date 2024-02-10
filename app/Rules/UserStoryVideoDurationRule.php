@@ -21,7 +21,7 @@ class UserStoryVideoDurationRule implements ValidationRule
             try {
                 $response = exec("ffprobe");
 
-                $fail($response);
+                $fail('execution returned: ' . $response);
 
 //                $ffmpeg = FFMpeg::create([
 //                    'ffmpeg.binaries'  => 'ffmpeg',
