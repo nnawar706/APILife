@@ -34,7 +34,7 @@ class UserStoryService
 
             $extension = $file->getClientOriginalExtension();
 
-            if ($extension == 'mp4')
+            if (in_array($extension, ['mp4','mov']))
             {
                 $videoName = 'tmp_' . time() . rand(100, 999) . '.' . $extension;
 
@@ -60,7 +60,7 @@ class UserStoryService
                 'story_url' => $url
             ]);
 
-            if ($extension == 'mp4')
+            if (in_array($extension, ['mp4','mov']))
             {
                 dispatch(new CompressUserStoryVideo($story, $extension));
             }

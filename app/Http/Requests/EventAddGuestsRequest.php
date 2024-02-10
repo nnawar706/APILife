@@ -27,16 +27,21 @@ class EventAddGuestsRequest extends FormRequest
     public function rules(): array
     {
         return [
+            // values of users array must be integer and unique
             'users.*'  => 'required|integer|distinct',
-            'users'    => ['required','array',
+            // users must be an array of minimum length 1
+            'users'    => ['required','array','min:1',
                 function($attr, $val, $fail) {
+                    // fetch active users count whose ids are provided
                     $users = User::whereIn('id', $val)->status()->count();
 
+                    // if count does not match provided users array's length, return error
                     if ($users !== count($val))
                     {
                         $fail('Some of the participants are not active.');
                     }
 
+                    // check if provided users are present in this event's participant list
                     else if (EventParticipant::where('event_id', $this->route('id'))
                             ->whereIn('user_id', $val)->exists()) {
                         $fail('Participants cannot be added to the extravaganza guest list.');

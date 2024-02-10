@@ -27,17 +27,7 @@ class UserStoryCreateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'file'  => ['required','file','mimetypes:image/jpeg,image/jpg,image/png,video/mp4',
-                'max:16384',
-                new UserStoryVideoDurationRule()
-            ]
-        ];
-    }
-
-    public function messages()
-    {
-        return [
-            'max' => 'File size must not exceed 16MB.'
+            'file'  => ['required','file', 'max:16384', new UserStoryVideoDurationRule()]
         ];
     }
 

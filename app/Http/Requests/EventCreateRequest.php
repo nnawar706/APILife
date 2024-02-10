@@ -31,8 +31,10 @@ class EventCreateRequest extends FormRequest
         return [
             'event_category_id' => ['required',
                                     function($attr, $val, $fail) {
+                                        // fetch active category with provided id
                                         $cat = EventCategory::status()->find($val);
 
+                                        // if not found, show error
                                         if (!$cat)
                                         {
                                             $fail('No active extravaganza category found.');
@@ -40,23 +42,34 @@ class EventCreateRequest extends FormRequest
                                     }],
             'lead_user_id'      => ['required','integer',
                                     function($attr, $val, $fail) {
+                                        // fetch active user with provided id
                                         $user = User::status()->find($val);
 
+                                        // if no user found, show error
                                         if (!$user)
                                         {
                                             $fail('No active user found.');
                                         }
                                     }],
+            // title must be a string of maximum length 150
             'title'             => 'required|string|max:150',
+            // detail must be a string of maximum length 490
             'detail'            => 'required|string|max:490',
+            // from date must have a format of Y-m-d H:i
             'from_date'         => 'required|date_format:Y-m-d H:i',
+            // to date is not required, since event can happen only one day
+            // if present, the date must be after from date and have a format of Y-m-d H:i
             'to_date'           => 'nullable|date_format:Y-m-d H:i|after:from_date',
+            // not required, but if present then must be a string of maximum length 500
             'remarks'           => 'nullable|string|max:500',
+            // must be an array of minimum length 3, meaning an event must have at least 3 participants
             'participants'      => ['required','array','min:3',
                                     function($attr, $val, $fail) {
+                                        // fetch active users count with provided ids
                                         $users = User::whereIn('id', $val)
                                             ->status()->count();
 
+                                        // if count does not match provided users array's length, return error
                                         if (count(array_unique($val)) != count($val))
                                         {
                                             $fail('Duplicate participants detected.');

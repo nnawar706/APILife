@@ -65,7 +65,7 @@ class UserStory extends Model
                 dispatch(new NotifyUsers(
                     null,
                     true,
-                    'pages/home',
+                    'pages/accounts/notification',
                     $message,
                     auth()->user()
                 ));

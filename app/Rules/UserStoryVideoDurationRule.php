@@ -3,7 +3,6 @@
 namespace App\Rules;
 
 use Closure;
-use FFMpeg\FFMpeg;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Owenoj\LaravelGetId3\GetId3;
 
@@ -16,14 +15,22 @@ class UserStoryVideoDurationRule implements ValidationRule
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
+        // get file extension
         $extension = $value->getClientOriginalExtension();
 
-        if ($extension == 'mp4') {
+        if (!in_array($extension, ['jpeg','jpg','png','mp4','mov']))
+        {
+            $fail('Unsupported mime type detected.');
+        }
+
+        // if file mime is .mp4, check video duration
+        if (in_array($extension, ['mp4','mov'])) {
             try {
                 $video = new GetId3($value);
 
                 $duration = $video->getPlaytimeSeconds();
 
+                // if duration is greater than 30 secs, return error
                 if ($duration > 30) {
                     $fail('Uploaded video must be less than 30 seconds in duration.');
                 }

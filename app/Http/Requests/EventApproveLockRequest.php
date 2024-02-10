@@ -27,19 +27,24 @@ class EventApproveLockRequest extends FormRequest
     public function rules(): array
     {
         return [
+            // provided event id must be an integer
             'event_id' => ['required', 'integer',
                             function($attr, $val, $fail) {
+                                // fetch event
                                 $event = Event::find($val);
 
+                                // if event not found, show error
                                 if (!$event)
                                 {
                                     $fail('Invalid extravaganza detected.');
                                 }
                                 else {
+                                    // if event's status is not locked, show error (event_status_id = 2 / locked)
                                     if ($event->event_status_id != 2)
                                     {
                                         $fail('Unable to approve extravaganza until it has been locked.');
                                     }
+                                    // check if auth user belongs to the participant list
                                     else if ($event->eventParticipants()
                                         ->where('user_id', auth()->user()->id)
                                         ->doesntExist())

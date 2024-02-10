@@ -26,7 +26,10 @@ class EventAddImagesRequest extends FormRequest
     public function rules(): array
     {
         return [
+            // images must be an array of minimum length 1
             'images'   => 'required|array|min:1',
+            // all images must be of type either jpg, png or jpeg
+            // file size limit is 10MB
             'images.*' => 'required|image|mimes:jpg,png,jpeg|max:10240'
         ];
     }
