@@ -21,7 +21,7 @@ class UserStoryVideoDurationRule implements ValidationRule
         if ($extension == 'mp4') {
             try {
                 $ffmpeg = FFMpeg::create([
-//                    'ffmpeg.binaries'  => exec('which ffmpeg'),
+                    'ffmpeg.binaries'  => 'ffmpeg',
                     'ffprobe.binaries' => '/tmp/ffprobe',
                 ]);
 
