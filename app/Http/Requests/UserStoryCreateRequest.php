@@ -29,7 +29,7 @@ class UserStoryCreateRequest extends FormRequest
         return [
             'file'  => ['required','file','mimetypes:image/jpeg,image/jpg,image/png,video/mp4',
                 'max:16384',
-//                new UserStoryVideoDurationRule()
+                new UserStoryVideoDurationRule()
             ]
         ];
     }
