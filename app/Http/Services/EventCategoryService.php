@@ -28,7 +28,7 @@ class EventCategoryService
             'name' => $request->name
         ]);
 
-        saveImage($request->file('icon'), '/images/event_categories_icons/', $category, 'icon_url');
+        saveImage($request->file('icon'), '/images/event_categories_icons/', $category, 'icon_url', false);
     }
 
     public function updateInfo(Request $request, $id): bool
@@ -44,7 +44,7 @@ class EventCategoryService
         {
             deleteFile($category->icon_url);
 
-            saveImage($request->file('icon'), '/images/event_categories_icons/', $category, 'icon_url');
+            saveImage($request->file('icon'), '/images/event_categories_icons/', $category, 'icon_url', false);
         }
 
         // return if any changes were made to the model or not

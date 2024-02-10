@@ -40,7 +40,7 @@ class UserService
         ]);
 
         // store profile image to the /users folder
-        saveImage(request()->file('photo'), '/images/users/', $user, 'photo_url');
+        saveImage(request()->file('photo'), '/images/users/', $user, 'photo_url', true);
     }
 
     public function updateInfo(Request $request): bool
@@ -58,7 +58,7 @@ class UserService
         {
             deleteFile($user->photo_url);
 
-            saveImage($request->file('photo'), '/images/users/', $user, 'photo_url');
+            saveImage($request->file('photo'), '/images/users/', $user, 'photo_url', true);
         }
 
         return $user->wasChanged();

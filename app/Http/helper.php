@@ -2,13 +2,28 @@
 
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Log;
+use Intervention\Image\Facades\Image;
 use Pusher\PushNotifications\PushNotifications;
 
-function saveImage($image, $path, $model, $field): void
+function saveImage($image, $path, $model, $field, $compress): void
 {
     try {
+        $img = Image::make($image);
+
         $image_name = time() . rand(100, 9999) . '.' . $image->getClientOriginalExtension();
-        $image->move(public_path($path), $image_name);
+
+        if ($compress)
+        {
+            $compressedImage = $img->orientate()
+                ->resize(1200, 1200, function ($constraint) {
+                    $constraint->aspectRatio();
+                });
+
+            $compressedImage->save(public_path($path . $image_name));
+        } else {
+            $image->move(public_path($path), $image_name);
+        }
+
         $model->$field = $path . $image_name;
         $model->save();
     } catch (Throwable $th) {}

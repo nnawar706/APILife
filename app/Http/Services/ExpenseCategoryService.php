@@ -26,7 +26,7 @@ class ExpenseCategoryService
             'name' => $request->name
         ]);
 
-        saveImage($request->file('icon'), '/images/expense_categories_icons/', $category, 'icon_url');
+        saveImage($request->file('icon'), '/images/expense_categories_icons/', $category, 'icon_url', false);
     }
 
     public function updateInfo(Request $request, $id)
@@ -41,7 +41,7 @@ class ExpenseCategoryService
         {
             deleteFile($category->icon_url);
 
-            saveImage($request->file('icon'), '/images/expense_categories_icons/', $category, 'icon_url');
+            saveImage($request->file('icon'), '/images/expense_categories_icons/', $category, 'icon_url', false);
         }
 
         return $category->wasChanged();
