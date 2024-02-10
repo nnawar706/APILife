@@ -20,8 +20,8 @@ class UserStoryVideoDurationRule implements ValidationRule
         if ($extension == 'mp4') {
             try {
                 $ffmpeg = FFMpeg::create([
-                    'ffmpeg.binaries'  => 'ffmpeg',
-                    'ffprobe.binaries' => 'ffprobe',
+                    'ffmpeg.binaries'  => exec('which ffmpeg'),
+                    'ffprobe.binaries' => exec('which ffprobe'),
                     'timeout'          => 3600, // the timeout for the underlying process
                     'ffmpeg.threads'   => 12,   // the number of threads that FFMpeg should use
                 ]);
