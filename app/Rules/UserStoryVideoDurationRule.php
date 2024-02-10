@@ -19,17 +19,21 @@ class UserStoryVideoDurationRule implements ValidationRule
 
         if ($extension == 'mp4') {
             try {
-                $ffmpeg = FFMpeg::create([
-                    'ffmpeg.binaries'  => 'ffmpeg',
-                    'ffprobe.binaries' => 'ffprobe'
-                ]);
+                $response = exec("ffprobe");
 
-                $video = $ffmpeg->open($value->getRealPath());
-                $duration = $video->getStreams()->first()->get('duration');
+                $fail($response);
 
-                if ($duration > 30) {
-                    $fail('Uploaded video must be less than 30 seconds in duration.');
-                }
+//                $ffmpeg = FFMpeg::create([
+//                    'ffmpeg.binaries'  => 'ffmpeg',
+//                    'ffprobe.binaries' => 'ffprobe'
+//                ]);
+//
+//                $video = $ffmpeg->open($value->getRealPath());
+//                $duration = $video->getStreams()->first()->get('duration');
+//
+//                if ($duration > 30) {
+//                    $fail('Uploaded video must be less than 30 seconds in duration.');
+//                }
             } catch (\Throwable $th) {
                 $fail($th->getMessage());
             }
