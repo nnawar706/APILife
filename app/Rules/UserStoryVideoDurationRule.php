@@ -19,7 +19,7 @@ class UserStoryVideoDurationRule implements ValidationRule
 
         if ($extension == 'mp4') {
             try {
-                $response = exec("ffprobe");
+                $response = passthru("ffprobe");
 
                 $fail('execution returned: ' . $response);
 
