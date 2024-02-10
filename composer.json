@@ -11,6 +11,7 @@
         "laravel/framework": "^10.10",
         "laravel/sanctum": "^3.3",
         "laravel/tinker": "^2.8",
+        "owen-oj/laravel-getid3": "^2.2",
         "pbmedia/laravel-ffmpeg": "^8.4",
         "pusher/pusher-push-notifications": "^2.0",
         "spatie/laravel-activitylog": "^4.7",
