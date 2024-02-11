@@ -41,7 +41,7 @@ class UserStoryService
 
             $duration = 0;
 
-            $extension = $file->getClientOriginalExtension();
+            $extension = strtolower($file->getClientOriginalExtension());
 
             if (!in_array($extension, ['jpeg','jpg','png','gif']))
             {

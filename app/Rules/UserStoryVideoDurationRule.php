@@ -16,7 +16,7 @@ class UserStoryVideoDurationRule implements ValidationRule
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
         // get file extension
-        $extension = $value->getClientOriginalExtension();
+        $extension = strtolower($value->getClientOriginalExtension());
 
         if (!in_array($extension, ['jpeg','jpg','png','gif','mp4','mov','avi','wmv','webm','flv']))
         {
