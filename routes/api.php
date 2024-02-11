@@ -32,6 +32,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('notifications/all', 'getNotifications');
         Route::get('notifications/mark_as_read', 'readNotifications');
         Route::get('unread_notifications_count', 'getNotificationCount');
+        Route::get('unseen_story_count', 'getUnseenStoryCount');
         Route::get('pusher/beams_auth', 'authenticatePusher');
         Route::get('refresh', 'refreshUser');
         Route::get('logout', 'logout');
