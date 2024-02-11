@@ -96,13 +96,15 @@ class UserStoryService
         }
     }
 
-    public function markStoryAsSeen($id): void
+    public function markStoryAsSeen($id): bool
     {
         $story = $this->model->findOrFail($id);
 
-        $story->views()->firstOrCreate([
+        $view = $story->views()->firstOrCreate([
             'seen_by' => auth()->user()->id
         ]);
+
+        return $view->wasRecentlyCreated;
     }
 
     public function getAuthUnseenStoryCount()

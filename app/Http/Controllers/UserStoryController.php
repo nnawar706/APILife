@@ -46,10 +46,10 @@ class UserStoryController extends Controller
 
     public function markSeen($id)
     {
-        $this->service->markStoryAsSeen($id);
+        $response = $this->service->markStoryAsSeen($id);
 
         return response()->json([
             'status' => true
-        ], Response::HTTP_OK);
+        ], $response ? Response::HTTP_OK : Response::HTTP_NOT_MODIFIED);
     }
 }
