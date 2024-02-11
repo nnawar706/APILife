@@ -15,7 +15,7 @@ function saveImage($image, $path, $model, $field, $compress): void
         if ($compress)
         {
             $compressedImage = $img->orientate()
-                ->resize(1200, 1200, function ($constraint) {
+                ->resize(1920, 1080, function ($constraint) {
                     $constraint->aspectRatio();
                 });
 

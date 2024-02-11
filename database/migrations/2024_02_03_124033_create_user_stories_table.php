@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->string('story_url', 100)->nullable();
+            $table->float('duration')->default(5.00);
             $table->timestamps();
 
             $table->softDeletes();

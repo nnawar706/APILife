@@ -18,20 +18,20 @@ class UserStoryVideoDurationRule implements ValidationRule
         // get file extension
         $extension = $value->getClientOriginalExtension();
 
-        if (!in_array($extension, ['jpeg','jpg','png','mp4','mov']))
+        if (!in_array($extension, ['jpeg','jpg','png','gif','mp4','mov','avi','wmv','webm','flv']))
         {
             $fail('Unsupported mime type detected.');
         }
 
         // if file mime is .mp4, check video duration
-        if (in_array($extension, ['mp4','mov'])) {
+        if (!in_array($extension, ['jpeg','jpg','png','gif'])) {
             try {
                 $video = new GetId3($value);
 
                 $duration = $video->getPlaytimeSeconds();
 
                 // if duration is greater than 30 secs, return error
-                if ($duration > 30) {
+                if ($duration > 300) {
                     $fail('Uploaded video must be less than 30 seconds in duration.');
                 }
             } catch (\Throwable $th) {

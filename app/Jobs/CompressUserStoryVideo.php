@@ -14,15 +14,14 @@ class CompressUserStoryVideo implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public $story, $extension;
+    public $story;
 
     /**
      * Create a new job instance.
      */
-    public function __construct(UserStory $story, $extension)
+    public function __construct(UserStory $story)
     {
         $this->story     = $story;
-        $this->extension = $extension;
     }
 
     /**
@@ -34,14 +33,12 @@ class CompressUserStoryVideo implements ShouldQueue
         $inputVideoPath = public_path($this->story->story_url);
 
         // compressed video name
-        $videoName = time() . rand(100, 9999) . '.' . $this->extension;
+        $videoName = time() . rand(100, 9999) . '.mp4';
 
         // compressed video file path
         $outputVideoPath = public_path('/videos/user_stories/' . $videoName);
 
-        // command to compress original video file and save it to generated file path
-        $ffmpegCommand = "ffmpeg -i $inputVideoPath -vf scale=1280:-1 -c:v libx264 -preset slow -crf 24 $outputVideoPath";
-
+        $ffmpegCommand = "ffmpeg -i $inputVideoPath -c:v libx264 -c:a aac -vf scale=1280:-2 -movflags +faststart $outputVideoPath";
         // execute the compression command
         exec($ffmpegCommand);
 

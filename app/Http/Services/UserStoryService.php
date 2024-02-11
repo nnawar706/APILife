@@ -6,6 +6,7 @@ use App\Jobs\CompressUserStoryVideo;
 use App\Models\UserStory;
 use Illuminate\Http\Request;
 use Intervention\Image\Facades\Image;
+use Owenoj\LaravelGetId3\GetId3;
 
 class UserStoryService
 {
@@ -32,16 +33,29 @@ class UserStoryService
         try {
             $file = $request->file('file');
 
+            $duration = 0;
+
             $extension = $file->getClientOriginalExtension();
 
-            if (in_array($extension, ['mp4','mov']))
+            if (!in_array($extension, ['jpeg','jpg','png','gif']))
             {
+                $video = new GetId3($file);
+
+                $duration = $video->getPlaytimeSeconds();
+
                 $videoName = 'tmp_' . time() . rand(100, 999) . '.' . $extension;
 
                 $file->move(public_path('/videos/user_stories/'), $videoName);
 
                 $url = '/videos/user_stories/' . $videoName;
-            } else {
+            }
+            else if ($extension == 'gif') {
+                $imageName = time() . rand(100, 9999) . '.' . $extension;
+                $file->move(public_path('/images/user_stories/'), $imageName);
+
+                $url = '/images/user_stories/' . $imageName;
+            }
+            else {
                 $storyImage = Image::make($file);
 
                 $compressedStoryImage = $storyImage->orientate()
@@ -60,9 +74,12 @@ class UserStoryService
                 'story_url' => $url
             ]);
 
-            if (in_array($extension, ['mp4','mov']))
+            if (!in_array($extension, ['jpeg','jpg','png','gif']))
             {
-                dispatch(new CompressUserStoryVideo($story, $extension));
+                $story->duration = $duration;
+                $story->saveQuietly();
+
+                dispatch(new CompressUserStoryVideo($story));
             }
 
             return null;
