@@ -27,14 +27,14 @@ class UserStoryCreateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'file'  => ['required','file', 'max:51200', new UserStoryVideoDurationRule()]
+            'file'  => ['required','file', 'max:102400', new UserStoryVideoDurationRule()]
         ];
     }
 
     public function messages()
     {
         return [
-            'file.max' => 'File size must not exceed 50MB',
+            'file.max' => 'File size must not exceed 100MB',
         ];
     }
 
