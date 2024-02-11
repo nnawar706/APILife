@@ -31,7 +31,7 @@ class UserStoryVideoDurationRule implements ValidationRule
                 $duration = $video->getPlaytimeSeconds();
 
                 // if duration is greater than 30 secs, return error
-                if ($duration > 300) {
+                if ($duration > 30) {
                     $fail('Uploaded video must be less than 30 seconds in duration.');
                 }
             } catch (\Throwable $th) {
