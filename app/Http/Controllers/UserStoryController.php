@@ -18,10 +18,12 @@ class UserStoryController extends Controller
     public function index()
     {
         $data = $this->service->getAllUnseenStories();
+        $unseen_count = $this->service->getAuthUnseenStoryCount();
 
         return response()->json([
-            'status' => true,
-            'data'   => $data
+            'status'             => true,
+            'data'               => $data,
+            'unseen_story_count' => $unseen_count
         ], count($data) == 0 ? Response::HTTP_NO_CONTENT : Response::HTTP_OK);
     }
 
