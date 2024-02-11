@@ -53,7 +53,8 @@ class TreasurerService
                 return $q->where('user_id', auth()->user()->id);
             })
             ->with('treasurer','events.event')
-            ->latest()->get();
+            ->orderBy('completion_status')
+            ->orderBy('deadline')->get();
 
         $response = [];
 

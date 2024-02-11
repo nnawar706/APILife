@@ -65,12 +65,12 @@ class UserStoryService
             else {
                 $storyImage = Image::make($file);
 
-                $compressedStoryImage = $storyImage->orientate()
+                $compressedStoryImage = $storyImage->encode('jpg')->orientate()
                     ->resize(1200, 1200, function ($constraint) {
                         $constraint->aspectRatio();
                     });
 
-                $imageName = time() . rand(100, 9999) . '.' . $extension;
+                $imageName = time() . rand(100, 9999) . '.jpg';
                 $compressedStoryImage->save(public_path('/images/user_stories/' . $imageName));
 
                 $url = '/images/user_stories/' . $imageName;
