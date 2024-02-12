@@ -2,14 +2,15 @@
 
 namespace App\Http\Services;
 
-use App\Jobs\NotifyEventParticipants;
-use App\Models\Event;
-use App\Models\ExpenseCategory;
 use Carbon\Carbon;
-use Illuminate\Database\QueryException;
+use App\Models\Event;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
+use App\Models\ExpenseCategory;
 use Illuminate\Support\Facades\DB;
+use App\Jobs\NotifyEventParticipants;
+use Illuminate\Support\Facades\Cache;
+use Intervention\Image\Facades\Image;
+use Illuminate\Database\QueryException;
 
 class EventService
 {
@@ -38,13 +39,16 @@ class EventService
 
             $participants = $request->participants;
 
+            // include auth user in the requested participant list if not present
             if(!in_array(auth()->user()->id, $participants))
             {
                 $participants[] = auth()->user()->id;
             }
 
+            // attach participants to newly created extravaganza
             $event->participants()->sync($participants);
 
+            // add designation based grading entries
             foreach ($request->designation_gradings as $item)
             {
                 $event->designationGradings()->create([
@@ -55,6 +59,7 @@ class EventService
 
             DB::commit();
 
+            // notify all participants and lead about new extravaganza
             dispatch(new NotifyEventParticipants(
                 $event,
                 auth()->user(),
@@ -69,6 +74,7 @@ class EventService
         {
             DB::rollback();
 
+            // return error, if any
             return $ex->getMessage();
         }
     }
@@ -77,6 +83,7 @@ class EventService
     {
         $event = $this->model->findOrFail($id);
 
+        // save extravaganza lead
         $lead_id = $event->lead_user_id;
 
         DB::beginTransaction();
@@ -95,6 +102,7 @@ class EventService
 
             foreach ($request->designation_gradings as $item)
             {
+                // update each designation based grading
                 $event->designationGradings()->updateOrCreate([
                     'designation_id' => $item['designation_id']
                 ], [
@@ -104,11 +112,13 @@ class EventService
 
             DB::commit();
 
+            // notify changes to participants
             dispatch(new NotifyEventParticipants(
                 $event,
                 auth()->user(),
                 'pages/update-vaganza/'.$event->id,
                 auth()->user()->name . ' updated an extravaganza information.',
+                // notify to lead only if lead user has changed
                 $lead_id != $event->lead_user_id,
                 false
             ));
@@ -275,42 +285,62 @@ class EventService
 
     public function getAllEvents(Request $request)
     {
-        return $this->model->latest()
+        return $this->model
+            // when request has a query parameter named status_id
+            // value of status_id can only be 3
             ->when($request->has('status_id'), function ($q) use ($request) {
+                // fetch those that has a status of approved
                 return $q->where('event_status_id', $request->status_id)
+                    // fetch those in which auth user has participated
                     ->where(function ($q) {
                         $q->whereHas('eventParticipants', function ($q1) {
                             return $q1->where('user_id', auth()->user()->id);
                         });
                     })
+                    // fetch those that has not been treasured yet
                     ->whereDoesntHave('treasurer');
             })
+            // when no query parameter is present
             ->when(!$request->has('status_id'), function ($q) use ($request) {
+                // fetch public extravaganzas
                 return $q->where('is_public', '=', 1)
+                    // also fetch those where auth user has participated
                     ->orWhere(function ($q) {
                         $q->whereHas('eventParticipants', function ($q1) {
                             return $q1->where('user_id', auth()->user()->id);
                         });
                     });
             })
+            // fetch lead, category and rating
             ->with('lead','category','rating')
             ->with(['participants' => function($q) {
+                // fetch only id, name & photo of participants
                 return $q->select('users.id','name','photo_url');
             }])
             ->with(['eventParticipants' => function($q) {
+                // fetch only the row where auth user is present (to check if rated or not)
                 return $q->where('user_id', auth()->user()->id);
             }])
             ->with(['guests' => function($q) {
+                // fetch only id, name & photo of guests
                 return $q->select('users.id','name','photo_url');
-            }])->get();
+            }])
+            // ongoing extravaganzas will show at first, then locked & approved, and so on
+            ->orderBy('event_status_id')
+            // extravaganzas that will occur early, will show first
+            ->latest('from_date')->get();
     }
 
     public function getParticipantBasedEvents()
     {
-        return $this->model->latest()
+        return $this->model
+            // extravaganzas that will occur early, will show first
+            ->latest('from_date')
             ->whereHas('eventParticipants', function ($q) {
+                // fetch in which auth user has participated
                 return $q->where('user_id', auth()->user()->id);
             })->orWhere(function ($q) {
+                // also fetch those where auth user was guest
                 return $q->whereHas('eventGuests', function ($q1) {
                     return $q1->where('user_id', auth()->user()->id);
                 });
@@ -320,18 +350,25 @@ class EventService
     public function getPendingEvents()
     {
         return $this->model
+            // fetch extravaganzas that are locked
             ->where('event_status_id', '=', 2)
             ->whereHas('eventParticipants', function ($q) {
+                // fetch those which auth user has not approved
                 return $q->where('user_id', auth()->user()->id)
                     ->where('approval_status', 0);
             })
-            ->with('lead')->get();
+            // fetch lead
+            ->with('lead')
+            // extravaganzas that has occurred early, will show first
+            ->latest('from_date')
+            ->get();
     }
 
     public function removeEventParticipant($user_id, $id): bool
     {
         $event = $this->model->findOrFail($id);
 
+        //
         $participant = $event->addParticipants()->where('user_id', $user_id)->first();
 
         if ($participant)
@@ -525,5 +562,75 @@ class EventService
         $participant->saveQuietly();
 
         return null;
+    }
+
+    public function storeEventImages(Request $request, $id)
+    {
+        $event = $this->model->findOrFail($id);
+        $error = null;
+
+        foreach ($request->images as $image) {
+            try {
+                $img1 = Image::make($image);
+                $img2 = Image::make($image);
+
+                $compressedImage = $img1->orientate()
+                    ->resize(1500, 1500, function ($constraint) {
+                        $constraint->aspectRatio();
+                    });
+
+                $height = $compressedImage->height();
+                $width = $compressedImage->width();
+
+                $thumbnailImage = $img2->orientate()
+                    ->resize(300, 300, function ($constraint) {
+                        $constraint->aspectRatio();
+                    });
+
+                $image_name_c = time() . rand(100, 9999) . '.' . $image->getClientOriginalExtension();
+                $compressedImage->save(public_path('/images/events/' . $image_name_c));
+
+                $image_name_t = 'thumbnail-' . time() . rand(100, 9999) . '.' . $image->getClientOriginalExtension();
+                $thumbnailImage->save(public_path('/images/events/' . $image_name_t));
+
+                $event->images()->create([
+                    'image_url' => '/images/events/' . $image_name_c,
+                    'thumbnail_url' => '/images/events/' . $image_name_t,
+                    'width' => $width,
+                    'height' => $height
+                ]);
+            }  catch (\Throwable $th)
+            {
+                $error = $th->getMessage();
+            }
+        }
+
+        Cache::forget('event_images'.$id);
+
+        dispatch(new NotifyEventParticipants(
+            $event,
+            auth()->user(),
+            'pages/random-snaps',
+            auth()->user()->name . ' shared some memories of ' . $event->title . '. 🌸',
+            false,
+            true
+        ));
+
+        return $error;
+    }
+
+    public function removeEventImage($id, $image_id): bool
+    {
+        $event = $this->model->findOrFail($id);
+
+        $image = $event->images()->where('id', $image_id)->first();
+
+        if ($image) {
+            $image->delete();
+
+            return true;
+        }
+
+        return false;
     }
 }

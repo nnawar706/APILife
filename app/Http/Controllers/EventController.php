@@ -2,19 +2,20 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\EventAddGuestsRequest;
-use App\Http\Requests\EventAddParticipantsRequest;
-use App\Http\Requests\EventApproveLockRequest;
+use Illuminate\Http\Request;
+use App\Http\Services\EventService;
+use Illuminate\Support\Facades\Cache;
 use App\Http\Requests\EventCreateRequest;
+use App\Http\Requests\EventUpdateRequest;
+use App\Http\Requests\EventAddGuestsRequest;
+use App\Http\Requests\EventAddImagesRequest;
+use App\Http\Requests\EventApproveLockRequest;
+use Symfony\Component\HttpFoundation\Response;
 use App\Http\Requests\EventRatingCreateRequest;
 use App\Http\Requests\EventRemoveGuestsRequest;
-use App\Http\Requests\EventRemoveParticipantsRequest;
-use App\Http\Requests\EventUpdateRequest;
 use App\Http\Requests\EventUpdateStatusRequest;
-use App\Http\Services\EventService;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
-use Symfony\Component\HttpFoundation\Response;
+use App\Http\Requests\EventAddParticipantsRequest;
+use App\Http\Requests\EventRemoveParticipantsRequest;
 
 class EventController extends Controller
 {
@@ -29,6 +30,7 @@ class EventController extends Controller
     {
         $data = $this->service->getAllEvents($request);
 
+        // if no data found, status = 204, else 200
         return response()->json([
             'status' => true,
             'data'   => $data
@@ -39,6 +41,7 @@ class EventController extends Controller
     {
         $data = $this->service->getParticipantBasedEvents();
 
+        // if no data found, status = 204, else 200
         return response()->json([
             'status' => true,
             'data'   => $data
@@ -51,6 +54,7 @@ class EventController extends Controller
             return $this->service->getDesignationGradings($id);
         });
 
+        // if no data found, status = 204, else 200
         return response()->json([
             'status' => true,
             'data'   => $data
@@ -63,16 +67,18 @@ class EventController extends Controller
             return $this->service->getEventImages($id);
         });
 
+        // if no data found, status = 204, else 200
         return response()->json([
             'status' => true,
             'data'   => $data
-        ]);
+        ], count($data) == 0 ? Response::HTTP_NO_CONTENT : Response::HTTP_OK);
     }
 
     public function pendingEvents()
     {
         $data = $this->service->getPendingEvents();
 
+        // if no data found, status = 204, else 200
         return response()->json([
             'status' => true,
             'data'   => $data
@@ -85,6 +91,7 @@ class EventController extends Controller
             return $this->service->getExpenseLog($id);
         });
 
+        // if no data found, status = 204, else 200
         return response()->json([
             'status' => true,
             'data'   => $data
@@ -184,6 +191,7 @@ class EventController extends Controller
     {
         $data = $this->service->getInfo($id);
 
+        // if no data found, status = 204, else 200
         return response()->json([
             'status' => true,
             'data'   => $data
@@ -239,5 +247,36 @@ class EventController extends Controller
         return response()->json([
             'status' => true,
         ], Response::HTTP_CREATED);
+    }
+
+    public function addImages(EventAddImagesRequest $request, $id)
+    {
+        $response = $this->service->storeEventImages($request, $id);
+
+        if ($response)
+        {
+            return response()->json([
+                'status' => false,
+                'error'  => $response
+            ], Response::HTTP_BAD_REQUEST);
+        }
+
+        return response()->json([
+            'status' => true,
+        ], Response::HTTP_CREATED);
+    }
+
+    public function deleteImage($id, $image_id)
+    {
+        $response = $this->service->removeEventImage($id, $image_id);
+
+        if ($response) {
+            return response()->json(['status' => true], Response::HTTP_OK);
+        }
+
+        return response()->json([
+            'status' => false,
+            'error'  => 'Image not found'
+        ], Response::HTTP_BAD_REQUEST);
     }
 }
