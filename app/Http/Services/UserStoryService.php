@@ -5,6 +5,7 @@ namespace App\Http\Services;
 use App\Jobs\CompressUserStoryVideo;
 use App\Models\UserStory;
 use Carbon\Carbon;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Intervention\Image\Facades\Image;
 use Owenoj\LaravelGetId3\GetId3;
@@ -100,11 +101,15 @@ class UserStoryService
     {
         $story = $this->model->findOrFail($id);
 
-        $view = $story->views()->firstOrCreate([
-            'seen_by' => auth()->user()->id
-        ]);
+        try {
+            $view = $story->views()->firstOrCreate([
+                'seen_by' => auth()->user()->id
+            ]);
 
-        return $view->wasRecentlyCreated;
+            return $view->wasRecentlyCreated;
+        } catch (QueryException $ex) {
+            return false;
+        }
     }
 
     public function getAuthUnseenStoryCount()

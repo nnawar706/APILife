@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\UserStoryCreateRequest;
 use App\Http\Services\UserStoryService;
+use App\Http\Requests\UserStoryCreateRequest;
 use Symfony\Component\HttpFoundation\Response;
 
 class UserStoryController extends Controller

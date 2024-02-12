@@ -93,6 +93,8 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('events/designation_gradings/{id}', 'eventDesignations');
             Route::get('events/expense_log/{id}', 'eventExpenseLog');
             Route::post('events/rating/{id}', 'eventRating');
+            Route::post('events/images/create/{id}', 'addImages');
+            Route::delete('events/images/delete/{id}/{image_id}', 'deleteImage');
         });
 
         Route::get('events/images/{id}', 'getImages')->middleware('event.participant.checker:all');
@@ -120,13 +122,6 @@ Route::group(['middleware' => 'auth'], function () {
             Route::post('events/inventories/create/{id}', 'addInventory');
             Route::put('events/inventories/update/{id}/{inventory_id}', 'updateInventory');
             Route::delete('events/inventories/delete/{id}/{inventory_id}', 'deleteInventory');
-        });
-    });
-
-    Route::controller(EventImageController::class)->group(function () {
-        Route::group(['middleware' => 'event.participant.checker:participant'], function () {
-            Route::post('events/images/create/{id}', 'addImages');
-            Route::delete('events/images/delete/{id}/{image_id}', 'deleteImage');
         });
     });
 
