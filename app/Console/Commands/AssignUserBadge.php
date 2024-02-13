@@ -2,14 +2,14 @@
 
 namespace App\Console\Commands;
 
+use Carbon\Carbon;
 use App\Models\User;
 use App\Models\UserBadge;
-use App\Notifications\UserNotification;
-use Carbon\Carbon;
 use Illuminate\Console\Command;
-use Illuminate\Database\QueryException;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Cache;
+use App\Notifications\UserNotification;
+use Illuminate\Database\QueryException;
 
 class AssignUserBadge extends Command
 {

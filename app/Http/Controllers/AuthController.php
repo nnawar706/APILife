@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\LoginRequest;
-use App\Http\Requests\UserPasswordUpdateRequest;
-use App\Http\Services\AuthService;
-use App\Http\Services\UserStoryService;
 use App\Models\UserStory;
 use Illuminate\Http\Request;
+use App\Http\Services\AuthService;
+use App\Http\Requests\LoginRequest;
 use Illuminate\Support\Facades\Cache;
+use App\Http\Services\UserStoryService;
 use Symfony\Component\HttpFoundation\Response;
+use App\Http\Requests\UserPasswordUpdateRequest;
 
 class AuthController extends Controller
 {
@@ -28,13 +28,13 @@ class AuthController extends Controller
         {
             return response()->json([
                 'status' => true,
-                'data' => $response
+                'data'   => $response
             ], Response::HTTP_OK);
         }
 
         return response()->json([
             'status' => false,
-            'error' => 'No authorized account found with given credentials.'
+            'error'  => 'No authorized account found with given credentials.'
         ], Response::HTTP_UNAUTHORIZED);
     }
 
@@ -74,7 +74,7 @@ class AuthController extends Controller
 
         return response()->json([
             'status' => true,
-            'data' => $data,
+            'data'   => $data,
         ], Response::HTTP_OK);
     }
 

@@ -3,9 +3,8 @@
 namespace App\Models;
 
 use App\Jobs\NotifyEventParticipants;
-use App\Notifications\UserNotification;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use App\Notifications\UserNotification;
 
 class EventParticipant extends Model
 {

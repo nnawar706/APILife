@@ -2,8 +2,8 @@
 
 namespace App\Rules;
 
-use App\Models\EventParticipant;
 use Closure;
+use App\Models\EventParticipant;
 use Illuminate\Contracts\Validation\ValidationRule;
 
 class EventInventoryParticipantValidationRule implements ValidationRule

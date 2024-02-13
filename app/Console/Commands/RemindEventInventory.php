@@ -2,10 +2,10 @@
 
 namespace App\Console\Commands;
 
-use App\Models\EventInventory;
-use App\Notifications\UserNotification;
 use Carbon\Carbon;
+use App\Models\EventInventory;
 use Illuminate\Console\Command;
+use App\Notifications\UserNotification;
 
 class RemindEventInventory extends Command
 {

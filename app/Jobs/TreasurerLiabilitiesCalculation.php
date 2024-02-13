@@ -2,16 +2,16 @@
 
 namespace App\Jobs;
 
-use App\Http\Services\EventService;
 use App\Models\Event;
 use App\Models\Treasurer;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Database\QueryException;
-use Illuminate\Foundation\Bus\Dispatchable;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\DB;
+use App\Http\Services\EventService;
+use Illuminate\Queue\SerializesModels;
+use Illuminate\Database\QueryException;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Foundation\Bus\Dispatchable;
 
 class TreasurerLiabilitiesCalculation implements ShouldQueue
 {

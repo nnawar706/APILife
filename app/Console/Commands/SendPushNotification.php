@@ -2,11 +2,11 @@
 
 namespace App\Console\Commands;
 
-use App\Models\Notification;
-use App\Models\User;
-use App\Notifications\UserNotification;
-use Illuminate\Console\Command;
 use Throwable;
+use App\Models\User;
+use App\Models\Notification;
+use Illuminate\Console\Command;
+use App\Notifications\UserNotification;
 
 class SendPushNotification extends Command
 {

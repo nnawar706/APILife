@@ -2,8 +2,8 @@
 
 namespace App\Rules;
 
-use App\Models\Event;
 use Closure;
+use App\Models\Event;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Translation\PotentiallyTranslatedString;
 

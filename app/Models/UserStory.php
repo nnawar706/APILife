@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use App\Jobs\NotifyUsers;
 use Carbon\Carbon;
+use App\Jobs\NotifyUsers;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Prunable;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -34,7 +34,7 @@ class UserStory extends Model
     public function prunable()
     {
         // delete models on 1st day of every month that are 2 months old
-        return static::whereMonth('created_at', Carbon::now('Asia/Dhaka')->subMonths(2)->format('n'));
+        return static::where('created_at', '<', Carbon::now('Asia/Dhaka')->subDays(2));
     }
 
     public static function boot ()

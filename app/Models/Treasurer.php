@@ -2,12 +2,9 @@
 
 namespace App\Models;
 
-use App\Notifications\UserNotification;
-use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Casts\Attribute;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Cache;
 use Spatie\Activitylog\LogOptions;
+use App\Notifications\UserNotification;
+use Illuminate\Database\Eloquent\Model;
 use Spatie\Activitylog\Traits\LogsActivity;
 
 class Treasurer extends Model

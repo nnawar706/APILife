@@ -2,10 +2,10 @@
 
 namespace App\Console\Commands;
 
-use App\Models\Treasurer;
-use App\Notifications\UserNotification;
 use Carbon\Carbon;
+use App\Models\Treasurer;
 use Illuminate\Console\Command;
+use App\Notifications\UserNotification;
 
 class RemindExtravaganzaPayment extends Command
 {

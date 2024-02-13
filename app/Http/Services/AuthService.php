@@ -2,9 +2,8 @@
 
 namespace App\Http\Services;
 
-use App\Models\User;
-use App\Models\UserBadge;
 use Carbon\Carbon;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -14,16 +13,19 @@ class AuthService
     {
         $credentials = $request->only('phone_no', 'password');
 
-        // if token is available for the requested phone no and password, create log entry and return token
+        // check if token is available for the requested phone no and password
         if ($token = $this->guard()->attempt($credentials))
         {
+            // create log entry once a day
             auth()->user()->accessLogs()->firstOrCreate([
                 'logged_in_at' => Carbon::today('Asia/Dhaka')->format('Y-m-d'),
             ]);
 
+            // return token
             return $this->respondWithToken($token);
         }
 
+        // if authentication failed, return null
         return null;
     }
 
@@ -34,6 +36,7 @@ class AuthService
 
     private function respondWithToken($token)
     {
+        // return token with expiration time
         return array(
             'access_token' => $token,
             'token_type' => 'bearer',
@@ -43,11 +46,13 @@ class AuthService
 
     public function refreshUser()
     {
+        // refresh current token and provide new
         return $this->respondWithToken($this->guard()->refresh());
     }
 
     public function getAuthUserProfile()
     {
+        // return auth profile with designation and current month badge
         return User::with('designation')
             ->with(['userBadge' => function($q) {
                 return $q->with('badge')->whereMonth('created_at', Carbon::now('Asia/Dhaka')->format('n'));
@@ -76,16 +81,9 @@ class AuthService
 
     public function getAuthNotifications()
     {
-        // return paginated notifications after updating send status
+        // updating send status
         auth()->user()->unreadNotifications()->update(['send_status' => 1]);
-
+        // return paginated notifications
         return auth()->user()->notifications()->latest()->paginate(15);
-    }
-
-    public function getAuthBadge()
-    {
-        return UserBadge::where('user_id', auth()->user()->id)
-            ->whereMonth('created_at', Carbon::now('Asia/Dhaka')->format('n'))
-            ->first();
     }
 }

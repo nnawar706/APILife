@@ -3,8 +3,8 @@
 namespace App\Rules;
 
 use Closure;
-use Illuminate\Contracts\Validation\ValidationRule;
 use Owenoj\LaravelGetId3\GetId3;
+use Illuminate\Contracts\Validation\ValidationRule;
 
 class UserStoryVideoDurationRule implements ValidationRule
 {

@@ -2,9 +2,9 @@
 
 namespace App\Http\Services;
 
+use Illuminate\Http\Request;
 use App\Models\EventCategory;
 use Illuminate\Database\QueryException;
-use Illuminate\Http\Request;
 
 class EventCategoryService
 {
@@ -55,6 +55,7 @@ class EventCategoryService
     {
         $category = $this->model->findOrFail($id);
 
+        // invert category's current status
         $category->status = !$category->status;
         $category->save();
     }

@@ -2,8 +2,8 @@
 
 namespace App\Rules;
 
-use App\Models\Designation;
 use Closure;
+use App\Models\Designation;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Translation\PotentiallyTranslatedString;
 

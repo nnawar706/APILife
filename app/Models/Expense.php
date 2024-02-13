@@ -2,14 +2,18 @@
 
 namespace App\Models;
 
-use App\Jobs\NotifyEventParticipants;
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Casts\Attribute;
-use Illuminate\Database\Eloquent\Model;
+use Spatie\Activitylog\LogOptions;
+use App\Jobs\NotifyEventParticipants;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Database\Eloquent\Model;
+use Spatie\Activitylog\Traits\LogsActivity;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class Expense extends Model
 {
+    use LogsActivity;
+
     protected $guarded = ['id'];
 
     protected function createdAt(): Attribute
@@ -24,6 +28,19 @@ class Expense extends Model
         return Attribute::make(
             get: fn(string $value) => Carbon::parse($value)->format('F d, Y')
         );
+    }
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logOnly(['expense_category_id','title','unit_cost','quantity','remarks'])
+            ->useLogName('Extravaganza Expense')
+            ->logAll();
+    }
+
+    public function getDescriptionForEvent(string $eventName): string
+    {
+        return "An extravaganza expense has been {$eventName}";
     }
 
     public function bearers()

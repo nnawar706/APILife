@@ -2,10 +2,10 @@
 
 namespace App\Observers;
 
-use App\Jobs\NotifyEventParticipants;
 use App\Jobs\NotifyUsers;
 use App\Models\EventRating;
 use Illuminate\Support\Facades\Cache;
+use App\Jobs\NotifyEventParticipants;
 
 class EventObserver
 {

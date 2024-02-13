@@ -3,8 +3,8 @@
 namespace App\Observers;
 
 use App\Jobs\NotifyUsers;
-use App\Notifications\UserNotification;
 use Illuminate\Support\Facades\Cache;
+use App\Notifications\UserNotification;
 
 class UserLoanObserver
 {

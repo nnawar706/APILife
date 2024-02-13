@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\EventCategoryCreateRequest;
-use App\Http\Services\EventCategoryService;
 use Illuminate\Support\Facades\Cache;
+use App\Http\Services\EventCategoryService;
 use Symfony\Component\HttpFoundation\Response;
+use App\Http\Requests\EventCategoryCreateRequest;
 
 class EventCategoryController extends Controller
 {
@@ -18,10 +18,12 @@ class EventCategoryController extends Controller
 
     public function index()
     {
+        // cache the category list until anything gets updated
         $data = Cache::remember('event_categories', 24*60*60*60, function () {
             return $this->service->getAll();
         });
 
+        // if no data found, status = 204, else 200
         return response()->json([
             'status' => true,
             'data'   => $data
@@ -30,6 +32,8 @@ class EventCategoryController extends Controller
 
     public function create(EventCategoryCreateRequest $request)
     {
+        // check icon availability here because request validation file is shared
+        // icon is required while creating
         if (!$request->file('icon'))
         {
             return response()->json([
@@ -46,8 +50,10 @@ class EventCategoryController extends Controller
 
     public function update(EventCategoryCreateRequest $request, $id)
     {
+        // status = true, when category has been modified, else false
         $status = $this->service->updateInfo($request, $id);
 
+        // status = 304, if not modified, else 200
         return response()->json([
             'status' => $status,
         ], $status ? Response::HTTP_OK : Response::HTTP_NOT_MODIFIED);
@@ -64,6 +70,7 @@ class EventCategoryController extends Controller
 
     public function delete($id)
     {
+        // it will return false if categories cannot be deleted (events exist)
         if ($this->service->removeCategory($id))
         {
             return response()->json([

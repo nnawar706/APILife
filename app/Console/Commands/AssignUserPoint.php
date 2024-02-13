@@ -2,18 +2,18 @@
 
 namespace App\Console\Commands;
 
-use App\Enums\UserPointWeight;
-use App\Models\Event;
-use App\Models\EventParticipant;
-use App\Models\ExpenseBearer;
-use App\Models\ExpensePayer;
+use Carbon\Carbon;
 use App\Models\User;
+use App\Models\Event;
 use App\Models\UserLoan;
 use App\Models\UserPoint;
-use Carbon\Carbon;
+use App\Models\ExpensePayer;
+use App\Models\ExpenseBearer;
+use App\Enums\UserPointWeight;
 use Illuminate\Console\Command;
-use Illuminate\Database\QueryException;
+use App\Models\EventParticipant;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Database\QueryException;
 
 class AssignUserPoint extends Command
 {

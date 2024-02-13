@@ -4,8 +4,8 @@ namespace App\Console\Commands;
 
 use App\Models\User;
 use App\Models\UserLoan;
-use App\Notifications\UserNotification;
 use Illuminate\Console\Command;
+use App\Notifications\UserNotification;
 
 class NotifyPendingLoanPayable extends Command
 {

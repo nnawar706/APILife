@@ -2,11 +2,11 @@
 
 namespace App\Console\Commands;
 
-use App\Models\PetCare;
-use App\Models\User;
-use App\Notifications\UserNotification;
 use Carbon\Carbon;
+use App\Models\User;
+use App\Models\PetCare;
 use Illuminate\Console\Command;
+use App\Notifications\UserNotification;
 
 class SendPetCareReminder extends Command
 {

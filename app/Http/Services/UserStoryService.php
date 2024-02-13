@@ -28,7 +28,7 @@ class UserStoryService
             ->whereDoesntHave('views', function ($q) use ($six_hours_ago) {
             // auth user can see stories for 6 hours
             return $q->where('seen_by', '=', auth()->user()->id)
-                ->where('created_at', '<', $six_hours_ago);
+                ->where('created_at', '<=', $six_hours_ago);
         })->with(['uploadedByInfo' => function ($q) {
             return $q->select('id','name','photo_url');
         }])->with(['viewers' => function ($q) {

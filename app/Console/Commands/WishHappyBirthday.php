@@ -2,11 +2,11 @@
 
 namespace App\Console\Commands;
 
-use App\Jobs\NotifyUsers;
-use App\Models\User;
-use App\Notifications\UserNotification;
 use Carbon\Carbon;
+use App\Models\User;
+use App\Jobs\NotifyUsers;
 use Illuminate\Console\Command;
+use App\Notifications\UserNotification;
 
 class WishHappyBirthday extends Command
 {
