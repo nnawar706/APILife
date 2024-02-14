@@ -120,4 +120,9 @@ class UserStoryService
             return $q->where('seen_by', '=', auth()->user()->id);
         })->count();
     }
+
+    public function getLastStoryCreationTime()
+    {
+        return $this->model->latest()->first()?->created_at;
+    }
 }

@@ -112,14 +112,18 @@ class AuthController extends Controller
 
     public function getNotificationCount()
     {
-        $notificationCount = auth()->user()->unreadNotifications->count();
-        $unseenStoryCount  = (new UserStoryService(new UserStory()))->getAuthUnseenStoryCount();
+        $userStoryService   = new UserStoryService(new UserStory());
+
+        $notificationCount  = auth()->user()->unreadNotifications->count();
+        $unseenStoryCount   = $userStoryService->getAuthUnseenStoryCount();
+        $lastStoryCreatedAt = $userStoryService->getLastStoryCreationTime();
 
         return response()->json([
             'status' => true,
             'data'   => array(
                 'unread_notification_count' => $notificationCount,
-                'unseen_story_count'        => $unseenStoryCount
+                'unseen_story_count'        => $unseenStoryCount,
+                'last_story_created_at'     => $lastStoryCreatedAt
             )
         ], Response::HTTP_OK);
     }
