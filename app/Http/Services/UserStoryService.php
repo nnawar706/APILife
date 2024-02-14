@@ -30,8 +30,10 @@ class UserStoryService
             return $q->where('seen_by', '=', auth()->user()->id)
                 ->where('created_at', '<=', $six_hours_ago);
         })->with(['uploadedByInfo' => function ($q) {
+            // fetch id, name, & photo url only
             return $q->select('id','name','photo_url');
         }])->with(['viewers' => function ($q) {
+            // fetch name and photo url only
             return $q->select('users.id','user_story_id','seen_by','name','photo_url');
         }])->latest()->get();
     }
