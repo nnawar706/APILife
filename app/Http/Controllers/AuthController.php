@@ -2,14 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\UserStory;
-use Illuminate\Http\Request;
-use App\Http\Services\AuthService;
 use App\Http\Requests\LoginRequest;
-use Illuminate\Support\Facades\Cache;
-use App\Http\Services\UserStoryService;
-use Symfony\Component\HttpFoundation\Response;
 use App\Http\Requests\UserPasswordUpdateRequest;
+use App\Http\Services\AuthService;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
+use Symfony\Component\HttpFoundation\Response;
 
 class AuthController extends Controller
 {
