@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\UserPasswordUpdateRequest;
 use App\Http\Services\AuthService;
+use App\Http\Services\UserStoryService;
+use App\Models\UserStory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Symfony\Component\HttpFoundation\Response;
@@ -111,11 +113,13 @@ class AuthController extends Controller
     public function getNotificationCount()
     {
         $notificationCount = auth()->user()->unreadNotifications->count();
+        $unseenStoryCount  = (new UserStoryService(new UserStory()))->getAuthUnseenStoryCount();
 
         return response()->json([
             'status' => true,
             'data'   => array(
                 'unread_notification_count' => $notificationCount,
+                'unseen_story_count'        => $unseenStoryCount
             )
         ], Response::HTTP_OK);
     }
