@@ -67,7 +67,7 @@ class SendPushNotification extends Command
                             )
                         ));
 
-                    // change the status
+                    // change the status and save
                     $item->send_status = 1;
                     $item->save();
                 }
