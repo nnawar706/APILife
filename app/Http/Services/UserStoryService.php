@@ -133,6 +133,8 @@ class UserStoryService
                     ->where('created_at', '<=', $six_hours_ago);
             })->latest()->first();
 
-        return $lastNotification ? $lastNotification->created_at : null;
+        return $lastNotification ?
+            Carbon::parse($lastNotification->created_at)->format('Y-m-d H:i:s')
+            : null;
     }
 }
