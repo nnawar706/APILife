@@ -10,20 +10,25 @@ function saveImage($image, $path, $model, $field, $compress): void
     try {
         $img = Image::make($image);
 
+        // generate a random image name
         $image_name = time() . rand(100, 9999) . '.' . $image->getClientOriginalExtension();
 
         if ($compress)
         {
+            // resize image to 1920x1080 with keeping the aspect ratio same
             $compressedImage = $img->orientate()
                 ->resize(1920, 1080, function ($constraint) {
                     $constraint->aspectRatio();
                 });
 
+            // save the compressed image to server
             $compressedImage->save(public_path($path . $image_name));
         } else {
+            // save the actual image to server
             $image->move(public_path($path), $image_name);
         }
 
+        // save the record
         $model->$field = $path . $image_name;
         $model->save();
     } catch (Throwable $th) {}
@@ -32,6 +37,7 @@ function saveImage($image, $path, $model, $field, $compress): void
 function deleteFile($filepath): void
 {
     try {
+        // delete file if exists
         if (File::exists(public_path($filepath))) {
             File::delete(public_path($filepath));
         }
@@ -41,6 +47,7 @@ function deleteFile($filepath): void
 
 function clearCache(): void
 {
+    // clear project cache
     Artisan::call('cache:clear');
 }
 
@@ -69,6 +76,7 @@ function getBeamsClient()
     );
 }
 
+// return 4 quotes according to the percentage
 function getQuotes($percentage): array
 {
     if ($percentage > 75)

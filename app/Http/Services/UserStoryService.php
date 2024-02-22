@@ -123,6 +123,8 @@ class UserStoryService
 
     public function getLastStoryCreationTime()
     {
-        return $this->model->latest()->first()?->created_at;
+        $lastNotification = $this->model->latest()->first();
+
+        return $lastNotification ? $lastNotification->created_at : null;
     }
 }

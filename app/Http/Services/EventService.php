@@ -312,15 +312,15 @@ class EventService
                     });
             })
             // fetch lead, category and rating
-            ->with('lead','category','rating')
+            ->with('lead','category','rating','eventParticipants')
             ->with(['participants' => function($q) {
                 // fetch only id, name & photo of participants
                 return $q->select('users.id','name','photo_url');
             }])
-            ->with(['eventParticipants' => function($q) {
+//            ->with(['eventParticipants' => function($q) {
                 // fetch only the row where auth user is present (to check if rated or not)
-                return $q->where('user_id', auth()->user()->id);
-            }])
+//                return $q->where('user_id', auth()->user()->id);
+//            }])
             ->with(['guests' => function($q) {
                 // fetch only id, name & photo of guests
                 return $q->select('users.id','name','photo_url');
