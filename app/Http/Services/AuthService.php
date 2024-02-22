@@ -81,9 +81,15 @@ class AuthService
 
     public function getAuthNotifications()
     {
-        // updating send status
-        auth()->user()->unreadNotifications()->update(['send_status' => 1]);
         // return paginated notifications
-        return auth()->user()->notifications()->latest()->paginate(15);
+        $data = auth()->user()->notifications()->latest()->paginate(15);
+
+        // updating send status
+        foreach ($data->items() as $q)
+        {
+            $q->update(['send_status' => 1]);
+        }
+
+        return $data;
     }
 }

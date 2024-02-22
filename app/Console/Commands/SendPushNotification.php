@@ -71,17 +71,7 @@ class SendPushNotification extends Command
                     $item->send_status = 1;
                     $item->save();
                 }
-                catch (Throwable $th) {
-                    $user = User::find(30);
-
-                    $user->notify(new UserNotification(
-                        '/',
-                        $th->getMessage(),
-                        null,
-                        'Life++',
-                        null
-                    ));
-                }
+                catch (Throwable $th) {}
             }
         }
     }
