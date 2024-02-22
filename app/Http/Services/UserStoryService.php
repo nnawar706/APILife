@@ -131,7 +131,7 @@ class UserStoryService
                 // auth user can see stories for 6 hours
                 return $q->where('seen_by', '=', auth()->user()->id)
                     ->where('created_at', '<=', $six_hours_ago);
-            })->first();
+            })->latest()->first();
 
         return $lastNotification ? $lastNotification->created_at : null;
     }
