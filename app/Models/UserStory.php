@@ -17,13 +17,6 @@ class UserStory extends Model
 
     protected $hidden = ['updated_at','deleted_at'];
 
-    protected function createdAt(): Attribute
-    {
-        return Attribute::make(
-            get: fn(string $value) => Carbon::parse($value)->format('Y-m-d H:i:s')
-        );
-    }
-
     public function views()
     {
         return $this->hasMany(UserStoryView::class);
