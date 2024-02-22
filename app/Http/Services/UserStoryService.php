@@ -123,7 +123,15 @@ class UserStoryService
 
     public function getLastStoryCreationTime()
     {
-        $lastNotification = $this->model->latest()->first();
+        // get time that is 6 hours ago from now
+        $six_hours_ago = Carbon::now('Asia/Dhaka')->subHours(6)->format('Y-m-d H:i:s');
+
+        $lastNotification = $this->model
+            ->whereDoesntHave('views', function ($q) use ($six_hours_ago) {
+                // auth user can see stories for 6 hours
+                return $q->where('seen_by', '=', auth()->user()->id)
+                    ->where('created_at', '<=', $six_hours_ago);
+            })->first();
 
         return $lastNotification ? $lastNotification->created_at : null;
     }
