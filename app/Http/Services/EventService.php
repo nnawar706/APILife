@@ -312,7 +312,7 @@ class EventService
                     });
             })
             // fetch lead, category and rating
-            ->with('lead','category','rating','eventParticipants')
+            ->with('lead','category','rating','eventParticipants.user')
             ->with(['participants' => function($q) {
                 // fetch only id, name & photo of participants
                 return $q->select('users.id','name','photo_url');
