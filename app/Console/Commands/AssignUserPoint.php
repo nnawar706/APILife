@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Notifications\UserNotification;
 use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Event;
@@ -82,6 +83,22 @@ class AssignUserPoint extends Command
             foreach ($users as $user)
             {
                 $weight = 0;
+
+                // birthday of user
+                $birthdate = $user->birthday . '-' . $end->clone()->format('Y');
+
+                if (Carbon::parse($birthdate)->isToday())
+                {
+                    $weight += 20;
+
+                    $user->notify(new UserNotification(
+                        'pages/accounts/notification',
+                        '🎉 Birthday Bonus Unlocked! 🎂 Enjoy 20 extra points on your special day as our token of celebration. 🎈🎁',
+                        null,
+                        'Life++',
+                        null
+                    ));
+                }
 
                 // login count
                 $loginCount = $user->accessLogs()->whereBetween('logged_in_at', [$start, $end])->count();
