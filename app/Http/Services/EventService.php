@@ -231,7 +231,7 @@ class EventService
             ->groupBy('expense_categories.id','expense_categories.name','expense_categories.icon_url')
             ->get();
 
-        $rating_status = $event->eventParticipants()->where('user_id', auth()->user()->id)->first()->rated;
+        $rating_status = $event->eventParticipants()->where('user_id', auth()->user()->id)->first()?->rated;
 
         return array(
             'additional_data' => array(

@@ -31,9 +31,8 @@ class CheckEventReadEligibility
             /** if the event is private, user check type is participant but user not present in participant list
              * or user check type is all and not present in either guest or participant list, return error
              **/
-            if (!$event->is_public &&
-                (($user_type == 'participant' && $argumentParticipant) ||
-                    ($user_type == 'all' && $argumentGuest && $argumentParticipant)))
+            if (($user_type == 'participant' && $argumentParticipant) ||
+                    ($user_type == 'all' && $argumentGuest && $argumentParticipant))
             {
                 return response()->json([
                     'status' => false,
