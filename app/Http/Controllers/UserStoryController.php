@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UserStoryReactionRequest;
 use App\Http\Services\UserStoryService;
 use App\Http\Requests\UserStoryCreateRequest;
 use Symfony\Component\HttpFoundation\Response;
@@ -51,5 +52,14 @@ class UserStoryController extends Controller
         return response()->json([
             'status' => true
         ], $response ? Response::HTTP_OK : Response::HTTP_NOT_MODIFIED);
+    }
+
+    public function reactStory(UserStoryReactionRequest $request, $id)
+    {
+        $this->service->storyReaction($request->reaction_id, $id);
+
+        return response()->json([
+            'status' => true
+        ]);
     }
 }

@@ -21,8 +21,8 @@ class UserStoryService
 
     public function getAllUnseenStories()
     {
-        // get time that is 6 hours ago from now
-        $six_hours_ago = Carbon::now('Asia/Dhaka')->subHours(6)->format('Y-m-d H:i:s');
+        // get time that is 12 hours ago from now
+        $six_hours_ago = Carbon::now('Asia/Dhaka')->subHours(12)->format('Y-m-d H:i:s');
 
         return $this->model
             ->whereDoesntHave('views', function ($q) use ($six_hours_ago) {
@@ -34,7 +34,7 @@ class UserStoryService
             return $q->select('id','name','photo_url');
         }])->with(['viewers' => function ($q) {
             // fetch name and photo url only
-            return $q->select('users.id','user_story_id','seen_by','name','photo_url');
+            return $q->select('users.id','user_story_id','seen_by','name','photo_url','reaction_id');
         }])->latest()->get();
     }
 
@@ -134,5 +134,16 @@ class UserStoryService
             })->latest()->first();
 
         return $lastNotification ? $lastNotification->created_at : null;
+    }
+
+    public function storyReaction($reaction, $id): void
+    {
+        $story = $this->model->findOrFail($id);
+
+        $story->views()->updateOrCreate([
+            'seen_by' => auth()->user()->id
+        ],[
+            'reaction_id' => $reaction
+        ]);
     }
 }

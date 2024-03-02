@@ -167,6 +167,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::controller(UserStoryController::class)->group(function () {
         Route::get('user_stories/all', 'index');
         Route::get('user_stories/mark_as_seen/{id}', 'markSeen');
+        Route::put('user_stories/react/{id}', 'reactStory');
         Route::post('user_stories/create', 'create')->middleware('user.stories');
     });
 });

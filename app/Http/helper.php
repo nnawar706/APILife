@@ -45,12 +45,6 @@ function deleteFile($filepath): void
     {}
 }
 
-function clearCache(): void
-{
-    // clear project cache
-    Artisan::call('cache:clear');
-}
-
 
 function getThresholds($max, $min): array
 {

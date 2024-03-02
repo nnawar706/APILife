@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_story_id')->constrained('user_stories')->onDelete('cascade');
             $table->foreignId('seen_by')->constrained('users')->onDelete('cascade');
+            $table->tinyInteger('reaction_id', false, true)->nullable();
             $table->timestamps();
         });
     }

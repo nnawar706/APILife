@@ -8,6 +8,7 @@ use Laravel\Sanctum\HasApiTokens;
 use Spatie\Activitylog\LogOptions;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Artisan;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Builder;
@@ -242,7 +243,7 @@ class User extends Authenticatable implements JWTSubject
         });
 
         static::updated(function ($model) {
-            clearCache();
+            Artisan::call('cache:clear');
 
             if ($model->id != auth()->user()->id && $model->status == 0)
             {
