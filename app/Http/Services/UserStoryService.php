@@ -123,8 +123,8 @@ class UserStoryService
 
     public function getLastStoryCreationTime()
     {
-        // get time that is 6 hours ago from now
-        $twelve_hours_ago = Carbon::now('Asia/Dhaka')->subHours(6)->format('Y-m-d H:i:s');
+        // get time that is 12 hours ago from now
+        $twelve_hours_ago = Carbon::now('Asia/Dhaka')->subHours(12)->format('Y-m-d H:i:s');
 
         $lastNotification = $this->model
             ->whereDoesntHave('views', function ($q) use ($twelve_hours_ago) {
