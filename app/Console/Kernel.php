@@ -15,7 +15,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('app:send-push-notification')->everyMinute();
         $schedule->command('app:remove-user-stories')->everyMinute();
         $schedule->command('app:wish-happy-birthday')->dailyAt('0:01')->timezone('Asia/Dhaka');
-        $schedule->command('app:assign-user-point')->dailyAt('0:01')->timezone('Asia/Dhaka');
+        $schedule->command('app:assign-user-point')->dailyAt('23:55')->timezone('Asia/Dhaka');
         $schedule->command('app:send-pet-care-reminder')->dailyAt('10:00')->timezone('Asia/Dhaka');
         $schedule->command('app:remind-extravaganza-payment')->dailyAt('11:00')->timezone('Asia/Dhaka');
         $schedule->command('app:remind-event-inventory')->dailyAt('22:00')->timezone('Asia/Dhaka');

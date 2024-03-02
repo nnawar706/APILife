@@ -86,20 +86,10 @@ class SystemController extends Controller
 
     public function test(Request $request)
     {
-//        $thresholds = getThresholds(1688, 235);
-//
-//        return response()->json([
-//            'threshold' => $thresholds
-//        ]);
+        $thresholds = getThresholds(1688, 235);
 
-        UserPoint::whereDate('created_at', '2024-03-01')->update([
-            'created_at' => '2024-02-29 23:55:00',
-            'updated_at' => '2024-02-29 23:55:00',
-        ]);
-
-        UserPoint::whereDate('created_at', '2024-03-02')->update([
-            'created_at' => '2024-03-01 23:55:00',
-            'updated_at' => '2024-03-01 23:55:00',
+        return response()->json([
+            'threshold' => $thresholds
         ]);
     }
 }
