@@ -22,13 +22,13 @@ class UserStoryService
     public function getAllUnseenStories()
     {
         // get time that is 12 hours ago from now
-        $six_hours_ago = Carbon::now('Asia/Dhaka')->subHours(12)->format('Y-m-d H:i:s');
+        $twelve_hours_ago = Carbon::now('Asia/Dhaka')->subHours(12)->format('Y-m-d H:i:s');
 
         return $this->model
-            ->whereDoesntHave('views', function ($q) use ($six_hours_ago) {
+            ->whereDoesntHave('views', function ($q) use ($twelve_hours_ago) {
             // auth user can see stories for 6 hours
             return $q->where('seen_by', '=', auth()->user()->id)
-                ->where('created_at', '<', $six_hours_ago);
+                ->where('created_at', '<', $twelve_hours_ago);
         })->with(['uploadedByInfo' => function ($q) {
             // fetch id, name, & photo url only
             return $q->select('id','name','photo_url');
@@ -124,13 +124,13 @@ class UserStoryService
     public function getLastStoryCreationTime()
     {
         // get time that is 6 hours ago from now
-        $six_hours_ago = Carbon::now('Asia/Dhaka')->subHours(6)->format('Y-m-d H:i:s');
+        $twelve_hours_ago = Carbon::now('Asia/Dhaka')->subHours(6)->format('Y-m-d H:i:s');
 
         $lastNotification = $this->model
-            ->whereDoesntHave('views', function ($q) use ($six_hours_ago) {
+            ->whereDoesntHave('views', function ($q) use ($twelve_hours_ago) {
                 // auth user can see stories for 6 hours
                 return $q->where('seen_by', '=', auth()->user()->id)
-                    ->where('created_at', '<', $six_hours_ago);
+                    ->where('created_at', '<', $twelve_hours_ago);
             })->latest()->first();
 
         return $lastNotification ? $lastNotification->created_at : null;
