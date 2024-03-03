@@ -41,55 +41,58 @@ class UserStoryService
     public function storeStory(Request $request)
     {
         try {
-            $file = $request->file('file');
+            if ($request->hasFile('file')) {
+                $file = $request->file('file');
 
-            $duration = 0;
+                $duration = 0;
 
-            $extension = strtolower($file->getClientOriginalExtension());
+                $extension = strtolower($file->getClientOriginalExtension());
 
-            if (!in_array($extension, ['jpeg','jpg','png','gif']))
-            {
-                $video = new GetId3($file);
+                if (!in_array($extension, ['jpeg', 'jpg', 'png', 'gif'])) {
+                    $video = new GetId3($file);
 
-                $duration = $video->getPlaytimeSeconds();
+                    $duration = $video->getPlaytimeSeconds();
 
-                $videoName = 'tmp_' . time() . rand(100, 999) . '.' . $extension;
+                    $videoName = 'tmp_' . time() . rand(100, 999) . '.' . $extension;
 
-                $file->move(public_path('/videos/user_stories/'), $videoName);
+                    $file->move(public_path('/videos/user_stories/'), $videoName);
 
-                $url = '/videos/user_stories/' . $videoName;
-            }
-            else if ($extension == 'gif') {
-                $imageName = time() . rand(100, 9999) . '.' . $extension;
-                $file->move(public_path('/images/user_stories/'), $imageName);
+                    $url = '/videos/user_stories/' . $videoName;
+                } else if ($extension == 'gif') {
+                    $imageName = time() . rand(100, 9999) . '.' . $extension;
+                    $file->move(public_path('/images/user_stories/'), $imageName);
 
-                $url = '/images/user_stories/' . $imageName;
-            }
-            else {
-                $storyImage = Image::make($file);
+                    $url = '/images/user_stories/' . $imageName;
+                } else {
+                    $storyImage = Image::make($file);
 
-                $compressedStoryImage = $storyImage->encode('jpg')->orientate()
-                    ->resize(1200, 1200, function ($constraint) {
-                        $constraint->aspectRatio();
-                    });
+                    $compressedStoryImage = $storyImage->encode('jpg')->orientate()
+                        ->resize(1200, 1200, function ($constraint) {
+                            $constraint->aspectRatio();
+                        });
 
-                $imageName = time() . rand(100, 9999) . '.jpg';
-                $compressedStoryImage->save(public_path('/images/user_stories/' . $imageName));
+                    $imageName = time() . rand(100, 9999) . '.jpg';
+                    $compressedStoryImage->save(public_path('/images/user_stories/' . $imageName));
 
-                $url = '/images/user_stories/' . $imageName;
-            }
+                    $url = '/images/user_stories/' . $imageName;
+                }
 
-            $story = $this->model->create([
-                'user_id'   => auth()->user()->id,
-                'story_url' => $url
-            ]);
+                $story = $this->model->create([
+                    'user_id' => auth()->user()->id,
+                    'story_url' => $url
+                ]);
 
-            if (!in_array($extension, ['jpeg','jpg','png','gif']))
-            {
-                $story->duration = $duration;
-                $story->saveQuietly();
+                if (!in_array($extension, ['jpeg', 'jpg', 'png', 'gif'])) {
+                    $story->duration = $duration;
+                    $story->saveQuietly();
 
-                dispatch(new CompressUserStoryVideo($story));
+                    dispatch(new CompressUserStoryVideo($story));
+                }
+            } else {
+                $this->model->create([
+                    'user_id' => auth()->user()->id,
+                    'story_text' => $request->caption
+                ]);
             }
 
             return null;
@@ -116,7 +119,8 @@ class UserStoryService
 
     public function getAuthUnseenStoryCount()
     {
-        return $this->model->whereDoesntHave('views', function ($q) {
+        return $this->model
+            ->whereDoesntHave('views', function ($q) {
             return $q->where('seen_by', '=', auth()->user()->id);
         })->count();
     }
@@ -161,7 +165,10 @@ class UserStoryService
             return false;
         }
 
-        deleteFile($story->story_url);
+        if ($story->story_url)
+        {
+            deleteFile($story->story_url);
+        }
 
         $story->forceDelete();
 

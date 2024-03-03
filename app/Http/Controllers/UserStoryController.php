@@ -40,6 +40,13 @@ class UserStoryController extends Controller
 
     public function create(UserStoryCreateRequest $request)
     {
+        if (!$request->hasAny('file','caption'))
+        {
+            return response()->json([
+                'status' => false,
+                'error'  => 'Invalid payload.'
+            ], Response::HTTP_BAD_REQUEST);
+        }
         $response = $this->service->storeStory($request);
 
         if ($response)

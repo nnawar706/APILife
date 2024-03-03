@@ -27,7 +27,8 @@ class UserStoryCreateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'file'  => ['required','file', 'max:102400', new UserStoryVideoDurationRule()]
+            'file'  => ['sometimes','file', 'max:102400', new UserStoryVideoDurationRule()],
+            'caption' => 'sometimes|string|max:490'
         ];
     }
 
