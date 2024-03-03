@@ -146,4 +146,25 @@ class UserStoryService
             'reaction_id' => $reaction
         ]);
     }
+
+    public function getAuthStories()
+    {
+        return $this->model->where('user_id', auth()->user()->id)->get();
+    }
+
+    public function removeStory($id): bool
+    {
+        $story = $this->model->findOrFail($id);
+
+        if ($story->user_id != auth()->user()->id)
+        {
+            return false;
+        }
+
+        deleteFile($story->story_url);
+
+        $story->forceDelete();
+
+        return true;
+    }
 }

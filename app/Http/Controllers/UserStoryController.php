@@ -28,6 +28,16 @@ class UserStoryController extends Controller
         ], count($data) == 0 ? Response::HTTP_NO_CONTENT : Response::HTTP_OK);
     }
 
+    public function myIndex()
+    {
+        $data = $this->service->getAuthStories();
+
+        return response()->json([
+            'status' => true,
+            'data'   => $data
+        ], count($data) === 0 ? Response::HTTP_NO_CONTENT : Response::HTTP_OK);
+    }
+
     public function create(UserStoryCreateRequest $request)
     {
         $response = $this->service->storeStory($request);
@@ -61,5 +71,21 @@ class UserStoryController extends Controller
         return response()->json([
             'status' => true
         ]);
+    }
+
+    public function delete($id)
+    {
+        $response = $this->service->removeStory($id);
+
+        if ($response)
+        {
+            return response()->json([
+                'status' => true
+            ]);
+        }
+        return response()->json([
+            'status' => false,
+            'error'  => 'You are not allowed to remove this story.'
+        ], Response::HTTP_FORBIDDEN);
     }
 }
