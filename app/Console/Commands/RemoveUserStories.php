@@ -35,11 +35,13 @@ class RemoveUserStories extends Command
         UserStory::where('created_at', '<', $deleteTime)->each(function ($story) {
             $viewCount = $story->views()->count();
 
+            $reactionCount = $story->views()->whereNotNull('reaction_id')->count();
+
             if ($viewCount > 5)
             {
                 $story->uploadedByInfo->notify(new UserNotification(
                     'pages/accounts/notification',
-                    'Your last story got ' . $viewCount . ' views. 💥',
+                    'Your last story got ' . $viewCount . ' views and ' . $reactionCount . ' reactions. 💥',
                     null,
                     'Life++',
                     null
