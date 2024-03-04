@@ -17,6 +17,7 @@ use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use Intervention\Image\Facades\Image;
 use Symfony\Component\HttpFoundation\Response;
 
 class SystemController extends Controller
@@ -86,10 +87,32 @@ class SystemController extends Controller
 
     public function test(Request $request)
     {
-        $thresholds = getThresholds(1688, 235);
+//        $thresholds = getThresholds(1688, 235);
+//
+//        return response()->json([
+//            'threshold' => $thresholds
+//        ]);
 
-        return response()->json([
-            'threshold' => $thresholds
-        ]);
+        $image = $request->file('file');
+
+        $img = Image::make($image);
+
+        // generate a random image name
+        $image_name = $request->name . '.' . $image->getClientOriginalExtension();
+
+//        if ($compress)
+//        {
+            // resize image to 1920x1080 with keeping the aspect ratio same
+            $compressedImage = $img->orientate()
+                ->resize(1920, 1080, function ($constraint) {
+                    $constraint->aspectRatio();
+                });
+
+            // save the compressed image to server
+            $compressedImage->save(public_path('/images/user_stories/' . $image_name));
+//        } else {
+//            // save the actual image to server
+//            $image->move(public_path($path), $image_name);
+//        }
     }
 }
