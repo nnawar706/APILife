@@ -113,3 +113,22 @@ function getQuotes($percentage): array
         "No money left? Time for a dramatic survival plan: beg boss for night shifts or else quit wasting habit!",
     ];
 }
+
+function getReactionNotification($reactionId): string
+{
+    return match ($reactionId) {
+        1 => "You've got hearts! " . auth()->user()->name . " just reacted to your story with a ❤️.",
+        2 => "Looks like your story triggered the poop emoji reaction! It seems " . auth()->user()->name . "'s feeling quite expressive today! 💩",
+        3 => "Looks like your content brought a laughter to " . auth()->user()->name . "'s face!",
+        4 => "Just wanted to give you a heads up - " . auth()->user()->name . "'s feeling sad about your story.",
+        5 => "🤯 Whoa there! Looks like your story just blew " . auth()->user()->name . "'s socks off with a 'wow' reaction!",
+        6 => "Hold on! 🎩 Your story got some virtual salute from " . auth()->user()->name . ".",
+        7 => "Looks like your story just got " . auth()->user()->name . " 'angry'!",
+        8 => auth()->user()->name . "wants you to know that your story reached peak relatability!",
+        9 => "Bam! Looks like " . auth()->user()->name . " just threw a virtual punch your way. Be careful!",
+        10 => "Not sure why but seems like " . auth()->user()->name . " is sending some 'baby feeder' emojis to your story!",
+        11 => "Hold on! " . auth()->user()->name . " is sending Rasel's face to your story.",
+        12 => "Hey there! " . auth()->user()->name . " finds your story as cute as Mickie & Minnie!",
+        default => '',
+    };
+}

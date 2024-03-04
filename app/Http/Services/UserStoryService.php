@@ -4,6 +4,7 @@ namespace App\Http\Services;
 
 use App\Jobs\CompressUserStoryVideo;
 use App\Models\UserStory;
+use App\Notifications\UserNotification;
 use Carbon\Carbon;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
@@ -149,6 +150,19 @@ class UserStoryService
         ],[
             'reaction_id' => $reaction
         ]);
+
+        if ($story->user_id != auth()->user()->id)
+        {
+            $story->uploadedByInfo->notify(
+                new UserNotification(
+                    'pages/accounts/notification',
+                    getReactionNotification($reaction),
+                    auth()->user()->id,
+                    auth()->user()->name,
+                    '/images/user_stories/' . $reaction . '.png',
+                )
+            );
+        }
     }
 
     public function getAuthStories()
