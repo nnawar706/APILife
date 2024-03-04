@@ -124,7 +124,7 @@ function getReactionNotification($reactionId): string
         5 => "🤯 Whoa there! Looks like your story just blew " . auth()->user()->name . "'s socks off with a 'wow' reaction!",
         6 => "Hold on! 🎩 Your story got some virtual salute from " . auth()->user()->name . ".",
         7 => "Looks like your story just got " . auth()->user()->name . " 'angry'!",
-        8 => auth()->user()->name . "wants you to know that your story reached peak relatability!",
+        8 => auth()->user()->name . " wants you to know that your story reached peak relatability!",
         9 => "Bam! Looks like " . auth()->user()->name . " just threw a virtual punch your way. Be careful!",
         10 => "Not sure why but seems like " . auth()->user()->name . " is sending some 'baby feeder' emojis to your story!",
         11 => "Hold on! " . auth()->user()->name . " is sending Rasel's face to your story.",
