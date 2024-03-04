@@ -157,7 +157,7 @@ class UserStoryService
                 new UserNotification(
                     'pages/accounts/notification',
                     getReactionNotification($reaction),
-                    auth()->user()->id,
+                    null,
                     auth()->user()->name,
                     '/images/user_stories/' . $reaction . '.png',
                 )
