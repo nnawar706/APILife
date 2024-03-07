@@ -18,8 +18,8 @@ class CheckStoryCreateEligibility
     {
         $curTime = Carbon::now('Asia/Dhaka');
 
-        $officeStarts = Carbon::createFromTime(10); // 10 am
-        $officeEnds   = Carbon::createFromTime(18); // 6 pm
+//        $officeStarts = Carbon::createFromTime(10); // 10 am
+//        $officeEnds   = Carbon::createFromTime(18); // 6 pm
 
 //        if (in_array($request->ip(), ['103.205.71.148', '2400:3240:900a:17::1008', '127.0.0.1']))
 //        {
@@ -39,7 +39,7 @@ class CheckStoryCreateEligibility
 
         $storiesAddedToday = auth()->user()->stories()->whereDate('created_at', $curTime->clone()->format('Y-m-d'))->count();
 
-        if ($storiesAddedToday >= 3 && auth()->user()->id != 3)
+        if ($storiesAddedToday >= 3)
         {
             return response()->json([
                 'status' => false,
