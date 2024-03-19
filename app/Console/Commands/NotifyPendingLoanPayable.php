@@ -35,11 +35,13 @@ class NotifyPendingLoanPayable extends Command
 
         foreach ($users as $item)
         {
+            // total amount that user got
             // total debited amount of that user -> (user & debited) + (selected user & credited)
             $debited = $transactions->clone()->where('user_id', $item->id)->debited()->sum('amount')
                 +
                 $transactions->clone()->where('selected_user_id', $item->id)->credited()->sum('amount');
 
+            // total amount that user spent
             // total credited amount of that user -> (user & credited) + (selected user & debited)
             $credited= $transactions->clone()->where('selected_user_id', $item->id)->debited()->sum('amount')
                 +
